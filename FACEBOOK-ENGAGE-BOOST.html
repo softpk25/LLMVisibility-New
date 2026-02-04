@@ -1,0 +1,2004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Comment Management - Prometrix</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.2/cdn.min.js" defer></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --primary: #5046e5;
+            --primary-dark: #4039c0;
+            --secondary: #00c4cc;
+            --text-dark: #1a202c;
+            --text-light: #718096;
+            --bg-light: #f7fafc;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        
+        .btn-success:hover {
+            background-color: #059669;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: var(--text-dark);
+            border: 1px solid #e2e8f0;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #f7fafc;
+            border-color: var(--primary);
+        }
+        
+        .sidebar {
+            width: 280px;
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            border-right: 1px solid #e2e8f0;
+            padding: 1.5rem 0;
+            transition: all 0.3s ease;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .prometrix-wordmark {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #5046e5 0%, #00c4cc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .primary-text { color: #5046e5; }
+        .dark-text { color: #1a202c; }
+        
+        .analytics-bars {
+            display: flex;
+            align-items: end;
+            gap: 2px;
+            margin-left: 8px;
+            margin-right: 4px;
+        }
+        
+        .bar {
+            border-radius: 2px;
+            background: linear-gradient(135deg, #00c4cc 0%, #5046e5 100%);
+            width: 3px;
+        }
+        
+        .bar1 { height: 10px; opacity: 0.7; }
+        .bar2 { height: 14px; opacity: 0.8; }
+        .bar3 { height: 18px; opacity: 0.9; }
+        .bar4 { height: 22px; }
+        
+        .tagline-small {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #718096;
+        }
+        
+        .menu {
+            margin-top: 1.5rem;
+            list-style: none;
+        }
+        
+        .menu-section {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #9ca3af;
+            letter-spacing: 0.5px;
+            margin-top: 1rem;
+        }
+        
+        .menu-item {
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #718096;
+            font-weight: 500;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+        
+        .menu-item:hover {
+            background-color: rgba(80, 70, 229, 0.05);
+            color: var(--primary);
+        }
+        
+        .menu-item.active {
+            color: var(--primary);
+            background-color: rgba(80, 70, 229, 0.1);
+            border-left-color: var(--primary);
+        }
+        
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+            max-width: calc(100vw - 280px);
+        }
+        
+        .comment-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e5e7eb;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .comment-card:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary);
+        }
+        
+        .comment-card.pending {
+            border-left: 4px solid var(--warning);
+        }
+        
+        .comment-card.approved {
+            border-left: 4px solid var(--success);
+            opacity: 0.7;
+        }
+        
+        .comment-card.rejected {
+            border-left: 4px solid var(--danger);
+            opacity: 0.7;
+        }
+        
+        .intent-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .intent-positive { background-color: #dbeafe; color: #1e40af; }
+        .intent-question { background-color: #fef3c7; color: #92400e; }
+        .intent-support { background-color: #fee2e2; color: #991b1b; }
+        .intent-lead { background-color: #d1fae5; color: #065f46; }
+        .intent-spam { background-color: #e5e7eb; color: #374151; }
+        .intent-testimonial { background-color: #fce7f3; color: #831843; }
+        
+        .confidence-bar {
+            height: 6px;
+            background-color: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            transition: width 0.3s;
+        }
+        
+        .confidence-high { background-color: var(--success); }
+        .confidence-medium { background-color: var(--warning); }
+        .confidence-low { background-color: var(--danger); }
+        
+        .filter-chip {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .filter-chip:hover {
+            border-color: var(--primary);
+        }
+        
+        .filter-chip.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .stats-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .response-preview {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 2000;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .notification.show {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .capability-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary);
+            height: 100%;
+        }
+        
+        .capability-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .intent-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .intent-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .intent-card.expanded {
+            border-color: var(--primary);
+            background-color: rgba(80, 70, 229, 0.02);
+        }
+        
+        .intent-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .intent-card.expanded .intent-details {
+            max-height: 500px;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .workflow-step {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            margin: 1.5rem 0;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .workflow-step:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .step-number {
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            color: var(--primary);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.5em;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .example-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 1rem;
+        }
+        
+        .example-card:hover {
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+        
+        .example-card.active {
+            border-color: var(--primary);
+            background-color: rgba(80, 70, 229, 0.02);
+        }
+        
+        .example-response {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .example-card.active .example-response {
+            max-height: 300px;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .architecture-box {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .architecture-box:hover {
+            border-color: var(--primary);
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(80, 70, 229, 0.2);
+        }
+        
+        .arrow-down {
+            text-align: center;
+            font-size: 2rem;
+            color: var(--primary);
+            margin: 1rem 0;
+        }
+
+        .ai-suggestion {
+            background: linear-gradient(135deg, rgba(80, 70, 229, 0.05) 0%, rgba(0, 196, 204, 0.05) 100%);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0.5rem;
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .knowledge-section {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            margin-bottom: 1.5rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-auto {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-review {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-escalate {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body x-data="commentDashboard()">
+    <!-- Sidebar -->    <aside class="sidebar">
+        <div style="padding: 0 1.5rem 1.5rem; border-bottom: 1px solid #e2e8f0;">
+            <div style="text-align: left;">
+                <div class="prometrix-wordmark">
+                    <span class="dark-text">Pro</span>
+                    <span class="primary-text">me</span>
+                    <span class="gradient-text">t</span>
+                    <div class="analytics-bars">
+                        <div class="bar bar1"></div>
+                        <div class="bar bar2"></div>
+                        <div class="bar bar3"></div>
+                        <div class="bar bar4"></div>
+                    </div>
+                    <span class="gradient-text">rix</span>
+                </div>
+                <div class="tagline-small">AI-POWERED MARKETING</div>
+            </div>
+        </div>
+        <nav style="margin-top: 1.5rem; overflow-y: auto; max-height: calc(100vh - 100px);">
+            <ul style="list-style: none;">
+                <!-- Create Campaign -->
+                <li>
+                    <a class="menu-item" href="FACEBOOK-CREATE-CAMPAIGN.html" style="text-decoration: none;">
+                        <span>🚀</span>
+                        <span>Create Campaign</span>
+                    </a>
+                </li>
+                
+                <!-- Brand Registration -->
+                <li>
+                    <a class="menu-item" href="FACEBOOK-BRAND-REGISTRATION.html" style="text-decoration: none;">
+                        <span>🏢</span>
+                        <span>Brand Registration</span>
+                    </a>
+                </li>
+                
+                <!-- Inspire Me -->
+                <li>
+                    <a class="menu-item" href="FACEBOOK-INSPIRE-ME.html" style="text-decoration: none;">
+                        <span>💡</span>
+                        <span>Inspire Me</span>
+                    </a>
+                </li>
+                
+                <!-- Engage Boost with Submenu -->
+                <li x-data="{ engageOpen: true }">
+                    <a class="menu-item active" @click="engageOpen = !engageOpen" style="text-decoration: none; justify-content: space-between;">
+                        <span style="display: flex; align-items: center; gap: 0.75rem;">
+                            <span>💬</span>
+                            <span>Engage Boost</span>
+                        </span>
+                        <span x-text="engageOpen ? '▼' : '▶'" style="font-size: 0.7rem;"></span>
+                    </a>
+                    <ul x-show="engageOpen" x-transition style="list-style: none; background: #f8fafc; margin: 0; padding: 0;">
+                        <li>
+                            <a class="menu-item" :class="{ 'active': activeView === 'pending' }" @click="activeView = 'pending'" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>⏳</span>
+                                <span>Pending Reviews</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" :class="{ 'active': activeView === 'all' }" @click="activeView = 'all'" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>💭</span>
+                                <span>All Comments</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" :class="{ 'active': activeView === 'approved' }" @click="activeView = 'approved'" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>✅</span>
+                                <span>Approved</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" :class="{ 'active': activeView === 'rejected' }" @click="activeView = 'rejected'" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>❌</span>
+                                <span>Rejected</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" :class="{ 'active': activeView === 'knowledge' }" @click="activeView = 'knowledge'" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>📚</span>
+                                <span>Knowledge Base</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" :class="{ 'active': activeView === 'analytics' }" @click="activeView = 'analytics'" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>📊</span>
+                                <span>Analytics</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" :class="{ 'active': activeView === 'settings' }" @click="activeView = 'settings'" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>⚙️</span>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <!-- Insights -->
+                <li>
+                    <a class="menu-item" href="#" style="text-decoration: none;">
+                        <span>📈</span>
+                        <span>Insights</span>
+                    </a>
+                </li>
+                
+                <!-- Settings with Submenu -->
+                <li x-data="{ settingsOpen: false }">
+                    <a class="menu-item" href="FACEBOOK-SETTINGS.html" style="text-decoration: none; justify-content: space-between;">
+                        <span style="display: flex; align-items: center; gap: 0.75rem;">
+                            <span>⚙️</span>
+                            <span>Settings</span>
+                        </span>
+                        <span x-text="settingsOpen ? '▼' : '▶'" style="font-size: 0.7rem;"></span>
+                    </a>
+                    <ul x-show="settingsOpen" x-transition style="list-style: none; background: #f8fafc; margin: 0; padding: 0;">
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-SETTINGS.html#language" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>🌐</span>
+                                <span>Language</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-SETTINGS.html#llm" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>🤖</span>
+                                <span>LLM Settings</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-SETTINGS.html#guardrails" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>🛡️</span>
+                                <span>Guardrails</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-SETTINGS.html#integrations" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>🔗</span>
+                                <span>Integrations</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-SETTINGS.html#products" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>📦</span>
+                                <span>Products</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">
+                    <span x-show="activeView === 'pending'">⏳ Pending Review</span>
+                    <span x-show="activeView === 'all'">💬 All Comments</span>
+                    <span x-show="activeView === 'approved'">✅ Approved Comments</span>
+                    <span x-show="activeView === 'rejected'">❌ Rejected Comments</span>
+                    <span x-show="activeView === 'analytics'">📊 Analytics</span>
+                    <span x-show="activeView === 'knowledge'">📚 Knowledge Base</span>
+                    <span x-show="activeView === 'settings'">⚙️ Settings</span>
+                </h1>
+                <p class="text-gray-600 mt-1">
+                    <span x-show="activeView === 'pending'">Review AI-flagged comments requiring human approval</span>
+                    <span x-show="activeView === 'all'">View and manage all incoming comments</span>
+                    <span x-show="activeView === 'approved'">Successfully approved and posted responses</span>
+                    <span x-show="activeView === 'rejected'">Comments that were rejected or hidden</span>
+                    <span x-show="activeView === 'analytics'">Performance metrics and insights</span>
+                    <span x-show="activeView === 'knowledge'">Learn about the Smart Comment Understanding Engine</span>
+                    <span x-show="activeView === 'settings'">Configure automation and response settings</span>
+                </p>
+            </div>
+            <button x-show="activeView !== 'knowledge'" class="btn-primary" @click="simulateNewComment()">
+                <span>➕</span>
+                Simulate New Comment
+            </button>
+        </div>
+
+        <!-- Filters -->
+        <div x-show="activeView !== 'analytics' && activeView !== 'settings' && activeView !== 'knowledge'" class="mb-6">
+            <div class="flex flex-wrap gap-3">
+                <button class="filter-chip" 
+                        :class="{ 'active': filter === 'all' }"
+                        @click="filter = 'all'">
+                    All
+                </button>
+                <button class="filter-chip"
+                        :class="{ 'active': filter === 'positive' }"
+                        @click="filter = 'positive'">
+                    💬 Positive
+                </button>
+                <button class="filter-chip"
+                        :class="{ 'active': filter === 'question' }"
+                        @click="filter = 'question'">
+                    ❓ Questions
+                </button>
+                <button class="filter-chip"
+                        :class="{ 'active': filter === 'support' }"
+                        @click="filter = 'support'">
+                    🛠️ Support
+                </button>
+                <button class="filter-chip"
+                        :class="{ 'active': filter === 'lead' }"
+                        @click="filter = 'lead'">
+                    🤝 Leads
+                </button>
+                <button class="filter-chip"
+                        :class="{ 'active': filter === 'spam' }"
+                        @click="filter = 'spam'">
+                    ⚠️ Spam
+                </button>
+            </div>
+        </div>
+
+        <!-- Comments List -->
+        <div x-show="activeView !== 'analytics' && activeView !== 'settings' && activeView !== 'knowledge'">
+            <template x-for="comment in filteredComments" :key="comment.id">
+                <div class="comment-card" 
+                     :class="{
+                        'pending': comment.status === 'pending',
+                        'approved': comment.status === 'approved',
+                        'rejected': comment.status === 'rejected'
+                     }">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-blue-400 flex items-center justify-center text-white font-bold text-lg"
+                                 x-text="comment.user.charAt(0)">
+                            </div>
+                            <div>
+                                <div class="font-semibold" x-text="comment.user"></div>
+                                <div class="text-sm text-gray-500" x-text="comment.time"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="intent-badge"
+                                  :class="{
+                                    'intent-positive': comment.intent === 'positive',
+                                    'intent-question': comment.intent === 'question',
+                                    'intent-support': comment.intent === 'support',
+                                    'intent-lead': comment.intent === 'lead',
+                                    'intent-spam': comment.intent === 'spam',
+                                    'intent-testimonial': comment.intent === 'testimonial'
+                                  }">
+                                <span x-text="comment.intentIcon"></span>
+                                <span x-text="comment.intentLabel"></span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <p class="text-gray-800 mb-2" x-text="comment.text"></p>
+                        <div class="text-xs text-gray-500">
+                            Post: <span class="font-medium" x-text="comment.postTitle"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-xs text-gray-600">AI Confidence</span>
+                            <span class="text-xs font-semibold" 
+                                  :class="{
+                                    'text-green-600': comment.confidence >= 85,
+                                    'text-yellow-600': comment.confidence >= 60 && comment.confidence < 85,
+                                    'text-red-600': comment.confidence < 60
+                                  }"
+                                  x-text="comment.confidence + '%'"></span>
+                        </div>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill"
+                                 :class="{
+                                    'confidence-high': comment.confidence >= 85,
+                                    'confidence-medium': comment.confidence >= 60 && comment.confidence < 85,
+                                    'confidence-low': comment.confidence < 60
+                                 }"
+                                 :style="`width: ${comment.confidence}%`"></div>
+                        </div>
+                    </div>
+
+                    <div x-show="comment.aiResponse" class="response-preview mb-3">
+                        <div class="text-xs font-semibold text-gray-700 mb-2">AI Generated Response:</div>
+                        <p class="text-sm text-gray-800" x-text="comment.aiResponse"></p>
+                    </div>
+
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <button x-show="comment.status === 'pending'" 
+                                @click="approveComment(comment.id)"
+                                class="btn-success">
+                            ✓ Approve & Post
+                        </button>
+                        <button x-show="comment.status === 'pending'"
+                                @click="openEditModal(comment)"
+                                class="btn-primary">
+                            ✏️ Edit Response
+                        </button>
+                        <button x-show="comment.status === 'pending'"
+                                @click="rejectComment(comment.id)"
+                                class="btn-danger">
+                            ✕ Reject
+                        </button>
+                        <button x-show="comment.status === 'approved' || comment.status === 'rejected'"
+                                @click="viewDetails(comment)"
+                                class="btn-secondary">
+                                👁️ View Details
+                        </button>
+                    </div>
+                </div>
+            </template>
+
+            <div x-show="filteredComments.length === 0" class="text-center py-12">
+                <div class="text-6xl mb-4">📭</div>
+                <div class="text-xl font-semibold text-gray-600">No comments found</div>
+                <p class="text-gray-500 mt-2">Try adjusting your filters or simulate new comments</p>
+            </div>
+        </div>
+
+        <!-- Analytics View -->
+        <div x-show="activeView === 'analytics'" class="animate-fade-in">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="stats-card">
+                    <div class="text-3xl mb-2">💬</div>
+                    <div class="text-3xl font-bold text-primary" x-text="comments.length"></div>
+                    <div class="text-sm text-gray-600">Total Comments</div>
+                </div>
+                <div class="stats-card">
+                    <div class="text-3xl mb-2">✅</div>
+                    <div class="text-3xl font-bold text-green-600" x-text="approvedCount"></div>
+                    <div class="text-sm text-gray-600">Approved</div>
+                </div>
+                <div class="stats-card">
+                    <div class="text-3xl mb-2">⏳</div>
+                    <div class="text-3xl font-bold text-yellow-600" x-text="pendingCount"></div>
+                    <div class="text-sm text-gray-600">Pending Review</div>
+                </div>
+                <div class="stats-card">
+                    <div class="text-3xl mb-2">🤖</div>
+                    <div class="text-3xl font-bold text-purple-600" x-text="Math.round(automationRate) + '%'"></div>
+                    <div class="text-sm text-gray-600">Automation Rate</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="stats-card">
+                    <h3 class="font-bold text-lg mb-4">Comments by Intent</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm">💬 Positive Engagement</span>
+                            <span class="font-semibold" x-text="intentCounts.positive"></span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm">❓ Questions</span>
+                            <span class="font-semibold" x-text="intentCounts.question"></span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm">🛠️ Support</span>
+                            <span class="font-semibold" x-text="intentCounts.support"></span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm">🤝 Leads</span>
+                            <span class="font-semibold" x-text="intentCounts.lead"></span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm">⚠️ Spam</span>
+                            <span class="font-semibold" x-text="intentCounts.spam"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-card">
+                    <h3 class="font-bold text-lg mb-4">Performance Metrics</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>Average Response Time</span>
+                                <span class="font-semibold">2.3 sec</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>Approval Rate</span>
+                                <span class="font-semibold">92%</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>Lead Capture</span>
+                                <span class="font-semibold text-green-600">+34%</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>User Satisfaction</span>
+                                <span class="font-semibold">4.8/5</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Knowledge Base View -->
+        <div x-show="activeView === 'knowledge'" class="animate-fade-in">
+            <!-- Knowledge Tabs -->
+            <div class="mb-6 border-b border-gray-200">
+                <div class="flex flex-wrap gap-2">
+                    <button class="px-4 py-2 font-medium border-b-2 transition-colors"
+                            :class="knowledgeTab === 'overview' ? 'border-primary text-primary' : 'border-transparent text-gray-600 hover:text-primary'"
+                            @click="knowledgeTab = 'overview'">
+                        Overview
+                    </button>
+                    <button class="px-4 py-2 font-medium border-b-2 transition-colors"
+                            :class="knowledgeTab === 'capabilities' ? 'border-primary text-primary' : 'border-transparent text-gray-600 hover:text-primary'"
+                            @click="knowledgeTab = 'capabilities'">
+                        Capabilities
+                    </button>
+                    <button class="px-4 py-2 font-medium border-b-2 transition-colors"
+                            :class="knowledgeTab === 'intents' ? 'border-primary text-primary' : 'border-transparent text-gray-600 hover:text-primary'"
+                            @click="knowledgeTab = 'intents'">
+                        Intent Categories
+                    </button>
+                    <button class="px-4 py-2 font-medium border-b-2 transition-colors"
+                            :class="knowledgeTab === 'workflow' ? 'border-primary text-primary' : 'border-transparent text-gray-600 hover:text-primary'"
+                            @click="knowledgeTab = 'workflow'">
+                        Workflow
+                    </button>
+                    <button class="px-4 py-2 font-medium border-b-2 transition-colors"
+                            :class="knowledgeTab === 'examples' ? 'border-primary text-primary' : 'border-transparent text-gray-600 hover:text-primary'"
+                            @click="knowledgeTab = 'examples'">
+                        Examples
+                    </button>
+                    <button class="px-4 py-2 font-medium border-b-2 transition-colors"
+                            :class="knowledgeTab === 'architecture' ? 'border-primary text-primary' : 'border-transparent text-gray-600 hover:text-primary'"
+                            @click="knowledgeTab = 'architecture'">
+                        Architecture
+                    </button>
+                    <button class="px-4 py-2 font-medium border-b-2 transition-colors"
+                            :class="knowledgeTab === 'impact' ? 'border-primary text-primary' : 'border-transparent text-gray-600 hover:text-primary'"
+                            @click="knowledgeTab = 'impact'">
+                        Impact
+                    </button>
+                </div>
+            </div>
+
+            <!-- Overview Tab -->
+            <div x-show="knowledgeTab === 'overview'">
+                <div class="knowledge-section">
+                    <h2 class="text-2xl font-bold mb-6">📋 Feature Overview</h2>
+                    
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold mb-3">Module of: Facebook SMM Agent</h3>
+                        <p class="text-gray-700 leading-relaxed">
+                            Automatically read, understand, classify, and respond to comments on Facebook posts to 
+                            <strong class="text-primary">boost engagement, improve brand presence, and handle FAQs or leads autonomously</strong> 
+                            — with human-in-the-loop fallback for edge cases.
+                        </p>
+                    </div>
+                    
+                    <div class="ai-suggestion">
+                        <h4 class="font-semibold text-purple-800 mb-2 flex items-center">
+                            <span class="mr-2">💡</span>
+                            Why This Matters
+                        </h4>
+                        <p class="text-purple-700">
+                            Comment engagement is one of the <strong>strongest ranking and growth signals</strong> in the Facebook algorithm. 
+                            This feature transforms your comment section from a reactive space into a proactive engagement and conversion engine.
+                        </p>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-3 gap-6 mt-6">
+                        <div class="stats-card hover:shadow-lg transition-shadow">
+                            <div class="text-4xl mb-2">🚀</div>
+                            <div class="font-semibold text-gray-900">Boost Engagement</div>
+                            <p class="text-sm text-gray-600 mt-2">More comments = more algorithmic reach</p>
+                        </div>
+                        <div class="stats-card hover:shadow-lg transition-shadow">
+                            <div class="text-4xl mb-2">⚡</div>
+                            <div class="font-semibold text-gray-900">70-80% Automation</div>
+                            <p class="text-sm text-gray-600 mt-2">Save hours weekly on response management</p>
+                        </div>
+                        <div class="stats-card hover:shadow-lg transition-shadow">
+                            <div class="text-4xl mb-2">💼</div>
+                            <div class="font-semibold text-gray-900">Lead Conversion</div>
+                            <p class="text-sm text-gray-600 mt-2">Turn curiosity into action automatically</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Capabilities Tab -->
+            <div x-show="knowledgeTab === 'capabilities'">
+                <div class="knowledge-section">
+                    <h2 class="text-2xl font-bold mb-6">🧠 Core Capabilities</h2>
+                    
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <template x-for="(capability, index) in capabilities" :key="index">
+                            <div class="capability-card">
+                                <div class="flex items-center mb-3">
+                                    <span class="text-3xl mr-3" x-text="capability.icon"></span>
+                                    <h3 class="font-bold text-lg" x-text="capability.title"></h3>
+                                </div>
+                                <p class="text-gray-700 text-sm" x-text="capability.description"></p>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Intent Categories Tab -->
+            <div x-show="knowledgeTab === 'intents'">
+                <div class="knowledge-section">
+                    <h2 class="text-2xl font-bold mb-6">🧪 Comment Intent Categories</h2>
+                    <p class="text-gray-600 mb-6">Click on any intent type to see detailed information and examples</p>
+                    
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <template x-for="(intent, index) in intentCategories" :key="index">
+                            <div class="intent-card" 
+                                 :class="{ 'expanded': selectedIntent === index }"
+                                 @click="toggleIntent(index)">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-start flex-1">
+                                        <span class="text-3xl mr-3" x-text="intent.icon"></span>
+                                        <div class="flex-1">
+                                            <h3 class="font-bold text-lg mb-1" x-text="intent.type"></h3>
+                                            <p class="text-sm text-gray-600" x-text="intent.example"></p>
+                                        </div>
+                                    </div>
+                                    <span class="status-badge" 
+                                          :class="{
+                                            'status-auto': intent.action.includes('Auto'),
+                                            'status-review': intent.action.includes('Escalate') || intent.action.includes('Review'),
+                                            'status-escalate': intent.action.includes('Hide')
+                                          }"
+                                          x-text="intent.action"></span>
+                                </div>
+                                
+                                <div class="intent-details">
+                                    <h4 class="font-semibold mb-2 text-purple-700">Action Details:</h4>
+                                    <p class="text-sm text-gray-700 mb-3" x-text="intent.actionDetails"></p>
+                                    
+                                    <h4 class="font-semibold mb-2 text-purple-700">More Examples:</h4>
+                                    <ul class="text-sm text-gray-700 space-y-1">
+                                        <template x-for="ex in intent.moreExamples" :key="ex">
+                                            <li class="flex items-start">
+                                                <span class="text-primary mr-2">•</span>
+                                                <span x-text="ex"></span>
+                                            </li>
+                                        </template>
+                                    </ul>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workflow Tab -->
+            <div x-show="knowledgeTab === 'workflow'">
+                <div class="knowledge-section">
+                    <h2 class="text-2xl font-bold mb-6">🧰 Processing Workflow</h2>
+                    <p class="text-gray-600 mb-6">6-step automated process from comment detection to response posting</p>
+                    
+                    <div style="padding-left: 30px;">
+                        <template x-for="(step, index) in workflowSteps" :key="index">
+                            <div class="workflow-step" @click="selectedStep = selectedStep === index ? null : index">
+                                <div class="step-number" x-text="index + 1"></div>
+                                <h3 class="text-xl font-bold mb-2" x-text="step.title"></h3>
+                                <p x-text="step.description"></p>
+                                
+                                <div x-show="selectedStep === index" class="mt-4 pt-4 border-t border-white border-opacity-20">
+                                    <h4 class="font-semibold mb-2">Implementation Details:</h4>
+                                    <ul class="text-sm space-y-1">
+                                        <template x-for="detail in step.details" :key="detail">
+                                            <li class="flex items-start">
+                                                <span class="mr-2">→</span>
+                                                <span x-text="detail"></span>
+                                            </li>
+                                        </template>
+                                    </ul>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Examples Tab -->
+            <div x-show="knowledgeTab === 'examples'">
+                <div class="knowledge-section">
+                    <h2 class="text-2xl font-bold mb-6">🪄 Example Scenarios</h2>
+                    <p class="text-gray-600 mb-6">Click on any example to see the automated response strategy</p>
+                    
+                    <div class="space-y-4">
+                        <template x-for="(example, index) in knowledgeExamples" :key="index">
+                            <div class="example-card" 
+                                 :class="{ 'active': selectedExample === index }"
+                                 @click="toggleExample(index)">
+                                <div class="flex items-start justify-between mb-2">
+                                    <div class="flex-1">
+                                        <div class="flex items-center mb-2">
+                                            <span class="text-2xl mr-2" x-text="example.icon"></span>
+                                            <h3 class="font-semibold text-lg" x-text="example.title"></h3>
+                                        </div>
+                                        <div class="bg-gray-50 p-3 rounded-lg mb-2">
+                                            <p class="text-sm italic text-gray-700" x-text="example.comment"></p>
+                                        </div>
+                                    </div>
+                                    <span class="status-badge ml-4" 
+                                          :class="{
+                                            'status-auto': example.status === 'auto',
+                                            'status-review': example.status === 'review'
+                                          }"
+                                          x-text="example.status === 'auto' ? '✅ Auto-reply' : '⚠️ Escalated'"></span>
+                                </div>
+                                
+                                <div class="example-response">
+                                    <div class="bg-green-50 p-4 rounded-lg">
+                                        <h4 class="font-semibold text-green-800 mb-2">Response Strategy:</h4>
+                                        <p class="text-sm text-green-700 mb-3" x-text="example.response"></p>
+                                        
+                                        <div x-show="example.additionalAction" class="mt-3 pt-3 border-t border-green-200">
+                                            <p class="text-sm text-green-600">
+                                                <strong>Additional Action:</strong> 
+                                                <span x-text="example.additionalAction"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Architecture Tab -->
+            <div x-show="knowledgeTab === 'architecture'">
+                <div class="knowledge-section">
+                    <h2 class="text-2xl font-bold mb-6">🧱 Implementation Architecture</h2>
+                    <p class="text-gray-600 mb-8">High-level system architecture for the comment engine</p>
+                    
+                    <div class="space-y-4">
+                        <template x-for="(layer, index) in architectureLayers" :key="index">
+                            <div>
+                                <div class="architecture-box">
+                                    <div class="flex items-center justify-center mb-2">
+                                        <span class="text-3xl mr-3" x-text="layer.icon"></span>
+                                        <h3 class="font-bold text-lg" x-text="layer.name"></h3>
+                                    </div>
+                                    <p class="text-sm text-gray-600" x-text="layer.description"></p>
+                                </div>
+                                <div x-show="index < architectureLayers.length - 1" class="arrow-down">↓</div>
+                            </div>
+                        </template>
+                    </div>
+                    
+                    <div class="mt-8 ai-suggestion">
+                        <h4 class="font-semibold text-purple-800 mb-3">🔧 Technical Stack Recommendations</h4>
+                        <div class="grid md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <p class="font-medium text-purple-700 mb-2">Backend:</p>
+                                <ul class="space-y-1 text-gray-700">
+                                    <li>• Meta Graph API for webhook subscriptions</li>
+                                    <li>• CrewAI for agent orchestration</li>
+                                    <li>• LangChain for LLM integration</li>
+                                    <li>• Redis for caching and queues</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <p class="font-medium text-purple-700 mb-2">Frontend:</p>
+                                <ul class="space-y-1 text-gray-700">
+                                    <li>• React dashboard for human review</li>
+                                    <li>• Real-time WebSocket updates</li>
+                                    <li>• Analytics visualization</li>
+                                    <li>• Feedback loop interface</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Impact Tab -->
+            <div x-show="knowledgeTab === 'impact'">
+                <div class="knowledge-section">
+                    <h2 class="text-2xl font-bold mb-6">🧭 Strategic Impact</h2>
+                    
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <template x-for="metric in impactMetrics" :key="metric.title">
+                            <div class="stats-card hover:shadow-lg transition-shadow">
+                                <div class="text-4xl mb-3" x-text="metric.icon"></div>
+                                <h3 class="font-bold text-lg mb-2" x-text="metric.title"></h3>
+                                <p class="text-sm text-gray-600" x-text="metric.description"></p>
+                                <div class="mt-3 text-2xl font-bold text-primary" x-text="metric.value"></div>
+                            </div>
+                        </template>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="ai-suggestion">
+                            <h4 class="font-semibold text-purple-800 mb-3">📈 Business Benefits</h4>
+                            <ul class="space-y-2 text-sm text-purple-700">
+                                <li class="flex items-start">
+                                    <span class="text-green-600 mr-2">✓</span>
+                                    <span>Increased algorithmic reach through higher engagement rates</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-green-600 mr-2">✓</span>
+                                    <span>Improved customer satisfaction with instant, 24/7 responses</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-green-600 mr-2">✓</span>
+                                    <span>Better lead qualification and faster sales cycles</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-green-600 mr-2">✓</span>
+                                    <span>Reduced team workload, allowing focus on complex cases</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="ai-suggestion">
+                            <h4 class="font-semibold text-purple-800 mb-3">🎯 Success Metrics</h4>
+                            <ul class="space-y-2 text-sm text-purple-700">
+                                <li class="flex items-start">
+                                    <span class="text-blue-600 mr-2">→</span>
+                                    <span>Response time reduced from hours to seconds</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-blue-600 mr-2">→</span>
+                                    <span>Comment engagement rate increased by 40-60%</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-blue-600 mr-2">→</span>
+                                    <span>Lead capture rate improved by 30%</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-blue-600 mr-2">→</span>
+                                    <span>Team efficiency gains of 70-80%</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 p-6 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg">
+                        <h3 class="text-xl font-bold mb-4 text-center">🚀 Ready to Implement?</h3>
+                        <div class="flex justify-center gap-4">
+                            <button class="btn-primary">📄 Draft FRD Document</button>
+                            <button class="btn-secondary">🔧 Design Agent Logic (CrewAI)</button>
+                        </div>
+                        <p class="text-center text-sm text-gray-600 mt-4">
+                            Next recommended step: Design the Prompt Flow + Agent Logic for CrewAI implementation
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings View -->
+        <div x-show="activeView === 'settings'" class="animate-fade-in">
+            <div class="stats-card max-w-2xl">
+                <h3 class="font-bold text-lg mb-4">Automation Settings</h3>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" x-model="settings.autoApprove" class="mr-3 w-5 h-5">
+                            <div>
+                                <div class="font-medium">Auto-approve high confidence responses</div>
+                                <div class="text-sm text-gray-600">Automatically post responses with ≥85% confidence</div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" x-model="settings.autoHideSpam" class="mr-3 w-5 h-5">
+                            <div>
+                                <div class="font-medium">Auto-hide spam comments</div>
+                                <div class="text-sm text-gray-600">Automatically hide comments detected as spam</div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" x-model="settings.escalateSensitive" class="mr-3 w-5 h-5">
+                            <div>
+                                <div class="font-medium">Escalate sensitive topics</div>
+                                <div class="text-sm text-gray-600">Flag complaints, refunds, and legal issues for human review</div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" x-model="settings.trackLeads" class="mr-3 w-5 h-5">
+                            <div>
+                                <div class="font-medium">Automatic lead tracking</div>
+                                <div class="text-sm text-gray-600">Send sales leads to CRM automatically</div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="pt-4 border-t">
+                        <label class="block font-medium mb-2">Confidence Threshold</label>
+                        <input type="range" min="50" max="100" x-model="settings.confidenceThreshold" class="w-full">
+                        <div class="text-sm text-gray-600 mt-1">
+                            Current: <span class="font-semibold" x-text="settings.confidenceThreshold + '%'"></span>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary mt-4" @click="saveSettings()">
+                        💾 Save Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Edit Modal -->
+    <div class="modal" :class="{ 'active': showEditModal }">
+        <div class="modal-content">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-2xl font-bold">Edit Response</h2>
+                <button @click="showEditModal = false" class="text-gray-500 hover:text-gray-700 text-2xl">×</button>
+            </div>
+
+            <div x-show="editingComment" class="space-y-4">
+                <div>
+                    <label class="block font-medium mb-2">Original Comment</label>
+                    <div class="bg-gray-50 p-3 rounded-lg text-sm" x-text="editingComment?.text"></div>
+                </div>
+
+                <div>
+                    <label class="block font-medium mb-2">Your Response</label>
+                    <textarea x-model="editedResponse" 
+                              class="w-full p-3 border border-gray-300 rounded-lg"
+                              rows="4"></textarea>
+                </div>
+
+                <div class="flex gap-3">
+                    <button @click="saveEditedResponse()" class="btn-success">
+                        ✓ Save & Approve
+                    </button>
+                    <button @click="showEditModal = false" class="btn-secondary">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" :class="{ 'show': notification.show }">
+        <div class="flex items-center gap-3">
+            <span class="text-2xl" x-text="notification.icon"></span>
+            <div>
+                <div class="font-semibold" x-text="notification.title"></div>
+                <div class="text-sm text-gray-600" x-text="notification.message"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function commentDashboard() {
+            return {
+                activeView: 'pending',
+                filter: 'all',
+                knowledgeTab: 'overview',
+                showEditModal: false,
+                editingComment: null,
+                editedResponse: '',
+                selectedIntent: null,
+                selectedExample: null,
+                selectedStep: null,
+                notification: {
+                    show: false,
+                    icon: '',
+                    title: '',
+                    message: ''
+                },
+                settings: {
+                    autoApprove: true,
+                    autoHideSpam: true,
+                    escalateSensitive: true,
+                    trackLeads: true,
+                    confidenceThreshold: 85
+                },
+                
+                capabilities: [
+                    {
+                        icon: '📥',
+                        title: 'Comment Ingestion',
+                        description: 'Continuously monitors comments on all published posts, ads, and page posts via Meta Graph API.'
+                    },
+                    {
+                        icon: '🎯',
+                        title: 'Intent Classification',
+                        description: 'Uses LLM-based NLP to understand the intent of each comment (question, compliment, complaint, troll, sales query).'
+                    },
+                    {
+                        icon: '⭐',
+                        title: 'Priority Scoring',
+                        description: 'Scores each comment based on urgency, importance, and engagement potential.'
+                    },
+                    {
+                        icon: '✍️',
+                        title: 'Auto-Response Generation',
+                        description: 'Generates personalized replies using brand tone and context, referencing the post topic and user intent.'
+                    },
+                    {
+                        icon: '👥',
+                        title: 'Human-in-the-Loop',
+                        description: 'Flags sensitive or complex queries for human review before posting.'
+                    },
+                    {
+                        icon: '🚀',
+                        title: 'Engagement Boosting',
+                        description: 'Suggests follow-up questions and includes CTAs to maximize engagement and click-through.'
+                    }
+                ],
+                
+                intentCategories: [
+                    {
+                        icon: '💬',
+                        type: 'Positive Engagement',
+                        example: 'Example: "Love this!", "Great work!", "This looks amazing!"',
+                        action: 'Auto-reply',
+                        actionDetails: 'Automatically respond with a warm, on-brand thank you and optional engagement follow-up question to encourage further conversation.',
+                        moreExamples: [
+                            'This is exactly what I needed!',
+                            'Your content always inspires me',
+                            'Best product ever! 😍'
+                        ]
+                    },
+                    {
+                        icon: '❓',
+                        type: 'Product/Service Question',
+                        example: 'Example: "How much does this cost?", "Where can I buy it?"',
+                        action: 'Auto-answer',
+                        actionDetails: 'Fetch information from knowledge base (pricing, availability, shipping) and provide accurate answer, or escalate if information is unclear.',
+                        moreExamples: [
+                            'Do you ship internationally?',
+                            'What sizes are available?',
+                            'Is this compatible with X?'
+                        ]
+                    },
+                    {
+                        icon: '🛠️',
+                        type: 'Support / Complaint',
+                        example: 'Example: "Mine didn\'t arrive", "The link isn\'t working"',
+                        action: 'Escalate',
+                        actionDetails: 'Automatically apologize and provide initial troubleshooting steps. Escalate to human support team if issue involves orders, refunds, or requires account access.',
+                        moreExamples: [
+                            'I received the wrong item',
+                            'How do I return this?',
+                            'My order is missing'
+                        ]
+                    },
+                    {
+                        icon: '🤝',
+                        type: 'Lead / Sales Intent',
+                        example: 'Example: "Can we partner?", "Do you offer B2B pricing?"',
+                        action: 'Auto + Flag',
+                        actionDetails: 'Acknowledge interest and provide CTA to DM, email, or sales page. Automatically flag lead in CRM for sales team follow-up.',
+                        moreExamples: [
+                            'Interested in wholesale options',
+                            'Can I schedule a demo?',
+                            'Looking for enterprise pricing'
+                        ]
+                    },
+                    {
+                        icon: '🧠',
+                        type: 'General Curiosity',
+                        example: 'Example: "Does this work for beginners?"',
+                        action: 'Auto-reply',
+                        actionDetails: 'Provide relevant information from knowledge base and invite deeper conversation with follow-up questions.',
+                        moreExamples: [
+                            'What\'s the difference between plans?',
+                            'How does this compare to alternatives?',
+                            'Can you explain how it works?'
+                        ]
+                    },
+                    {
+                        icon: '⚠️',
+                        type: 'Troll / Spam / Irrelevant',
+                        example: 'Example: "This is fake", "DM me for crypto"',
+                        action: 'Hide/Report',
+                        actionDetails: 'Automatically ignore, hide, or report based on confidence score. No engagement to avoid feeding trolls or giving spam visibility.',
+                        moreExamples: [
+                            'Obvious spam links',
+                            'Abusive language',
+                            'Off-topic promotional content'
+                        ]
+                    },
+                    {
+                        icon: '📢',
+                        type: 'UGC / Testimonials',
+                        example: 'Example: "I\'ve used this and it works great!"',
+                        action: 'Auto-reply',
+                        actionDetails: 'Express appreciation and optionally request permission to feature as testimonial. Engage positively to encourage more UGC.',
+                        moreExamples: [
+                            'Been using this for months, amazing!',
+                            'Recommended to all my friends',
+                            'This changed my life!'
+                        ]
+                    }
+                ],
+
+                workflowSteps: [
+                    {
+                        title: 'Comment Ingestion',
+                        description: 'Listen to all comments on posts (organic + boosted) and enrich with metadata: post context, user name, timestamp, engagement level.',
+                        details: [
+                            'Subscribe to Facebook Graph API webhooks for comment events',
+                            'Store raw comment data with metadata enrichment',
+                            'Track comment source (organic post, ad, shared post)',
+                            'Capture user profile information and engagement history'
+                        ]
+                    },
+                    {
+                        title: 'NLP Understanding & Intent Mapping',
+                        description: 'LLM parses the comment and assigns intent type, confidence score, urgency level, and recommended action.',
+                        details: [
+                            'Use GPT-4 or Claude for natural language understanding',
+                            'Classify into 7 main intent categories',
+                            'Generate confidence score (0-100%)',
+                            'Assess urgency level (low, medium, high)',
+                            'Extract key entities (product names, issues, sentiment)'
+                        ]
+                    },
+                    {
+                        title: 'Knowledge Retrieval (Optional)',
+                        description: 'If factual question detected, fetch data from product database, CMS, or FAQ knowledge base.',
+                        details: [
+                            'Query product database for pricing/availability',
+                            'Search FAQ knowledge base for relevant answers',
+                            'Retrieve brand guidelines and approved responses',
+                            'Access CRM for customer-specific information'
+                        ]
+                    },
+                    {
+                        title: 'Draft Response Generation',
+                        description: 'LLM drafts personalized, context-aware response using brand tone guidelines, post content, and CTA templates.',
+                        details: [
+                            'Apply brand voice and tone guidelines',
+                            'Reference original post content for context',
+                            'Personalize with user\'s name and comment specifics',
+                            'Include appropriate CTAs based on intent',
+                            'Ensure response length is optimal for engagement'
+                        ]
+                    },
+                    {
+                        title: 'Decision Layer',
+                        description: 'Auto-post if confidence ≥85% & non-sensitive, or escalate to human review queue.',
+                        details: [
+                            'Confidence ≥85% + non-sensitive = auto-post immediately',
+                            'Confidence 60-85% = draft saved for human review',
+                            'Confidence <60% or sensitive topic = escalate to human',
+                            'Track decision rationale for learning',
+                            'Apply rate limiting to prevent spam'
+                        ]
+                    },
+                    {
+                        title: 'Feedback Loop',
+                        description: 'Human edits are fed back into the system to fine-tune response models over time.',
+                        details: [
+                            'Track human edits and approvals',
+                            'Measure response effectiveness (likes, replies, conversions)',
+                            'Fine-tune models based on feedback',
+                            'Update knowledge base with new patterns',
+                            'Continuous improvement through A/B testing'
+                        ]
+                    }
+                ],
+
+                knowledgeExamples: [
+                    {
+                        icon: '💰',
+                        title: 'Pricing Question',
+                        comment: 'How much is this course?',
+                        status: 'auto',
+                        response: 'Thanks for asking, [Name]! The full course is ₹4,999 and you can get started here 👉 [link]. Want me to share a sneak peek of the curriculum?',
+                        additionalAction: 'Engagement follow-up question included to boost conversation'
+                    },
+                    {
+                        icon: '📦',
+                        title: 'Order Issue',
+                        comment: 'I ordered last week and still haven\'t received it.',
+                        status: 'review',
+                        response: 'This is flagged for human review as it involves a sensitive support case requiring order verification and resolution.',
+                        additionalAction: 'Ticket created in support system with priority flag'
+                    },
+                    {
+                        icon: '❤️',
+                        title: 'Positive Feedback',
+                        comment: 'Love your content ❤️',
+                        status: 'auto',
+                        response: 'Thank you so much, [Name]! ❤️ What topic would you like us to post about next?',
+                        additionalAction: 'Follow-up question to encourage continued engagement'
+                    },
+                    {
+                        icon: '🤝',
+                        title: 'Partnership Inquiry',
+                        comment: 'Can we partner with your brand?',
+                        status: 'auto',
+                        response: 'Thanks for your interest in partnering, [Name]! We\'d love to explore this. Please DM us or email partnerships@brand.com with more details. 🤝',
+                        additionalAction: 'Lead automatically flagged in CRM for sales team'
+                    }
+                ],
+
+                architectureLayers: [
+                    {
+                        icon: '📡',
+                        name: 'Comment Listener',
+                        description: 'Subscribes to Facebook Graph API comment webhooks for real-time detection'
+                    },
+                    {
+                        icon: '🧠',
+                        name: 'NLP Processor',
+                        description: 'Classifies intent, extracts entities, and scores urgency using LLM'
+                    },
+                    {
+                        icon: '📚',
+                        name: 'Knowledge Layer',
+                        description: 'Retrieves factual information from databases, CMS, and knowledge bases'
+                    },
+                    {
+                        icon: '✨',
+                        name: 'Response Generator (LLM)',
+                        description: 'Crafts personalized replies based on brand tone, intent, and context'
+                    },
+                    {
+                        icon: '⚖️',
+                        name: 'Decision Layer',
+                        description: 'Determines whether to auto-post or escalate to human review'
+                    },
+                    {
+                        icon: '📊',
+                        name: 'Engagement Analytics',
+                        description: 'Measures response performance and feeds learning back to models'
+                    },
+                    {
+                        icon: '👤',
+                        name: 'Human Review Dashboard',
+                        description: 'Interface for handling flagged cases and providing feedback'
+                    }
+                ],
+
+                impactMetrics: [
+                    {
+                        icon: '🚀',
+                        title: 'Boost Engagement',
+                        description: 'More comments mean more algorithmic reach',
+                        value: '+40-60%'
+                    },
+                    {
+                        icon: '⚡',
+                        title: 'Team Efficiency',
+                        description: 'Automate routine responses',
+                        value: '70-80%'
+                    },
+                    {
+                        icon: '🧠',
+                        title: 'Brand Trust',
+                        description: 'Fast, intelligent replies build authority',
+                        value: '24/7'
+                    },
+                    {
+                        icon: '💼',
+                        title: 'Lead Conversion',
+                        description: 'Turn curiosity into action',
+                        value: '+30%'
+                    }
+                ],
+                
+                comments: [
+                    {
+                        id: 1,
+                        user: 'Sarah Johnson',
+                        time: '2 minutes ago',
+                        text: 'This looks amazing! How much does it cost?',
+                        postTitle: 'New Product Launch 2024',
+                        intent: 'question',
+                        intentIcon: '❓',
+                        intentLabel: 'Question',
+                        confidence: 92,
+                        status: 'pending',
+                        aiResponse: 'Thanks for asking, Sarah! Our product is priced at $99 with a special launch discount. You can check out all the details here: [link]. Would you like to know more about the features? 😊'
+                    },
+                    {
+                        id: 2,
+                        user: 'Mike Chen',
+                        time: '5 minutes ago',
+                        text: 'I ordered last week and still haven\'t received my package. Order #12345',
+                        postTitle: 'Summer Sale Event',
+                        intent: 'support',
+                        intentIcon: '🛠️',
+                        intentLabel: 'Support',
+                        confidence: 68,
+                        status: 'pending',
+                        aiResponse: 'I apologize for the delay, Mike. Let me look into order #12345 for you. Our support team will reach out within the next hour. Thank you for your patience! 🙏'
+                    },
+                    {
+                        id: 3,
+                        user: 'Emma Williams',
+                        time: '12 minutes ago',
+                        text: 'Love your content! You guys are doing great work ❤️',
+                        postTitle: 'Behind the Scenes: Our Team',
+                        intent: 'positive',
+                        intentIcon: '💬',
+                        intentLabel: 'Positive',
+                        confidence: 95,
+                        status: 'approved',
+                        aiResponse: 'Thank you so much, Emma! ❤️ Your support means the world to us. What type of content would you like to see more of?'
+                    },
+                    {
+                        id: 4,
+                        user: 'David Brown',
+                        time: '25 minutes ago',
+                        text: 'Interested in B2B partnership opportunities. Can we discuss wholesale pricing?',
+                        postTitle: 'Expanding Our Reach',
+                        intent: 'lead',
+                        intentIcon: '🤝',
+                        intentLabel: 'Lead',
+                        confidence: 88,
+                        status: 'pending',
+                        aiResponse: 'Great to hear from you, David! We\'d love to explore partnership opportunities. Please reach out to partnerships@company.com or DM us to schedule a call. Looking forward to connecting! 🤝'
+                    },
+                    {
+                        id: 5,
+                        user: 'Spam Bot 2000',
+                        time: '1 hour ago',
+                        text: 'Click here for FREE Bitcoin! Limited time offer!!! 🤑💰',
+                        postTitle: 'Weekly Tips & Tricks',
+                        intent: 'spam',
+                        intentIcon: '⚠️',
+                        intentLabel: 'Spam',
+                        confidence: 99,
+                        status: 'rejected',
+                        aiResponse: null
+                    },
+                    {
+                        id: 6,
+                        user: 'Lisa Martinez',
+                        time: '2 hours ago',
+                        text: 'Been using your product for 3 months now and it\'s incredible! Highly recommend to everyone! 🌟',
+                        postTitle: 'Customer Success Stories',
+                        intent: 'testimonial',
+                        intentIcon: '📢',
+                        intentLabel: 'Testimonial',
+                        confidence: 96,
+                        status: 'approved',
+                        aiResponse: 'Thank you so much for the amazing feedback, Lisa! 🌟 We\'re thrilled it\'s working well for you. Would you mind if we featured your testimonial on our page?'
+                    },
+                    {
+                        id: 7,
+                        user: 'James Wilson',
+                        time: '3 hours ago',
+                        text: 'Does this ship to Canada? And what\'s the estimated delivery time?',
+                        postTitle: 'Flash Sale - 24 Hours Only',
+                        intent: 'question',
+                        intentIcon: '❓',
+                        intentLabel: 'Question',
+                        confidence: 91,
+                        status: 'approved',
+                        aiResponse: 'Yes, James! We ship to Canada 🇨🇦 Delivery typically takes 5-7 business days. Free shipping on orders over $50! Any other questions? 😊'
+                    }
+                ],
+
+                get filteredComments() {
+                    let filtered = this.comments;
+                    
+                    if (this.activeView === 'pending') {
+                        filtered = filtered.filter(c => c.status === 'pending');
+                    } else if (this.activeView === 'approved') {
+                        filtered = filtered.filter(c => c.status === 'approved');
+                    } else if (this.activeView === 'rejected') {
+                        filtered = filtered.filter(c => c.status === 'rejected');
+                    }
+                    
+                    if (this.filter !== 'all') {
+                        filtered = filtered.filter(c => c.intent === this.filter);
+                    }
+                    
+                    return filtered;
+                },
+
+                get pendingCount() {
+                    return this.comments.filter(c => c.status === 'pending').length;
+                },
+
+                get approvedCount() {
+                    return this.comments.filter(c => c.status === 'approved').length;
+                },
+
+                get rejectedCount() {
+                    return this.comments.filter(c => c.status === 'rejected').length;
+                },
+
+                get automationRate() {
+                    const total = this.comments.length;
+                    const autoApproved = this.comments.filter(c => c.confidence >= 85).length;
+                    return (autoApproved / total) * 100;
+                },
+
+                get intentCounts() {
+                    return {
+                        positive: this.comments.filter(c => c.intent === 'positive').length,
+                        question: this.comments.filter(c => c.intent === 'question').length,
+                        support: this.comments.filter(c => c.intent === 'support').length,
+                        lead: this.comments.filter(c => c.intent === 'lead').length,
+                        spam: this.comments.filter(c => c.intent === 'spam').length,
+                        testimonial: this.comments.filter(c => c.intent === 'testimonial').length
+                    };
+                },
+
+                approveComment(id) {
+                    const comment = this.comments.find(c => c.id === id);
+                    if (comment) {
+                        comment.status = 'approved';
+                        this.showNotification('✅', 'Comment Approved', 'Response posted successfully!');
+                    }
+                },
+
+                rejectComment(id) {
+                    const comment = this.comments.find(c => c.id === id);
+                    if (comment) {
+                        comment.status = 'rejected';
+                        this.showNotification('❌', 'Comment Rejected', 'Comment hidden and not responded to.');
+                    }
+                },
+
+                openEditModal(comment) {
+                    this.editingComment = comment;
+                    this.editedResponse = comment.aiResponse;
+                    this.showEditModal = true;
+                },
+
+                saveEditedResponse() {
+                    if (this.editingComment) {
+                        this.editingComment.aiResponse = this.editedResponse;
+                        this.editingComment.status = 'approved';
+                        this.showEditModal = false;
+                        this.showNotification('✅', 'Response Updated', 'Edited response posted successfully!');
+                    }
+                },
+
+                viewDetails(comment) {
+                    const details = `
+Comment Details
+━━━━━━━━━━━━━━━
+
+👤 User: ${comment.user}
+🕐 Time: ${comment.time}
+📝 Post: ${comment.postTitle}
+
+💬 Comment:
+${comment.text}
+
+🎯 Intent: ${comment.intentLabel}
+📊 Confidence: ${comment.confidence}%
+✓ Status: ${comment.status.toUpperCase()}
+
+${comment.aiResponse ? '🤖 AI Response:\n' + comment.aiResponse : '❌ No response generated'}
+                    `.trim();
+                    
+                    alert(details);
+                },
+
+                simulateNewComment() {
+                    const templates = [
+                        {
+                            user: 'Alex Thompson',
+                            text: 'Is this available in different colors?',
+                            intent: 'question',
+                            intentIcon: '❓',
+                            intentLabel: 'Question',
+                            confidence: 89,
+                            aiResponse: 'Great question, Alex! Yes, we offer this in 5 colors: Black, White, Blue, Red, and Green. Which color are you interested in? 🎨'
+                        },
+                        {
+                            user: 'Rachel Green',
+                            text: 'Your customer service is excellent! Thank you for the quick help!',
+                            intent: 'positive',
+                            intentIcon: '💬',
+                            intentLabel: 'Positive',
+                            confidence: 97,
+                            aiResponse: 'Thank you so much, Rachel! We\'re always here to help. Your satisfaction is our priority! 😊'
+                        },
+                        {
+                            user: 'Tom Anderson',
+                            text: 'Looking for enterprise solutions for my company. Who should I contact?',
+                            intent: 'lead',
+                            intentIcon: '🤝',
+                            intentLabel: 'Lead',
+                            confidence: 93,
+                            aiResponse: 'Perfect timing, Tom! Please reach out to enterprise@company.com or call us at 1-800-XXX-XXXX. We\'d love to discuss how we can help your business! 💼'
+                        }
+                    ];
+
+                    const newComment = templates[Math.floor(Math.random() * templates.length)];
+                    const maxId = Math.max(...this.comments.map(c => c.id));
+                    
+                    this.comments.unshift({
+                        id: maxId + 1,
+                        ...newComment,
+                        time: 'Just now',
+                        postTitle: 'Recent Post',
+                        status: 'pending'
+                    });
+
+                    this.showNotification('💬', 'New Comment', `Comment from ${newComment.user} needs review`);
+                },
+
+                saveSettings() {
+                    this.showNotification('💾', 'Settings Saved', 'Your automation preferences have been updated');
+                },
+
+                showNotification(icon, title, message) {
+                    this.notification = { show: true, icon, title, message };
+                    setTimeout(() => {
+                        this.notification.show = false;
+                    }, 3000);
+                },
+
+                toggleIntent(index) {
+                    this.selectedIntent = this.selectedIntent === index ? null : index;
+                },
+                
+                toggleExample(index) {
+                    this.selectedExample = this.selectedExample === index ? null : index;
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,2764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisualClone AI - Create Brand-Aligned Creatives</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #5046e5;
+            --primary-dark: #4039c0;
+            --secondary: #00c4cc;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-main: #f7fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1a202c;
+            --text-secondary: #718096;
+            --border: #e2e8f0;
+            --border-focus: #5046e5;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 280px;
+            right: 0;
+            height: 70px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 100;
+        }
+
+        .header-left h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .creative-type-badge {
+            display: inline-block;
+            margin-left: 12px;
+            padding: 4px 12px;
+            background: var(--primary);
+            color: white;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(80, 70, 229, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--bg-main);
+            border-color: var(--primary);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background-color: var(--bg-card);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 0;
+            overflow-y: auto;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #5046e5 0%, #00c4cc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .logo-text-primary { color: #5046e5; }
+        .logo-text-dark { color: #1a202c; }
+        
+        .analytics-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            margin-left: 8px;
+            margin-right: 4px;
+        }
+        
+        .bar {
+            border-radius: 2px;
+            background: linear-gradient(135deg, #00c4cc 0%, #5046e5 100%);
+            width: 3px;
+        }
+        
+        .bar1 { height: 10px; opacity: 0.7; }
+        .bar2 { height: 14px; opacity: 0.8; }
+        .bar3 { height: 18px; opacity: 0.9; }
+        .bar4 { height: 22px; }
+        
+        .tagline-small {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+        }
+
+        .project-card {
+            background: var(--bg-main);
+            padding: 16px;
+            border-radius: 12px;
+            margin: 1.5rem 1.5rem 1rem;
+        }
+
+        .project-card h3 {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .project-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .brand-profile {
+            margin: 0 1.5rem 1.5rem;
+        }
+
+        .brand-profile h3 {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-colors {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .color-swatch {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 2px solid var(--border);
+        }
+
+        .platform-preset {
+            padding: 12px;
+            background: var(--bg-main);
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .platform-preset strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* Menu */
+        .menu-section {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #9ca3af;
+            letter-spacing: 0.5px;
+            margin-top: 1rem;
+        }
+        
+        .menu-item {
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #718096;
+            font-weight: 500;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .menu-item:hover {
+            background-color: rgba(80, 70, 229, 0.05);
+            color: var(--primary);
+        }
+        
+        .menu-item.active {
+            color: var(--primary);
+            background-color: rgba(80, 70, 229, 0.1);
+            border-left-color: var(--primary);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            margin-top: 70px;
+            padding: 32px;
+            flex: 1;
+            overflow-y: auto;
+            height: calc(100vh - 70px);
+        }
+
+        /* Stepper */
+        .stepper {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 48px;
+            position: relative;
+        }
+
+        .stepper::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 40px;
+            right: 40px;
+            height: 2px;
+            background: var(--border);
+            z-index: 0;
+        }
+
+        .step {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+        }
+
+        .step.active .step-circle {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .step.completed .step-circle {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .step-label {
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .step-tagline {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Content Cards */
+        .content-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+            transition: all 0.3s;
+        }
+
+        .content-card h2 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .content-card .subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        .stats-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .stats-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 48px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--bg-card);
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(80, 70, 229, 0.02);
+            transform: translateY(-2px);
+        }
+
+        .upload-area.dragging {
+            border-color: var(--primary);
+            background: rgba(80, 70, 229, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .uploaded-files {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .file-preview {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .file-preview:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .file-preview img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .file-info {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .remove-file {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .remove-file:hover {
+            background: var(--danger);
+        }
+
+        /* Target Type Selection */
+        .type-selector {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .type-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .type-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(80, 70, 229, 0.2);
+        }
+
+        .type-card.selected {
+            border-color: var(--primary);
+            background: rgba(80, 70, 229, 0.05);
+            box-shadow: 0 4px 12px rgba(80, 70, 229, 0.15);
+        }
+
+        .type-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        /* Analysis Sections */
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .analysis-section {
+            background: var(--bg-main);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .analysis-section h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .analysis-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .analysis-section li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .analysis-section li:last-child {
+            border-bottom: none;
+        }
+
+        /* Narrative Options */
+        .narrative-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .narrative-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .narrative-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(80, 70, 229, 0.15);
+        }
+
+        .narrative-card.selected {
+            border-color: var(--primary);
+            background: rgba(80, 70, 229, 0.05);
+        }
+
+        .panel-count {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .role-map {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin: 8px 0;
+        }
+
+        /* Form Elements */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin: 24px 0;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--border-focus);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Storyboard Editor */
+        .storyboard-editor {
+            margin-top: 24px;
+        }
+
+        .storyboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .storyboard-tools {
+            display: flex;
+            gap: 8px;
+        }
+
+        .panel-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.3s;
+        }
+
+        .panel-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(80, 70, 229, 0.1);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .panel-number {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .role-badge.hook {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .role-badge.feature {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .role-badge.proof {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .role-badge.cta {
+            background-color: #fce7f3;
+            color: #9f1239;
+        }
+
+        /* Panel Matrix */
+        .panel-matrix {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .matrix-panel {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .matrix-panel:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(80, 70, 229, 0.2);
+        }
+
+        .matrix-panel.selected {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(80, 70, 229, 0.2);
+        }
+
+        .matrix-preview {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .matrix-info {
+            font-size: 12px;
+        }
+
+        .matrix-info .panel-num {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .consistency-markers {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .marker {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .marker.good {
+            background: var(--success);
+            color: white;
+        }
+
+        .marker.warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        /* Variant Gallery */
+        .variant-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 24px 0;
+        }
+
+        .variant-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .variant-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(80, 70, 229, 0.2);
+        }
+
+        .variant-card.selected {
+            border-color: var(--primary);
+            background: rgba(80, 70, 229, 0.05);
+        }
+
+        .variant-preview {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .variant-scores {
+            font-size: 12px;
+        }
+
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+        }
+
+        .score-value {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Export Section */
+        .export-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin: 24px 0;
+        }
+
+        .export-card {
+            background: var(--bg-main);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .export-card h3 {
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+
+        /* Action Footer */
+        .action-footer {
+            position: sticky;
+            bottom: 0;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            padding: 20px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0 -32px -32px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: none;
+            z-index: 1000;
+            min-width: 300px;
+        }
+
+        .toast.show {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Utilities */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Type-specific content visibility */
+        body[data-creative-type="image"] .type-specific[data-show-for="image"],
+        body[data-creative-type="carousel"] .type-specific[data-show-for="carousel"],
+        body[data-creative-type="gif"] .type-specific[data-show-for="gif"],
+        body[data-creative-type="reel"] .type-specific[data-show-for="reel"] {
+            display: block;
+        }
+
+        body[data-creative-type="image"] .type-specific:not([data-show-for="image"]),
+        body[data-creative-type="carousel"] .type-specific:not([data-show-for="carousel"]),
+        body[data-creative-type="gif"] .type-specific:not([data-show-for="gif"]),
+        body[data-creative-type="reel"] .type-specific:not([data-show-for="reel"]) {
+            display: none;
+        }
+
+        .type-specific {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Creative type badge colors */
+        body[data-creative-type="image"] .creative-type-badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        body[data-creative-type="carousel"] .creative-type-badge {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+
+        body[data-creative-type="gif"] .creative-type-badge {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+        }
+
+        body[data-creative-type="reel"] .creative-type-badge {
+            background: linear-gradient(135deg, #fa709a, #fee140);
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .mb-2 { margin-bottom: 8px; }
+        .mb-3 { margin-bottom: 16px; }
+        .mb-4 { margin-bottom: 24px; }
+        .mt-4 { margin-top: 24px; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                left: 0;
+            }
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .type-selector,
+            .narrative-options,
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->        <aside class="sidebar">
+            <div style="padding: 0 1.5rem 1.5rem; border-bottom: 1px solid #e2e8f0;">
+                <div style="text-align: left;">
+                    <div class="prometrix-wordmark">
+                        <span class="dark-text">Pro</span>
+                        <span class="primary-text">me</span>
+                        <span class="gradient-text">t</span>
+                        <div class="analytics-bars">
+                            <div class="bar bar1"></div>
+                            <div class="bar bar2"></div>
+                            <div class="bar bar3"></div>
+                            <div class="bar bar4"></div>
+                        </div>
+                        <span class="gradient-text">rix</span>
+                    </div>
+                    <div class="tagline-small">AI-POWERED MARKETING</div>
+                </div>
+            </div>
+            <nav style="margin-top: 1.5rem; overflow-y: auto; max-height: calc(100vh - 100px);">
+                <ul style="list-style: none;">
+                    <!-- Create Campaign -->
+                    <li>
+                        <a class="menu-item" href="FACEBOOK-CREATE-CAMPAIGN.html" style="text-decoration: none;">
+                            <span>🚀</span>
+                            <span>Create Campaign</span>
+                        </a>
+                    </li>
+                    
+                    <!-- Brand Registration -->
+                    <li>
+                        <a class="menu-item" href="FACEBOOK-BRAND-REGISTRATION.html" style="text-decoration: none;">
+                            <span>🏢</span>
+                            <span>Brand Registration</span>
+                        </a>
+                    </li>
+                    
+                    <!-- Inspire Me -->
+                    <li>
+                        <a class="menu-item active" href="FACEBOOK-INSPIRE-ME.html" style="text-decoration: none;">
+                            <span>💡</span>
+                            <span>Inspire Me</span>
+                        </a>
+                    </li>
+                    
+                    <!-- Engage Boost with Submenu -->
+                    <li x-data="{ engageOpen: false }">
+                        <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html" style="text-decoration: none; justify-content: space-between;">
+                            <span style="display: flex; align-items: center; gap: 0.75rem;">
+                                <span>💬</span>
+                                <span>Engage Boost</span>
+                            </span>
+                            <span x-text="engageOpen ? '▼' : '▶'" style="font-size: 0.7rem;"></span>
+                        </a>
+                        <ul x-show="engageOpen" x-transition style="list-style: none; background: #f8fafc; margin: 0; padding: 0;">
+                            <li>
+                                <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#pending" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                    <span>⏳</span>
+                                    <span>Pending Reviews</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#all" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                    <span>💭</span>
+                                    <span>All Comments</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#approved" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                    <span>✅</span>
+                                    <span>Approved</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#rejected" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                    <span>❌</span>
+                                    <span>Rejected</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#knowledge" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                    <span>📚</span>
+                                    <span>Knowledge Base</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#analytics" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                    <span>📊</span>
+                                    <span>Analytics</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#settings" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                    <span>⚙️</span>
+                                    <span>Settings</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <!-- Insights -->
+                    <li>
+                        <a class="menu-item" href="#" style="text-decoration: none;">
+                            <span>📈</span>
+                            <span>Insights</span>
+                        </a>
+                    </li>
+                    
+                    <!-- Settings with Submenu -->
+                    <li x-data="{ settingsOpen: false }">
+                        <a class="menu-item" href="FACEBOOK-SETTINGS.html" style="text-decoration: none; justify-content: space-between;">
+                            <span style="display: flex; align-items: center; gap: 0.75rem;">
+                                <span>⚙️</span>
+                                <span>Settings</span>
+                            </span>
+                            <span x-text="settingsOpen ? '▼' : '▶'" style="font-size: 0.7rem;"></span>
+                        </a>
+                        <ul x-show="settingsOpen" x-transition style="list-style: none; background: #f8fafc; margin: 0; padding: 0;">
+                            <li>
+                                <a class="menu-item" href="FACEBOOK-SETTINGS.html#language" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                    <span>🌐</span>
+                                    <span>Language</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="menu-item" href="FACEBOOK-SETTINGS.html#llm" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                    <span>🤖</span>
+                                    <span>LLM Settings</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="menu-item" href="FACEBOOK-SETTINGS.html#guardrails" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                    <span>🛡️</span>
+                                    <span>Guardrails</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="menu-item" href="FACEBOOK-SETTINGS.html#integrations" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                    <span>🔗</span>
+                                    <span>Integrations</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="menu-item" href="FACEBOOK-SETTINGS.html#products" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                    <span>📦</span>
+                                    <span>Products</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1>
+                    Create New Creative
+                    <span class="creative-type-badge" id="typebadge">Carousel</span>
+                </h1>
+            </div>
+            <div class="header-right">
+                <button class="btn btn-secondary" onclick="saveDraft()">Save Draft</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Stepper -->
+            <div class="stepper">
+                <div class="step" data-step="1">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">
+                        <div class="step-title">Upload Inspiration</div>
+                        <div class="step-tagline">Start with a creative you love</div>
+                    </div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">
+                        <div class="step-title">Understand & Decode</div>
+                        <div class="step-tagline">See the creative's DNA</div>
+                    </div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">
+                        <div class="step-title">Define Your Brief</div>
+                        <div class="step-tagline">Tell us what to create</div>
+                    </div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-circle">4</div>
+                    <div class="step-label">
+                        <div class="step-title">Generate & Review</div>
+                        <div class="step-tagline">Get multiple variants</div>
+                    </div>
+                </div>
+                <div class="step" data-step="5">
+                    <div class="step-circle">5</div>
+                    <div class="step-label">
+                        <div class="step-title">Schedule & Launch</div>
+                        <div class="step-tagline">Export or publish</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 1: Upload Inspiration -->
+            <div id="step1" class="step-content">
+                <div class="content-card">
+                    <h2>Upload Inspiration</h2>
+                    <p class="subtitle">Start with a creative you want to emulate</p>
+                    
+                    <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                        <div class="upload-icon">📤</div>
+                        <h3>Drag & drop files here</h3>
+                        <p style="color: var(--text-secondary); margin-top: 8px;">
+                            or click to browse<br>
+                            <small>JPG, PNG, WEBP, GIF, MP4 • Up to 5 files • Max 50MB each</small>
+                        </p>
+                        <input type="file" id="fileInput" multiple accept="image/*,video/*" style="display: none;">
+                    </div>
+
+                    <div id="uploadedFiles" class="uploaded-files hidden"></div>
+
+                    <div class="form-group mt-4">
+                        <label>What do you want to create?</label>
+                        <div class="type-selector">
+                            <div class="type-card" data-type="image" onclick="selectTargetType('image')">
+                                <div class="type-icon">🖼️</div>
+                                <strong>Image</strong>
+                                <p style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Single static post</p>
+                            </div>
+                            <div class="type-card selected" data-type="carousel" onclick="selectTargetType('carousel')">
+                                <div class="type-icon">📱</div>
+                                <strong>Carousel</strong>
+                                <p style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Multi-panel story</p>
+                            </div>
+                            <div class="type-card" data-type="gif" onclick="selectTargetType('gif')">
+                                <div class="type-icon">🎞️</div>
+                                <strong>GIF</strong>
+                                <p style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Looping animation</p>
+                            </div>
+                            <div class="type-card" data-type="reel" onclick="selectTargetType('reel')">
+                                <div class="type-icon">🎬</div>
+                                <strong>Reel</strong>
+                                <p style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Short-form video</p>
+                            </div>
+                        </div>
+                        <div style="margin-top: 16px; padding: 12px; background: #eef2ff; border-radius: 8px; font-size: 13px;" id="typeHint">
+                            <strong>💡 Tip:</strong> <span id="typeHintText">We'll analyze your inspiration and create a multi-panel carousel with strategic storytelling.</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>What do you like about this creative? (Optional)</label>
+                        <textarea placeholder="E.g., The bold colors, the dynamic composition, the way it showcases the product..."></textarea>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; margin-top: 32px;">
+                        <button class="btn btn-primary" onclick="nextStep(1)" id="analyzeBtn">Analyze Creative DNA →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Understand & Decode -->
+            <div id="step2" class="step-content hidden">
+                <div class="content-card">
+                    <h2>Understand & Decode</h2>
+                    <p class="subtitle">See the creative's DNA and blueprint</p>
+
+                    <!-- Creative Type Summary -->
+                    <div style="background: linear-gradient(135deg, #eef2ff, #fce7f3); padding: 20px; border-radius: 12px; margin-bottom: 24px; border-left: 4px solid var(--primary);">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span style="font-size: 32px;" id="summaryIcon">📱</span>
+                            <div>
+                                <strong style="font-size: 16px;">Creating: <span id="summaryType">Carousel</span></strong><br>
+                                <span style="font-size: 13px; color: var(--text-secondary);" id="summaryDescription">Multi-panel storytelling with hook, features, proof, and CTA</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Common Visual DNA (all types) -->
+                    <div class="analysis-grid">
+                        <div class="analysis-section">
+                            <h3>🎨 Visual DNA</h3>
+                            <ul>
+                                <li><strong>Composition:</strong> Hero-centered with dynamic diagonal lines</li>
+                                <li><strong>Palette:</strong> Bold orange (#FF6B35) 45%, Navy (#004E89) 30%</li>
+                                <li><strong>Lighting:</strong> High contrast studio lighting</li>
+                                <li><strong>Style:</strong> Premium, athletic, modern minimalism</li>
+                            </ul>
+                        </div>
+
+                        <div class="analysis-section">
+                            <h3>💡 Strategic Analysis</h3>
+                            <ul>
+                                <li><strong>Tone:</strong> Confident, aspirational, energetic</li>
+                                <li><strong>CTA Style:</strong> Direct action with urgency</li>
+                                <li><strong>Emotional Angle:</strong> Performance & achievement</li>
+                                <li><strong>Audience:</strong> Active lifestyle, 25-45, performance-driven</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- IMAGE SPECIFIC -->
+                    <div class="content-card mt-4 type-specific" data-show-for="image">
+                        <h3>🖼️ Image Composition Analysis</h3>
+                        <div class="analysis-grid">
+                            <div class="analysis-section">
+                                <h4>Focal Points</h4>
+                                <p>Primary focus on product with 60% saliency, secondary background elements create depth</p>
+                            </div>
+                            <div class="analysis-section">
+                                <h4>Typography Style</h4>
+                                <p>Bold sans-serif headlines, minimal copy, high contrast for legibility</p>
+                            </div>
+                        </div>
+                        <div class="content-card mt-4">
+                            <h3>📝 Prompt Reconstruction</h3>
+                            <p style="background: var(--bg-main); padding: 16px; border-radius: 8px; font-family: monospace; font-size: 13px;">
+                                "Professional product photography, athletic shoe on gradient background, dramatic studio lighting, high contrast, bold orange and navy color scheme, modern minimalist composition, commercial advertising style --ar 1:1 --style raw"
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- CAROUSEL SPECIFIC -->
+                    <div class="content-card mt-4 type-specific" data-show-for="carousel">
+                        <h3>📱 Carousel Narrative Options</h3>
+                        <p class="subtitle mb-4">Choose the story structure for your carousel</p>
+
+                        <div class="narrative-options">
+                            <div class="narrative-card" onclick="selectNarrative(4)">
+                                <div class="panel-count">4</div>
+                                <strong>Panels</strong>
+                                <div class="role-map">Hook → Feature → Proof → CTA</div>
+                                <p style="font-size: 12px; margin-top: 8px;">Quick impact story for fast scrollers</p>
+                            </div>
+
+                            <div class="narrative-card selected" onclick="selectNarrative(5)">
+                                <div class="panel-count">5</div>
+                                <strong>Panels</strong>
+                                <div class="role-map">Hook → Feature → Feature → Proof → CTA</div>
+                                <p style="font-size: 12px; margin-top: 8px;">Balanced story with dual benefits</p>
+                            </div>
+
+                            <div class="narrative-card" onclick="selectNarrative(7)">
+                                <div class="panel-count">7</div>
+                                <strong>Panels</strong>
+                                <div class="role-map">Hook → 3 Features → 2 Proofs → CTA</div>
+                                <p style="font-size: 12px; margin-top: 8px;">Deep dive with comprehensive value</p>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 24px;">🎯 Panel Semantics Guide</h3>
+                        <div class="analysis-grid">
+                            <div class="analysis-section">
+                                <span class="role-badge hook">Hook</span>
+                                <p style="margin-top: 8px;">Pattern-interrupt visual + 4–6 word punchline. Win the swipe.</p>
+                            </div>
+                            <div class="analysis-section">
+                                <span class="role-badge feature">Feature</span>
+                                <p style="margin-top: 8px;">Product benefit + visual proof. Make value obvious.</p>
+                            </div>
+                            <div class="analysis-section">
+                                <span class="role-badge proof">Proof</span>
+                                <p style="margin-top: 8px;">Testimonial, metric, or certification. Back it up.</p>
+                            </div>
+                            <div class="analysis-section">
+                                <span class="role-badge cta">CTA</span>
+                                <p style="margin-top: 8px;">Clear next step + brand mark. Tell them what to do.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GIF SPECIFIC -->
+                    <div class="content-card mt-4 type-specific" data-show-for="gif">
+                        <h3>🎞️ Motion & Loop Analysis</h3>
+                        <div class="analysis-grid">
+                            <div class="analysis-section">
+                                <h4>Loop Type</h4>
+                                <p>Seamless loop with smooth transition point at frame 24. Creates infinite effect.</p>
+                            </div>
+                            <div class="analysis-section">
+                                <h4>Animation Style</h4>
+                                <p>Product rotation with 360° movement, 12 FPS for smooth web playback</p>
+                            </div>
+                            <div class="analysis-section">
+                                <h4>Timing</h4>
+                                <p>2.0s duration, perfect for social feed autoplay without overwhelming viewer</p>
+                            </div>
+                            <div class="analysis-section">
+                                <h4>Motion Cues</h4>
+                                <p>Ease-in-out animation, emphasis on product features during key frames</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- REEL SPECIFIC -->
+                    <div class="content-card mt-4 type-specific" data-show-for="reel">
+                        <h3>🎬 Scene Breakdown & Structure</h3>
+                        <div class="analysis-section">
+                            <h4>Hook (0:00-0:03)</h4>
+                            <p>Fast cut intro with product reveal, text overlay "Wait for it...", trending audio fade-in</p>
+                        </div>
+                        <div class="analysis-section" style="margin-top: 16px;">
+                            <h4>Build-up (0:03-0:10)</h4>
+                            <p>3 quick scenes showing product features, dynamic transitions, upbeat music intensifies</p>
+                        </div>
+                        <div class="analysis-section" style="margin-top: 16px;">
+                            <h4>Payoff (0:10-0:15)</h4>
+                            <p>Product in action, lifestyle shot, satisfaction/result demonstration</p>
+                        </div>
+                        <div class="analysis-section" style="margin-top: 16px;">
+                            <h4>CTA (0:13-0:15)</h4>
+                            <p>Clear call-to-action with link sticker placement, branded end card</p>
+                        </div>
+                        <div class="analysis-grid" style="margin-top: 16px;">
+                            <div class="analysis-section">
+                                <strong>Voiceover:</strong> Present, energetic tone
+                            </div>
+                            <div class="analysis-section">
+                                <strong>Captions:</strong> Yes, keyword emphasis
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; margin-top: 32px;">
+                    <button class="btn btn-secondary" onclick="prevStep(2)">← Back</button>
+                    <button class="btn btn-primary" onclick="nextStep(2)">Define My Creative Brief →</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Define Your Brief -->
+            <div id="step3" class="step-content hidden">
+                <div class="content-card">
+                    <h2>Define Your Brief</h2>
+                    <p class="subtitle">Tell us what you want to create</p>
+
+                    <!-- Common Campaign Settings (all types) -->
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Campaign Objective</label>
+                            <select>
+                                <option>Product Launch</option>
+                                <option>Awareness</option>
+                                <option>Engagement</option>
+                                <option>Conversion</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Product</label>
+                            <select>
+                                <option>UltraRun Pro Shoes</option>
+                                <option>FlexFit Leggings</option>
+                                <option>PowerGrip Gloves</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Platform</label>
+                            <select>
+                                <option>Instagram</option>
+                                <option>TikTok</option>
+                                <option>Facebook</option>
+                                <option>LinkedIn</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Aspect Ratio</label>
+                            <select>
+                                <option>1:1 (Square)</option>
+                                <option>4:5 (Portrait)</option>
+                                <option>9:16 (Story)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- IMAGE EDITOR -->
+                    <div class="type-specific" data-show-for="image">
+                        <h3 style="margin-top: 32px;">🖼️ Image Settings</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Style Emphasis</label>
+                                <select>
+                                    <option>Product-focused</option>
+                                    <option>Lifestyle</option>
+                                    <option>Branded/Abstract</option>
+                                    <option>Editorial</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Background Mood</label>
+                                <select>
+                                    <option>Studio/Clean</option>
+                                    <option>Gradient</option>
+                                    <option>Lifestyle Scene</option>
+                                    <option>Abstract/Artistic</option>
+                                </select>
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Headline (Optional)</label>
+                                <input type="text" placeholder="Speed, Unleashed." maxlength="60">
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Subheadline (Optional)</label>
+                                <input type="text" placeholder="Carbon plate technology for elite performance" maxlength="100">
+                            </div>
+                            <div class="form-group full-width">
+                                <label>CTA Text (Optional)</label>
+                                <input type="text" placeholder="Shop Now" maxlength="30">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CAROUSEL STORYBOARD EDITOR -->
+                    <div class="storyboard-editor type-specific" data-show-for="carousel">
+                        <div class="storyboard-header">
+                            <h3>🎬 Storyboard Editor</h3>
+                            <div class="storyboard-tools">
+                                <button class="btn btn-secondary" onclick="autoFillCopy()">Auto-fill Copy with AI</button>
+                                <button class="btn btn-secondary" onclick="addPanel()">+ Add Panel</button>
+                            </div>
+                        </div>
+
+                        <div id="panelsList">
+                            <!-- Panel 1 -->
+                            <div class="panel-card">
+                                <div class="panel-header">
+                                    <div>
+                                        <span class="panel-number">Panel 1</span>
+                                        <span class="role-badge hook">Hook</span>
+                                    </div>
+                                </div>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label>Role</label>
+                                        <select>
+                                            <option>Hook</option>
+                                            <option>Feature</option>
+                                            <option>Proof</option>
+                                            <option>CTA</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Visual Intent</label>
+                                        <select>
+                                            <option>On-dark hero</option>
+                                            <option>Macro detail</option>
+                                            <option>Lifestyle cut</option>
+                                            <option>Exploded view</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label>Headline (≤48 chars)</label>
+                                        <input type="text" placeholder="Speed, Unleashed." maxlength="48" oninput="updateCharCount(this, 48)">
+                                        <div class="char-count">0 / 48</div>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label>Body Copy (≤120 chars, optional)</label>
+                                        <textarea placeholder="Carbon plate power for every stride." maxlength="120" oninput="updateCharCount(this, 120)"></textarea>
+                                        <div class="char-count">0 / 120</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Panels 2-5 (same structure) -->
+                            <div class="panel-card">
+                                <div class="panel-header">
+                                    <div>
+                                        <span class="panel-number">Panel 2</span>
+                                        <span class="role-badge feature">Feature</span>
+                                    </div>
+                                </div>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label>Role</label>
+                                        <select>
+                                            <option>Hook</option>
+                                            <option selected>Feature</option>
+                                            <option>Proof</option>
+                                            <option>CTA</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Visual Intent</label>
+                                        <select>
+                                            <option selected>Macro detail</option>
+                                            <option>On-dark hero</option>
+                                            <option>Lifestyle cut</option>
+                                            <option>Exploded view</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label>Headline (≤48 chars)</label>
+                                        <input type="text" placeholder="Carbon Fiber Technology" maxlength="48" oninput="updateCharCount(this, 48)">
+                                        <div class="char-count">0 / 48</div>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label>Body Copy (≤120 chars, optional)</label>
+                                        <textarea placeholder="Advanced carbon plate delivers explosive energy return" maxlength="120" oninput="updateCharCount(this, 120)"></textarea>
+                                        <div class="char-count">0 / 120</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel-card">
+                                <div class="panel-header">
+                                    <div>
+                                        <span class="panel-number">Panel 3</span>
+                                        <span class="role-badge feature">Feature</span>
+                                    </div>
+                                </div>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label>Role</label>
+                                        <select>
+                                            <option>Hook</option>
+                                            <option selected>Feature</option>
+                                            <option>Proof</option>
+                                            <option>CTA</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Visual Intent</label>
+                                        <select>
+                                            <option>Macro detail</option>
+                                            <option>On-dark hero</option>
+                                            <option selected>Lifestyle cut</option>
+                                            <option>Exploded view</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label>Headline (≤48 chars)</label>
+                                        <input type="text" placeholder="Built for Distance" maxlength="48" oninput="updateCharCount(this, 48)">
+                                        <div class="char-count">0 / 48</div>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label>Body Copy (≤120 chars, optional)</label>
+                                        <textarea placeholder="Engineered foam cushioning for marathon comfort" maxlength="120" oninput="updateCharCount(this, 120)"></textarea>
+                                        <div class="char-count">0 / 120</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel-card">
+                                <div class="panel-header">
+                                    <div>
+                                        <span class="panel-number">Panel 4</span>
+                                        <span class="role-badge proof">Proof</span>
+                                    </div>
+                                </div>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label>Role</label>
+                                        <select>
+                                            <option>Hook</option>
+                                            <option>Feature</option>
+                                            <option selected>Proof</option>
+                                            <option>CTA</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Visual Intent</label>
+                                        <select>
+                                            <option>Macro detail</option>
+                                            <option>On-dark hero</option>
+                                            <option selected>Lifestyle cut</option>
+                                            <option>Exploded view</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label>Headline (≤48 chars)</label>
+                                        <input type="text" placeholder="Trusted by Champions" maxlength="48" oninput="updateCharCount(this, 48)">
+                                        <div class="char-count">0 / 48</div>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label>Body Copy (≤120 chars, optional)</label>
+                                        <textarea placeholder="Used by elite athletes in 50+ marathons worldwide" maxlength="120" oninput="updateCharCount(this, 120)"></textarea>
+                                        <div class="char-count">0 / 120</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel-card">
+                                <div class="panel-header">
+                                    <div>
+                                        <span class="panel-number">Panel 5</span>
+                                        <span class="role-badge cta">CTA</span>
+                                    </div>
+                                </div>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label>Role</label>
+                                        <select>
+                                            <option>Hook</option>
+                                            <option>Feature</option>
+                                            <option>Proof</option>
+                                            <option selected>CTA</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Visual Intent</label>
+                                        <select>
+                                            <option>Macro detail</option>
+                                            <option selected>On-dark hero</option>
+                                            <option>Lifestyle cut</option>
+                                            <option>Exploded view</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label>Headline (≤48 chars)</label>
+                                        <input type="text" placeholder="Run Further. Run Faster." maxlength="48" oninput="updateCharCount(this, 48)">
+                                        <div class="char-count">0 / 48</div>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label>Body Copy (≤120 chars, optional)</label>
+                                        <textarea placeholder="Shop now at sportflex.com" maxlength="120" oninput="updateCharCount(this, 120)"></textarea>
+                                        <div class="char-count">0 / 120</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GIF SETTINGS -->
+                    <div class="type-specific" data-show-for="gif">
+                        <h3 style="margin-top: 32px;">🎞️ GIF Settings</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Loop Type</label>
+                                <select>
+                                    <option>Seamless</option>
+                                    <option>Ping-pong (Reverse)</option>
+                                    <option>Standard (Reset)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Frame Rate (FPS)</label>
+                                <select>
+                                    <option>12 FPS (Smooth)</option>
+                                    <option>24 FPS (Premium)</option>
+                                    <option>30 FPS (Ultra-smooth)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Duration</label>
+                                <select>
+                                    <option>1.5s (Quick)</option>
+                                    <option>2.0s (Standard)</option>
+                                    <option>3.0s (Extended)</option>
+                                    <option>4.0s (Detailed)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Animation Style</label>
+                                <select>
+                                    <option>Product rotation</option>
+                                    <option>Zoom in/out</option>
+                                    <option>Feature reveal</option>
+                                    <option>Color morph</option>
+                                </select>
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Text Overlay (Optional)</label>
+                                <input type="text" placeholder="e.g., 'New Collection'">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- REEL SETTINGS -->
+                    <div class="type-specific" data-show-for="reel">
+                        <h3 style="margin-top: 32px;">🎬 Reel Scene Editor</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Scene Count</label>
+                                <select>
+                                    <option>3 Scenes (Quick)</option>
+                                    <option selected>4 Scenes (Standard)</option>
+                                    <option>5 Scenes (Detailed)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Total Duration</label>
+                                <select>
+                                    <option>15 seconds</option>
+                                    <option>30 seconds</option>
+                                    <option>60 seconds</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Hook Length</label>
+                                <select>
+                                    <option>1-2 seconds</option>
+                                    <option selected>3 seconds</option>
+                                    <option>5 seconds</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Music Style</label>
+                                <select>
+                                    <option>Upbeat/Energetic</option>
+                                    <option>Trending Audio</option>
+                                    <option>Calm/Ambient</option>
+                                    <option>No Music</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Include Voiceover?</label>
+                                <select>
+                                    <option>Yes - Energetic</option>
+                                    <option>Yes - Professional</option>
+                                    <option selected>No</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Captions</label>
+                                <select>
+                                    <option selected>Yes - Auto-highlight keywords</option>
+                                    <option>Yes - Standard</option>
+                                    <option>No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="content-card mt-4">
+                            <h4>Scene Breakdown</h4>
+                            <div class="analysis-section">
+                                <strong>Scene 1 (Hook):</strong> Product reveal with text "Wait for it..."
+                            </div>
+                            <div class="analysis-section">
+                                <strong>Scene 2-3 (Features):</strong> Show key benefits with dynamic cuts
+                            </div>
+                            <div class="analysis-section">
+                                <strong>Scene 4 (CTA):</strong> Product in action + call-to-action
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; margin-top: 32px;">
+                    <button class="btn btn-secondary" onclick="prevStep(3)">← Back</button>
+                    <button class="btn btn-primary" onclick="generateCreative()" id="generateBtn">Generate Variants →</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Generate & Review -->
+            <div id="step4" class="step-content hidden">
+                <div class="content-card">
+                    <h2>Generate & Review</h2>
+                    <p class="subtitle">Review variants and refine details</p>
+
+                    <div style="margin-bottom: 24px;">
+                        <strong>Variant Selector:</strong>
+                        <button class="btn btn-secondary" style="margin-left: 12px;" onclick="selectVariant('A')">Variant A</button>
+                        <button class="btn btn-secondary" onclick="selectVariant('B')">Variant B</button>
+                        <button class="btn btn-secondary" onclick="selectVariant('C')">Variant C</button>
+                    </div>
+
+                    <!-- IMAGE REVIEW -->
+                    <div class="type-specific" data-show-for="image">
+                        <h3>🖼️ Image Variants</h3>
+                        <div class="variant-gallery">
+                            <div class="variant-card selected" onclick="event.currentTarget.classList.toggle('selected')">
+                                <div class="variant-preview">Variant A</div>
+                                <div class="variant-scores">
+                                    <div class="score-row">
+                                        <span>Brand Fit:</span>
+                                        <span class="score-value">96%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>Style Match:</span>
+                                        <span class="score-value">94%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>Legibility:</span>
+                                        <span class="score-value">98%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="variant-card" onclick="event.currentTarget.classList.toggle('selected')">
+                                <div class="variant-preview" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Variant B</div>
+                                <div class="variant-scores">
+                                    <div class="score-row">
+                                        <span>Brand Fit:</span>
+                                        <span class="score-value">93%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>Style Match:</span>
+                                        <span class="score-value">91%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>Legibility:</span>
+                                        <span class="score-value">95%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="variant-card" onclick="event.currentTarget.classList.toggle('selected')">
+                                <div class="variant-preview" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Variant C</div>
+                                <div class="variant-scores">
+                                    <div class="score-row">
+                                        <span>Brand Fit:</span>
+                                        <span class="score-value">95%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>Style Match:</span>
+                                        <span class="score-value">97%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>Legibility:</span>
+                                        <span class="score-value">96%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="content-card mt-4">
+                            <h4>Edit Selected Variant</h4>
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label>Headline</label>
+                                    <input type="text" value="Speed, Unleashed." onchange="showToast('Image updated!')">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Subheadline</label>
+                                    <input type="text" value="Carbon plate technology for elite performance">
+                                </div>
+                                <button class="btn btn-secondary">Re-generate Variant</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CAROUSEL REVIEW -->
+                    <div class="type-specific" data-show-for="carousel">
+                        <h3 style="margin-bottom: 16px;">📱 Panel Matrix - All Screens at Once</h3>
+                        <div class="panel-matrix">
+                            <div class="matrix-panel selected" onclick="selectMatrixPanel(1)">
+                                <div class="matrix-preview">Panel 1<br>Hook</div>
+                                <div class="matrix-info">
+                                    <div class="panel-num">Panel 1</div>
+                                    <span class="role-badge hook">Hook</span>
+                                    <div style="margin-top: 8px; font-size: 11px;">Speed, Unleashed</div>
+                                    <div class="consistency-markers">
+                                        <div class="marker good" title="Brand Fit: 95%">🎨</div>
+                                        <div class="marker good" title="Layout: 92%">📐</div>
+                                        <div class="marker good" title="Legibility: 96%">🔤</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="matrix-panel" onclick="selectMatrixPanel(2)">
+                                <div class="matrix-preview" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Panel 2<br>Feature</div>
+                                <div class="matrix-info">
+                                    <div class="panel-num">Panel 2</div>
+                                    <span class="role-badge feature">Feature</span>
+                                    <div style="margin-top: 8px; font-size: 11px;">Carbon Fiber Technology</div>
+                                    <div class="consistency-markers">
+                                        <div class="marker good" title="Brand Fit: 94%">🎨</div>
+                                        <div class="marker good" title="Layout: 90%">📐</div>
+                                        <div class="marker warning" title="Legibility: 88%">🔤</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="matrix-panel" onclick="selectMatrixPanel(3)">
+                                <div class="matrix-preview" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Panel 3<br>Feature</div>
+                                <div class="matrix-info">
+                                    <div class="panel-num">Panel 3</div>
+                                    <span class="role-badge feature">Feature</span>
+                                    <div style="margin-top: 8px; font-size: 11px;">Built for Distance</div>
+                                    <div class="consistency-markers">
+                                        <div class="marker good" title="Brand Fit: 96%">🎨</div>
+                                        <div class="marker good" title="Layout: 94%">📐</div>
+                                        <div class="marker good" title="Legibility: 95%">🔤</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="matrix-panel" onclick="selectMatrixPanel(4)">
+                                <div class="matrix-preview" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">Panel 4<br>Proof</div>
+                                <div class="matrix-info">
+                                    <div class="panel-num">Panel 4</div>
+                                    <span class="role-badge proof">Proof</span>
+                                    <div style="margin-top: 8px; font-size: 11px;">Trusted by Champions</div>
+                                    <div class="consistency-markers">
+                                        <div class="marker good" title="Brand Fit: 93%">🎨</div>
+                                        <div class="marker good" title="Layout: 91%">📐</div>
+                                        <div class="marker good" title="Legibility: 94%">🔤</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="matrix-panel" onclick="selectMatrixPanel(5)">
+                                <div class="matrix-preview" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">Panel 5<br>CTA</div>
+                                <div class="matrix-info">
+                                    <div class="panel-num">Panel 5</div>
+                                    <span class="role-badge cta">CTA</span>
+                                    <div style="margin-top: 8px; font-size: 11px;">Run Further. Run Faster.</div>
+                                    <div class="consistency-markers">
+                                        <div class="marker good" title="Brand Fit: 97%">🎨</div>
+                                        <div class="marker good" title="Layout: 95%">📐</div>
+                                        <div class="marker good" title="Legibility: 98%">🔤</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="content-card mt-4">
+                            <h3>Panel Detail Editor</h3>
+                            <p class="subtitle">Currently editing: Panel 1</p>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
+                                <div>
+                                    <div style="width: 100%; height: 300px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: 600;">
+                                        Panel 1 Preview<br>
+                                        <small style="font-size: 14px; font-weight: 400;">Speed, Unleashed</small>
+                                    </div>
+                                    <div style="margin-top: 16px;">
+                                        <button class="btn btn-secondary" onclick="reRenderPanel()">Re-render Panel</button>
+                                        <button class="btn btn-secondary" onclick="lockPanel()">🔒 Lock Panel</button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="form-group">
+                                        <label>Headline</label>
+                                        <input type="text" value="Speed, Unleashed." onchange="showToast('Panel updated!')">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Body Copy</label>
+                                        <textarea>Carbon plate power for every stride.</textarea>
+                                    </div>
+                                    <div style="margin-top: 16px;">
+                                        <strong>Score Breakdown:</strong>
+                                        <div class="score-row">
+                                            <span>Brand Fit:</span>
+                                            <span class="score-value">95%</span>
+                                        </div>
+                                        <div class="score-row">
+                                            <span>Layout:</span>
+                                            <span class="score-value">92%</span>
+                                        </div>
+                                        <div class="score-row">
+                                            <span>Legibility:</span>
+                                            <span class="score-value">96%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="content-card mt-4">
+                            <h3>🎯 Consistency Score</h3>
+                            <div style="font-size: 48px; font-weight: 700; color: var(--success); text-align: center; margin: 24px 0;">
+                                94
+                            </div>
+                            <p style="text-align: center; color: var(--text-secondary);">
+                                Excellent consistency across all panels. Ready to approve!
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- GIF REVIEW -->
+                    <div class="type-specific" data-show-for="gif">
+                        <h3>🎞️ GIF Variants</h3>
+                        <div class="variant-gallery">
+                            <div class="variant-card selected" onclick="event.currentTarget.classList.toggle('selected')">
+                                <div class="variant-preview">Variant A<br>2.0s Loop</div>
+                                <div class="variant-scores">
+                                    <div class="score-row">
+                                        <span>Loop Smoothness:</span>
+                                        <span class="score-value">97%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>Brand Fit:</span>
+                                        <span class="score-value">95%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>File Size:</span>
+                                        <span class="score-value">2.4 MB</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="variant-card" onclick="event.currentTarget.classList.toggle('selected')">
+                                <div class="variant-preview" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Variant B<br>2.0s Loop</div>
+                                <div class="variant-scores">
+                                    <div class="score-row">
+                                        <span>Loop Smoothness:</span>
+                                        <span class="score-value">93%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>Brand Fit:</span>
+                                        <span class="score-value">92%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>File Size:</span>
+                                        <span class="score-value">2.1 MB</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="variant-card" onclick="event.currentTarget.classList.toggle('selected')">
+                                <div class="variant-preview" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Variant C<br>2.0s Loop</div>
+                                <div class="variant-scores">
+                                    <div class="score-row">
+                                        <span>Loop Smoothness:</span>
+                                        <span class="score-value">96%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>Brand Fit:</span>
+                                        <span class="score-value">94%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>File Size:</span>
+                                        <span class="score-value">2.3 MB</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="content-card mt-4">
+                            <h4>🔄 Loop Inspector</h4>
+                            <p style="color: var(--text-secondary); margin-bottom: 16px;">
+                                Playback controls and smoothness analysis
+                            </p>
+                            <div style="background: var(--bg-main); padding: 24px; border-radius: 12px; text-align: center;">
+                                <div style="width: 100%; height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; margin-bottom: 16px;">
+                                    🔄 GIF Loop Preview
+                                </div>
+                                <button class="btn btn-secondary">▶️ Play</button>
+                                <button class="btn btn-secondary">⏸️ Pause</button>
+                                <button class="btn btn-secondary">🔁 Test Loop</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- REEL REVIEW -->
+                    <div class="type-specific" data-show-for="reel">
+                        <h3>🎬 Reel Variants</h3>
+                        <div class="variant-gallery">
+                            <div class="variant-card selected" onclick="event.currentTarget.classList.toggle('selected')">
+                                <div class="variant-preview">Variant A<br>15s</div>
+                                <div class="variant-scores">
+                                    <div class="score-row">
+                                        <span>Hook Quality:</span>
+                                        <span class="score-value">96%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>Flow:</span>
+                                        <span class="score-value">94%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>Engagement:</span>
+                                        <span class="score-value">92%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="variant-card" onclick="event.currentTarget.classList.toggle('selected')">
+                                <div class="variant-preview" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Variant B<br>15s</div>
+                                <div class="variant-scores">
+                                    <div class="score-row">
+                                        <span>Hook Quality:</span>
+                                        <span class="score-value">93%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>Flow:</span>
+                                        <span class="score-value">91%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>Engagement:</span>
+                                        <span class="score-value">95%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="variant-card" onclick="event.currentTarget.classList.toggle('selected')">
+                                <div class="variant-preview" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Variant C<br>15s</div>
+                                <div class="variant-scores">
+                                    <div class="score-row">
+                                        <span>Hook Quality:</span>
+                                        <span class="score-value">97%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>Flow:</span>
+                                        <span class="score-value">96%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>Engagement:</span>
+                                        <span class="score-value">94%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="content-card mt-4">
+                            <h4>🎞️ Scene Strip</h4>
+                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px;">
+                                <div style="background: var(--bg-main); padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; border: 2px solid var(--primary);">
+                                    <div style="width: 100%; height: 80px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 6px; margin-bottom: 8px;"></div>
+                                    <strong style="font-size: 12px;">Scene 1: Hook</strong><br>
+                                    <span style="font-size: 11px; color: var(--text-secondary);">0:00-0:03</span>
+                                </div>
+                                <div style="background: var(--bg-main); padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; border: 2px solid var(--border);">
+                                    <div style="width: 100%; height: 80px; background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); border-radius: 6px; margin-bottom: 8px;"></div>
+                                    <strong style="font-size: 12px;">Scene 2: Feature</strong><br>
+                                    <span style="font-size: 11px; color: var(--text-secondary);">0:03-0:08</span>
+                                </div>
+                                <div style="background: var(--bg-main); padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; border: 2px solid var(--border);">
+                                    <div style="width: 100%; height: 80px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 6px; margin-bottom: 8px;"></div>
+                                    <strong style="font-size: 12px;">Scene 3: Action</strong><br>
+                                    <span style="font-size: 11px; color: var(--text-secondary);">0:08-0:12</span>
+                                </div>
+                                <div style="background: var(--bg-main); padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; border: 2px solid var(--border);">
+                                    <div style="width: 100%; height: 80px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 6px; margin-bottom: 8px;"></div>
+                                    <strong style="font-size: 12px;">Scene 4: CTA</strong><br>
+                                    <span style="font-size: 11px; color: var(--text-secondary);">0:12-0:15</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Caption Preview</label>
+                                <div style="background: var(--bg-main); padding: 16px; border-radius: 8px; font-size: 14px;">
+                                    <strong style="color: var(--primary);">Speed, Unleashed.</strong> Carbon plate technology for elite runners. 🏃‍♂️⚡
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-footer">
+                    <button class="btn btn-secondary" onclick="prevStep(4)">← Back</button>
+                    <button class="btn btn-primary" onclick="nextStep(4)">Approve & Continue →</button>
+                </div>
+            </div>
+
+            <!-- Step 5: Schedule & Launch -->
+            <div id="step5" class="step-content hidden">
+                <div class="content-card">
+                    <h2>Schedule & Launch</h2>
+                    <p class="subtitle" id="exportSubtitle">Export or publish your creative</p>
+
+                    <div class="export-options">
+                        <div class="export-card">
+                            <h3>📦 Export Package</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 16px;" id="exportDescription">
+                                Download all assets
+                            </p>
+                            <ul style="list-style: none; padding: 0; margin-bottom: 16px;" id="exportFilesList">
+                                <!-- Populated dynamically based on type -->
+                            </ul>
+                            <button class="btn btn-primary" onclick="exportAssets()">Download Assets</button>
+                        </div>
+
+                        <div class="export-card">
+                            <h3>📅 Schedule & Publish</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 16px;">
+                                Post directly to your platform
+                            </p>
+                            <div class="form-group">
+                                <label>Platform Account</label>
+                                <select>
+                                    <option>@sportflex (Instagram)</option>
+                                    <option>@sportflexofficial (TikTok)</option>
+                                    <option>SportFlex (Facebook)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Schedule Date & Time</label>
+                                <input type="datetime-local">
+                            </div>
+                            <div class="form-group">
+                                <label>Caption</label>
+                                <textarea placeholder="Add your caption and hashtags..."></textarea>
+                            </div>
+                            <button class="btn btn-primary" onclick="schedulePost()">Schedule Post</button>
+                        </div>
+                    </div>
+
+                    <div class="content-card mt-4">
+                        <h3>🔗 UTM Builder</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Campaign</label>
+                                <input type="text" placeholder="spring_launch_2025">
+                            </div>
+                            <div class="form-group">
+                                <label>Source</label>
+                                <input type="text" placeholder="instagram">
+                            </div>
+                            <div class="form-group">
+                                <label>Medium</label>
+                                <input type="text" placeholder="carousel" id="utmMedium">
+                            </div>
+                            <div class="form-group">
+                                <label>Content</label>
+                                <input type="text" placeholder="ultrarun_pro">
+                            </div>
+                        </div>
+                        <div style="background: var(--bg-main); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 12px;">
+                            https://sportflex.com?utm_campaign=spring_launch_2025&utm_source=instagram&utm_medium=<span id="utmMediumDisplay">carousel</span>&utm_content=ultrarun_pro
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; margin-top: 32px;">
+                    <button class="btn btn-secondary" onclick="prevStep(5)">← Back</button>
+                    <button class="btn btn-primary" onclick="finishProject()">🎉 Finish Project</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <span id="toastMessage"></span>
+    </div>
+
+    <script>
+        // Submenu toggle function
+        function toggleSubmenu(element) {
+            const container = element.closest('.submenu-container');
+            const submenu = container.querySelector('.submenu');
+            const arrow = element.querySelector('.submenu-arrow');
+            
+            if (submenu.style.display === 'none' || submenu.style.display === '') {
+                submenu.style.display = 'block';
+                arrow.textContent = '▼';
+            } else {
+                submenu.style.display = 'none';
+                arrow.textContent = '▶';
+            }
+        }
+
+        let currentStep = 1;
+        let selectedType = 'carousel';
+        let selectedNarrative = 5;
+        let uploadedFiles = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStepperUI();
+            setupFileUpload();
+            // Set initial type
+            document.body.setAttribute('data-creative-type', selectedType);
+            updateExportContent();
+        });
+
+        function updateExportContent() {
+            const exportLists = {
+                image: [
+                    '✓ High-res PNG (1080×1080)',
+                    '✓ JPG version',
+                    '✓ prompt.json',
+                    '✓ Brand guidelines used'
+                ],
+                carousel: [
+                    '✓ 5 PNG panels (1080×1080)',
+                    '✓ storyboard.json',
+                    '✓ prompt.json',
+                    '✓ Brand guidelines used'
+                ],
+                gif: [
+                    '✓ GIF file (optimized)',
+                    '✓ MP4 fallback',
+                    '✓ prompt.json',
+                    '✓ Frame breakdown'
+                ],
+                reel: [
+                    '✓ MP4 video (1080×1920)',
+                    '✓ SRT captions file',
+                    '✓ Cover image (JPG)',
+                    '✓ Scene breakdown.json'
+                ]
+            };
+
+            const descriptions = {
+                image: 'Download your image creative',
+                carousel: 'Download all assets as a ZIP file',
+                gif: 'Download GIF and fallback video',
+                reel: 'Download video and caption files'
+            };
+
+            const subtitles = {
+                image: 'Export or publish your image',
+                carousel: 'Export or publish your carousel',
+                gif: 'Export or publish your GIF',
+                reel: 'Export or publish your reel'
+            };
+
+            const filesList = document.getElementById('exportFilesList');
+            const description = document.getElementById('exportDescription');
+            const subtitle = document.getElementById('exportSubtitle');
+            const utmMedium = document.getElementById('utmMedium');
+            const utmMediumDisplay = document.getElementById('utmMediumDisplay');
+
+            if (filesList) {
+                filesList.innerHTML = exportLists[selectedType].map(item => `<li>${item}</li>`).join('');
+            }
+            if (description) {
+                description.textContent = descriptions[selectedType];
+            }
+            if (subtitle) {
+                subtitle.textContent = subtitles[selectedType];
+            }
+            if (utmMedium) {
+                utmMedium.placeholder = selectedType;
+            }
+            if (utmMediumDisplay) {
+                utmMediumDisplay.textContent = selectedType;
+            }
+        }
+
+        // File Upload
+        function setupFileUpload() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragging');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragging');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragging');
+                handleFiles(e.dataTransfer.files);
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+            });
+        }
+
+        function handleFiles(files) {
+            uploadedFiles = Array.from(files);
+            displayUploadedFiles();
+        }
+
+        function displayUploadedFiles() {
+            const container = document.getElementById('uploadedFiles');
+            if (uploadedFiles.length === 0) {
+                container.classList.add('hidden');
+                return;
+            }
+
+            container.classList.remove('hidden');
+            container.innerHTML = uploadedFiles.map((file, index) => `
+                <div class="file-preview">
+                    <button class="remove-file" onclick="removeFile(${index})">×</button>
+                    <img src="https://via.placeholder.com/200x150?text=${file.name}" alt="${file.name}">
+                    <div class="file-info">
+                        <strong>${file.name}</strong><br>
+                        ${(file.size / 1024).toFixed(1)} KB
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1);
+            displayUploadedFiles();
+        }
+
+        // Target Type Selection
+        function selectTargetType(type) {
+            selectedType = type;
+            document.querySelectorAll('.type-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector(`[data-type="${type}"]`).classList.add('selected');
+            document.getElementById('typebadge').textContent = type.charAt(0).toUpperCase() + type.slice(1);
+            
+            // Update type hint
+            const hints = {
+                image: "We'll analyze your inspiration and create a brand-aligned image with strategic composition and copy.",
+                carousel: "We'll analyze your inspiration and create a multi-panel carousel with strategic storytelling.",
+                gif: "We'll analyze your inspiration and create a looping GIF with smooth motion and brand consistency.",
+                reel: "We'll analyze your inspiration and create a short-form video with hook, features, and call-to-action."
+            };
+            const hintText = document.getElementById('typeHintText');
+            if (hintText) {
+                hintText.textContent = hints[type];
+            }
+
+            // Update Step 1 analyze button
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            if (analyzeBtn) {
+                const analyzeBtnTexts = {
+                    image: 'Analyze Image DNA →',
+                    carousel: 'Analyze Creative DNA →',
+                    gif: 'Analyze Motion & Loop →',
+                    reel: 'Analyze Scenes & Hook →'
+                };
+                analyzeBtn.textContent = analyzeBtnTexts[type];
+            }
+            
+            showToast(`Target type set to ${type}`);
+            
+            // Update journey based on type
+            updateJourneyForType(type);
+            updateExportContent();
+        }
+
+        function updateJourneyForType(type) {
+            // This will be used to show/hide different content in subsequent steps
+            document.body.setAttribute('data-creative-type', type);
+            
+            // Update button text in Step 3
+            const generateBtn = document.getElementById('generateBtn');
+            if (generateBtn) {
+                const btnTexts = {
+                    image: 'Generate Image Variants →',
+                    carousel: 'Generate Carousel Variants →',
+                    gif: 'Generate GIF Variants →',
+                    reel: 'Generate Reel Variants →'
+                };
+                generateBtn.textContent = btnTexts[type] || 'Generate Variants →';
+            }
+
+            // Update Step 2 summary
+            const summaryIcons = {
+                image: '🖼️',
+                carousel: '📱',
+                gif: '🎞️',
+                reel: '🎬'
+            };
+
+            const summaryTypes = {
+                image: 'Image',
+                carousel: 'Carousel',
+                gif: 'GIF',
+                reel: 'Reel'
+            };
+
+            const summaryDescriptions = {
+                image: 'Single static post with strategic composition and copy',
+                carousel: 'Multi-panel storytelling with hook, features, proof, and CTA',
+                gif: 'Looping animation with smooth motion and brand consistency',
+                reel: 'Short-form video with hook, build-up, and call-to-action'
+            };
+
+            const summaryIcon = document.getElementById('summaryIcon');
+            const summaryType = document.getElementById('summaryType');
+            const summaryDescription = document.getElementById('summaryDescription');
+
+            if (summaryIcon) summaryIcon.textContent = summaryIcons[type];
+            if (summaryType) summaryType.textContent = summaryTypes[type];
+            if (summaryDescription) summaryDescription.textContent = summaryDescriptions[type];
+        }
+
+        // Narrative Selection
+        function selectNarrative(count) {
+            selectedNarrative = count;
+            document.querySelectorAll('.narrative-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            showToast(`${count}-panel narrative selected`);
+        }
+
+        // Step Navigation
+        function nextStep(current) {
+            if (current === 1 && uploadedFiles.length === 0) {
+                showToast('Please upload at least one file');
+                return;
+            }
+
+            currentStep = current + 1;
+            updateStepperUI();
+            updateStepContent();
+            window.scrollTo(0, 0);
+
+            // Update dynamic content based on creative type
+            updateJourneyForType(selectedType);
+
+            if (current === 3) {
+                const generationMessages = {
+                    image: 'Generating image variants... This may take a moment.',
+                    carousel: 'Generating carousel variants... This may take a moment.',
+                    gif: 'Generating GIF variants... Analyzing motion...',
+                    reel: 'Generating reel variants... Processing scenes...'
+                };
+                showToast(generationMessages[selectedType]);
+                setTimeout(() => {
+                    const successMessages = {
+                        image: '✨ Generated 3 image variants!',
+                        carousel: '✨ Generated 3 carousel variants!',
+                        gif: '✨ Generated 3 GIF variants!',
+                        reel: '✨ Generated 3 reel variants!'
+                    };
+                    showToast(successMessages[selectedType]);
+                }, 2000);
+            }
+        }
+
+        function prevStep(current) {
+            currentStep = current - 1;
+            updateStepperUI();
+            updateStepContent();
+            window.scrollTo(0, 0);
+        }
+
+        function updateStepperUI() {
+            document.querySelectorAll('.step').forEach((step, index) => {
+                const stepNum = index + 1;
+                step.classList.remove('active', 'completed');
+                
+                if (stepNum === currentStep) {
+                    step.classList.add('active');
+                } else if (stepNum < currentStep) {
+                    step.classList.add('completed');
+                    step.querySelector('.step-circle').textContent = '✓';
+                } else {
+                    step.querySelector('.step-circle').textContent = stepNum;
+                }
+            });
+        }
+
+        function updateStepContent() {
+            document.querySelectorAll('.step-content').forEach((content, index) => {
+                content.classList.toggle('hidden', index + 1 !== currentStep);
+            });
+        }
+
+        // Panel Management
+        function addPanel() {
+            showToast('Panel added! Scroll down to edit.');
+        }
+
+        function autoFillCopy() {
+            showToast('AI is generating copy for all panels...');
+            setTimeout(() => {
+                showToast('✨ Copy generated successfully!');
+            }, 1500);
+        }
+
+        function selectMatrixPanel(num) {
+            document.querySelectorAll('.matrix-panel').forEach(panel => {
+                panel.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            showToast(`Editing Panel ${num}`);
+        }
+
+        function selectVariant(variant) {
+            showToast(`Viewing Variant ${variant}`);
+        }
+
+        function reRenderPanel() {
+            showToast('Re-rendering panel with updated settings...');
+            setTimeout(() => {
+                showToast('✨ Panel updated!');
+            }, 1500);
+        }
+
+        function lockPanel() {
+            showToast('🔒 Panel locked - won\'t change on regeneration');
+        }
+
+        // Export & Publishing
+        function exportAssets() {
+            const exportMessages = {
+                image: '📦 Preparing image export...',
+                carousel: '📦 Preparing carousel export package...',
+                gif: '📦 Preparing GIF and MP4 files...',
+                reel: '📦 Preparing video and caption files...'
+            };
+            showToast(exportMessages[selectedType]);
+            setTimeout(() => {
+                showToast('✅ Assets downloaded successfully!');
+            }, 1500);
+        }
+
+        function schedulePost() {
+            const scheduleMessages = {
+                image: '📅 Image scheduled successfully!',
+                carousel: '📅 Carousel scheduled successfully!',
+                gif: '📅 GIF scheduled successfully!',
+                reel: '📅 Reel scheduled successfully!'
+            };
+            showToast(scheduleMessages[selectedType]);
+        }
+
+        function generateCreative() {
+            const generationMessages = {
+                image: '🎨 Generating image variants...',
+                carousel: '🎨 Generating carousel variants...',
+                gif: '🎞️ Generating GIF variants...',
+                reel: '🎬 Generating reel variants...'
+            };
+            showToast(generationMessages[selectedType]);
+            setTimeout(() => {
+                nextStep(3);
+            }, 1000);
+        }
+
+        function finishProject() {
+            const finishMessages = {
+                image: '🎉 Project completed! Your image is ready.',
+                carousel: '🎉 Project completed! Your carousel is ready.',
+                gif: '🎉 Project completed! Your GIF is ready.',
+                reel: '🎉 Project completed! Your reel is ready.'
+            };
+            showToast(finishMessages[selectedType]);
+            setTimeout(() => {
+                if (confirm('Project saved! Would you like to create another creative?')) {
+                    location.reload();
+                }
+            }, 1500);
+        }
+
+        // Utilities
+        function saveDraft() {
+            showToast('💾 Draft saved successfully');
+        }
+
+        function updateCharCount(element, maxChars) {
+            const parent = element.parentElement;
+            const charCount = parent.querySelector('.char-count');
+            const length = element.value.length;
+            charCount.textContent = `${length} / ${maxChars}`;
+            
+            if (length > maxChars * 0.9) {
+                charCount.style.color = 'var(--warning)';
+            } else {
+                charCount.style.color = 'var(--text-secondary)';
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
