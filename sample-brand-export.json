@@ -1,0 +1,89 @@
+{
+  "brand": {
+    "id": "brand-001",
+    "name": "TechBrand",
+    "guidelineDoc": {
+      "name": "brand-guidelines.pdf",
+      "size": 2048576,
+      "status": "parsed"
+    },
+    "blueprint": {
+      "version": "1.0.0",
+      "status": "saved",
+      "voice": {
+        "formality": 45,
+        "humor": 75,
+        "warmth": 80,
+        "emojiPolicy": "rich"
+      },
+      "pillars": [
+        {
+          "name": "Innovation",
+          "description": "Cutting-edge technology and breakthrough solutions",
+          "weight": 35
+        },
+        {
+          "name": "Education",
+          "description": "Learning and development content for our community",
+          "weight": 30
+        },
+        {
+          "name": "Community",
+          "description": "Building connections and fostering engagement",
+          "weight": 20
+        },
+        {
+          "name": "Product",
+          "description": "Product showcases and feature highlights",
+          "weight": 15
+        }
+      ],
+      "policies": {
+        "forbiddenPhrases": [
+          "urgent",
+          "act now",
+          "limited offer",
+          "buy now"
+        ],
+        "maxHashtags": 7,
+        "brandHashtags": [
+          "#TechBrand",
+          "#Innovation",
+          "#AI",
+          "#Future",
+          "#Technology"
+        ]
+      },
+      "productDefaultPct": 45
+    }
+  },
+  "settings": {
+    "defaultLanguage": "en",
+    "defaultLLM": "gpt-4.1",
+    "productDefaultPct": 45
+  },
+  "campaign": {
+    "objective": "Increase brand awareness and engagement by 25%",
+    "duration": 7,
+    "startDate": "2026-02-05",
+    "language": "en",
+    "llm": "gpt-4.1",
+    "productPct": 45,
+    "plan": {
+      "days": [],
+      "mixSummary": {
+        "pillarWeights": {},
+        "productInclusionActualPct": 0
+      },
+      "status": "draft"
+    },
+    "posts": []
+  },
+  "creatorSettings": {
+    "language": "en",
+    "llm": "gpt-4.1"
+  },
+  "exportedAt": "2026-02-05T12:50:00.000Z",
+  "exportVersion": "1.0.0",
+  "exportMethod": "client-side"
+}

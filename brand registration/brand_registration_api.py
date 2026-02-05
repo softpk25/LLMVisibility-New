@@ -295,6 +295,34 @@ async def update_brand_data(brand_id: str, updates: Dict[str, Any]):
     """Update brand registration data"""
     return brand_service.update_brand(brand_id, updates)
 
+@router.get("/export-json/{brand_id}")
+async def export_brand_json(brand_id: str):
+    """Export complete brand data as JSON file"""
+    try:
+        brand_data = brand_service.get_brand(brand_id)
+        
+        # Create export data structure
+        export_data = {
+            "brand": brand_data,
+            "exportedAt": datetime.now().isoformat(),
+            "exportVersion": "1.0.0",
+            "description": "Complete brand content management data export"
+        }
+        
+        # Create filename
+        filename = f"brand-content-data-{brand_id}-{datetime.now().strftime('%Y-%m-%d')}.json"
+        
+        # Return JSON response with download headers
+        from fastapi.responses import JSONResponse
+        response = JSONResponse(content=export_data)
+        response.headers["Content-Disposition"] = f"attachment; filename={filename}"
+        response.headers["Content-Type"] = "application/json"
+        
+        return response
+        
+    except HTTPException:
+        raise HTTPException(status_code=404, detail="Brand not found")
+
 @router.delete("/brand/{brand_id}")
 async def delete_brand(brand_id: str):
     """Delete brand registration"""

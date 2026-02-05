@@ -893,7 +893,7 @@
                     </div>
                     <div style="display: flex; gap: 0.5rem; align-items: center;">
                         <span class="version-badge" x-text="'v' + brand.blueprint.version + ' ' + brand.blueprint.status"></span>
-                        <button class="btn-secondary">Save Draft</button>
+                        <button class="btn-secondary" @click="downloadJSON()">Save JSON</button>
                         <button class="btn-success" :disabled="brand.blueprint.status === 'approved'">Approve Blueprint</button>
                         <button class="btn-secondary">Re-generate from Doc</button>
                     </div>
@@ -1788,10 +1788,10 @@
                     }
                 },
 
-                showSaveIndicator() {
+                showSaveIndicator(message = 'Saved!') {
                     // Show a temporary save indicator
                     const indicator = document.createElement('div');
-                    indicator.innerHTML = '💾 Saved!';
+                    indicator.innerHTML = `💾 ${message}`;
                     indicator.style.cssText = `
                         position: fixed;
                         top: 20px;
@@ -1863,6 +1863,76 @@
                         this.isGeneratingBlueprint = false;
                         this.activeTab = 'blueprint';
                     }, 3000);
+                },
+
+                downloadJSON() {
+                    // Option 1: Client-side JSON generation and download
+                    this.downloadJSONClientSide();
+                    
+                    // Option 2: Also save to backend for server-side download
+                    this.downloadJSONServerSide();
+                },
+
+                downloadJSONClientSide() {
+                    // Collect all form data
+                    const exportData = {
+                        brand: {
+                            id: this.brand.id,
+                            name: this.brand.name,
+                            guidelineDoc: this.brand.guidelineDoc,
+                            blueprint: this.brand.blueprint
+                        },
+                        settings: this.settings,
+                        campaign: {
+                            objective: this.campaign.objective,
+                            duration: this.campaign.duration,
+                            startDate: this.campaign.startDate,
+                            language: this.campaign.language,
+                            llm: this.campaign.llm,
+                            productPct: this.campaign.productPct,
+                            plan: this.campaign.plan,
+                            posts: this.campaign.posts
+                        },
+                        creatorSettings: this.creatorSettings,
+                        exportedAt: new Date().toISOString(),
+                        exportVersion: '1.0.0',
+                        exportMethod: 'client-side'
+                    };
+
+                    // Create and download JSON file
+                    const jsonString = JSON.stringify(exportData, null, 2);
+                    const blob = new Blob([jsonString], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    // Create download link
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `brand-content-data-${this.brand.id}-${new Date().toISOString().split('T')[0]}.json`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Clean up
+                    URL.revokeObjectURL(url);
+                    
+                    // Show success message
+                    this.showSaveIndicator('JSON Downloaded!');
+                },
+
+                async downloadJSONServerSide() {
+                    try {
+                        // First save current data to backend
+                        await this.saveSettings();
+                        await this.saveBlueprint();
+                        
+                        // Then trigger server-side download
+                        const downloadUrl = `/api/brand-registration/export-json/${this.brand.id}`;
+                        window.open(downloadUrl, '_blank');
+                        
+                    } catch (error) {
+                        console.error('Server-side download failed:', error);
+                        // Client-side download already completed, so this is just a backup
+                    }
                 },
                 
                 addPillar() {
