@@ -200,20 +200,26 @@ async def upload_brand_guideline(
                 "uploadTime": file_info["upload_time"]
             }
         })
-    except HTTPException:
-        # Brand doesn't exist, create it
-        brand_data = BrandRegistrationData(
-            id=brand_id,
-            name=f"Brand {brand_id}",
-            guidelineDoc={
-                "name": file_info["original_name"],
-                "size": file_info["size"],
-                "status": "uploaded",
-                "path": file_info["path"],
-                "uploadTime": file_info["upload_time"]
-            }
-        )
-        brand_service.create_brand(brand_data)
+    except HTTPException as e:
+        if e.status_code == 404:
+            # Brand doesn't exist, create it
+            now = datetime.now().isoformat()
+            brand_data = BrandRegistrationData(
+                id=brand_id,
+                name=f"Brand {brand_id}",
+                guidelineDoc={
+                    "name": file_info["original_name"],
+                    "size": file_info["size"],
+                    "status": "uploaded",
+                    "path": file_info["path"],
+                    "uploadTime": file_info["upload_time"]
+                },
+                createdAt=now,
+                updatedAt=now
+            )
+            brand_service.create_brand(brand_data)
+        else:
+            raise e
     
     return file_info
 
@@ -228,14 +234,20 @@ async def save_brand_settings(
             "settings": settings.dict()
         })
         return result
-    except HTTPException:
-        # Brand doesn't exist, create it
-        brand_data = BrandRegistrationData(
-            id=brand_id,
-            name=f"Brand {brand_id}",
-            settings=settings
-        )
-        return brand_service.create_brand(brand_data)
+    except HTTPException as e:
+        if e.status_code == 404:
+            # Brand doesn't exist, create it
+            now = datetime.now().isoformat()
+            brand_data = BrandRegistrationData(
+                id=brand_id,
+                name=f"Brand {brand_id}",
+                settings=settings,
+                createdAt=now,
+                updatedAt=now
+            )
+            return brand_service.create_brand(brand_data)
+        else:
+            raise e
 
 @router.post("/save-blueprint/{brand_id}")
 async def save_brand_blueprint(
@@ -248,14 +260,20 @@ async def save_brand_blueprint(
             "blueprint": blueprint.dict()
         })
         return result
-    except HTTPException:
-        # Brand doesn't exist, create it
-        brand_data = BrandRegistrationData(
-            id=brand_id,
-            name=f"Brand {brand_id}",
-            blueprint=blueprint
-        )
-        return brand_service.create_brand(brand_data)
+    except HTTPException as e:
+        if e.status_code == 404:
+            # Brand doesn't exist, create it
+            now = datetime.now().isoformat()
+            brand_data = BrandRegistrationData(
+                id=brand_id,
+                name=f"Brand {brand_id}",
+                blueprint=blueprint,
+                createdAt=now,
+                updatedAt=now
+            )
+            return brand_service.create_brand(brand_data)
+        else:
+            raise e
 
 @router.get("/brand/{brand_id}")
 async def get_brand_data(brand_id: str):
@@ -276,6 +294,34 @@ async def create_new_brand(brand_data: BrandRegistrationData):
 async def update_brand_data(brand_id: str, updates: Dict[str, Any]):
     """Update brand registration data"""
     return brand_service.update_brand(brand_id, updates)
+
+@router.get("/export-json/{brand_id}")
+async def export_brand_json(brand_id: str):
+    """Export complete brand data as JSON file"""
+    try:
+        brand_data = brand_service.get_brand(brand_id)
+        
+        # Create export data structure
+        export_data = {
+            "brand": brand_data,
+            "exportedAt": datetime.now().isoformat(),
+            "exportVersion": "1.0.0",
+            "description": "Complete brand content management data export"
+        }
+        
+        # Create filename
+        filename = f"brand-content-data-{brand_id}-{datetime.now().strftime('%Y-%m-%d')}.json"
+        
+        # Return JSON response with download headers
+        from fastapi.responses import JSONResponse
+        response = JSONResponse(content=export_data)
+        response.headers["Content-Disposition"] = f"attachment; filename={filename}"
+        response.headers["Content-Type"] = "application/json"
+        
+        return response
+        
+    except HTTPException:
+        raise HTTPException(status_code=404, detail="Brand not found")
 
 @router.delete("/brand/{brand_id}")
 async def delete_brand(brand_id: str):
