@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VisualClone AI - Create Brand-Aligned Creatives</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        
+
         * {
             margin: 0;
             padding: 0;
@@ -123,12 +124,12 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
-        
+
         .sidebar-header {
             padding: 0 1.5rem 1.5rem;
             border-bottom: 1px solid var(--border);
         }
-        
+
         .logo {
             font-size: 28px;
             font-weight: 800;
@@ -137,17 +138,22 @@
             align-items: center;
             margin-bottom: 4px;
         }
-        
+
         .gradient-text {
             background: linear-gradient(135deg, #5046e5 0%, #00c4cc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        
-        .logo-text-primary { color: #5046e5; }
-        .logo-text-dark { color: #1a202c; }
-        
+
+        .logo-text-primary {
+            color: #5046e5;
+        }
+
+        .logo-text-dark {
+            color: #1a202c;
+        }
+
         .analytics-bars {
             display: flex;
             align-items: flex-end;
@@ -155,18 +161,32 @@
             margin-left: 8px;
             margin-right: 4px;
         }
-        
+
         .bar {
             border-radius: 2px;
             background: linear-gradient(135deg, #00c4cc 0%, #5046e5 100%);
             width: 3px;
         }
-        
-        .bar1 { height: 10px; opacity: 0.7; }
-        .bar2 { height: 14px; opacity: 0.8; }
-        .bar3 { height: 18px; opacity: 0.9; }
-        .bar4 { height: 22px; }
-        
+
+        .bar1 {
+            height: 10px;
+            opacity: 0.7;
+        }
+
+        .bar2 {
+            height: 14px;
+            opacity: 0.8;
+        }
+
+        .bar3 {
+            height: 18px;
+            opacity: 0.9;
+        }
+
+        .bar4 {
+            height: 22px;
+        }
+
         .tagline-small {
             font-size: 9px;
             font-weight: 600;
@@ -244,7 +264,7 @@
             letter-spacing: 0.5px;
             margin-top: 1rem;
         }
-        
+
         .menu-item {
             padding: 0.75rem 1.5rem;
             display: flex;
@@ -257,12 +277,12 @@
             cursor: pointer;
             font-size: 14px;
         }
-        
+
         .menu-item:hover {
             background-color: rgba(80, 70, 229, 0.05);
             color: var(--primary);
         }
-        
+
         .menu-item.active {
             color: var(--primary);
             background-color: rgba(80, 70, 229, 0.1);
@@ -451,7 +471,7 @@
             position: absolute;
             top: 24px;
             right: 24px;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.7);
             color: white;
             border: none;
             border-radius: 50%;
@@ -885,7 +905,7 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 16px 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             display: none;
             z-index: 1000;
             min-width: 300px;
@@ -903,6 +923,7 @@
                 transform: translateX(400px);
                 opacity: 0;
             }
+
             to {
                 transform: translateX(0);
                 opacity: 1;
@@ -914,6 +935,7 @@
                 transform: translateY(100%);
                 opacity: 0;
             }
+
             to {
                 transform: translateY(0);
                 opacity: 1;
@@ -925,6 +947,7 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -961,6 +984,7 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -988,22 +1012,36 @@
             animation: fadeIn 0.5s ease-in;
         }
 
-        .mb-2 { margin-bottom: 8px; }
-        .mb-3 { margin-bottom: 16px; }
-        .mb-4 { margin-bottom: 24px; }
-        .mt-4 { margin-top: 24px; }
+        .mb-2 {
+            margin-bottom: 8px;
+        }
+
+        .mb-3 {
+            margin-bottom: 16px;
+        }
+
+        .mb-4 {
+            margin-bottom: 24px;
+        }
+
+        .mt-4 {
+            margin-top: 24px;
+        }
 
         /* Responsive */
         @media (max-width: 768px) {
             .header {
                 left: 0;
             }
+
             .sidebar {
                 transform: translateX(-100%);
             }
+
             .main-content {
                 margin-left: 0;
             }
+
             .type-selector,
             .narrative-options,
             .form-grid {
@@ -1012,9 +1050,11 @@
         }
     </style>
 </head>
+
 <body>
     <div class="app-container">
-        <!-- Sidebar -->        <aside class="sidebar">
+        <!-- Sidebar -->
+        <aside class="sidebar">
             <div style="padding: 0 1.5rem 1.5rem; border-bottom: 1px solid #e2e8f0;">
                 <div style="text-align: left;">
                     <div class="prometrix-wordmark">
@@ -1041,7 +1081,7 @@
                             <span>Create Campaign</span>
                         </a>
                     </li>
-                    
+
                     <!-- Brand Registration -->
                     <li>
                         <a class="menu-item" href="FACEBOOK-BRAND-REGISTRATION.html" style="text-decoration: none;">
@@ -1049,7 +1089,7 @@
                             <span>Brand Registration</span>
                         </a>
                     </li>
-                    
+
                     <!-- Inspire Me -->
                     <li>
                         <a class="menu-item active" href="FACEBOOK-INSPIRE-ME.html" style="text-decoration: none;">
@@ -1057,62 +1097,71 @@
                             <span>Inspire Me</span>
                         </a>
                     </li>
-                    
+
                     <!-- Engage Boost with Submenu -->
                     <li x-data="{ engageOpen: false }">
-                        <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html" style="text-decoration: none; justify-content: space-between;">
+                        <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html"
+                            style="text-decoration: none; justify-content: space-between;">
                             <span style="display: flex; align-items: center; gap: 0.75rem;">
                                 <span>💬</span>
                                 <span>Engage Boost</span>
                             </span>
                             <span x-text="engageOpen ? '▼' : '▶'" style="font-size: 0.7rem;"></span>
                         </a>
-                        <ul x-show="engageOpen" x-transition style="list-style: none; background: #f8fafc; margin: 0; padding: 0;">
+                        <ul x-show="engageOpen" x-transition
+                            style="list-style: none; background: #f8fafc; margin: 0; padding: 0;">
                             <li>
-                                <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#pending" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#pending"
+                                    style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
                                     <span>⏳</span>
                                     <span>Pending Reviews</span>
                                 </a>
                             </li>
                             <li>
-                                <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#all" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#all"
+                                    style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
                                     <span>💭</span>
                                     <span>All Comments</span>
                                 </a>
                             </li>
                             <li>
-                                <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#approved" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#approved"
+                                    style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
                                     <span>✅</span>
                                     <span>Approved</span>
                                 </a>
                             </li>
                             <li>
-                                <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#rejected" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#rejected"
+                                    style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
                                     <span>❌</span>
                                     <span>Rejected</span>
                                 </a>
                             </li>
                             <li>
-                                <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#knowledge" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#knowledge"
+                                    style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
                                     <span>📚</span>
                                     <span>Knowledge Base</span>
                                 </a>
                             </li>
                             <li>
-                                <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#analytics" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#analytics"
+                                    style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
                                     <span>📊</span>
                                     <span>Analytics</span>
                                 </a>
                             </li>
                             <li>
-                                <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#settings" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#settings"
+                                    style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
                                     <span>⚙️</span>
                                     <span>Settings</span>
                                 </a>
                             </li>
                         </ul>
                     </li>
-                    
+
                     <!-- Insights -->
                     <li>
                         <a class="menu-item" href="#" style="text-decoration: none;">
@@ -1120,43 +1169,50 @@
                             <span>Insights</span>
                         </a>
                     </li>
-                    
+
                     <!-- Settings with Submenu -->
                     <li x-data="{ settingsOpen: false }">
-                        <a class="menu-item" href="FACEBOOK-SETTINGS.html" style="text-decoration: none; justify-content: space-between;">
+                        <a class="menu-item" href="FACEBOOK-SETTINGS.html"
+                            style="text-decoration: none; justify-content: space-between;">
                             <span style="display: flex; align-items: center; gap: 0.75rem;">
                                 <span>⚙️</span>
                                 <span>Settings</span>
                             </span>
                             <span x-text="settingsOpen ? '▼' : '▶'" style="font-size: 0.7rem;"></span>
                         </a>
-                        <ul x-show="settingsOpen" x-transition style="list-style: none; background: #f8fafc; margin: 0; padding: 0;">
+                        <ul x-show="settingsOpen" x-transition
+                            style="list-style: none; background: #f8fafc; margin: 0; padding: 0;">
                             <li>
-                                <a class="menu-item" href="FACEBOOK-SETTINGS.html#language" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <a class="menu-item" href="FACEBOOK-SETTINGS.html#language"
+                                    style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
                                     <span>🌐</span>
                                     <span>Language</span>
                                 </a>
                             </li>
                             <li>
-                                <a class="menu-item" href="FACEBOOK-SETTINGS.html#llm" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <a class="menu-item" href="FACEBOOK-SETTINGS.html#llm"
+                                    style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
                                     <span>🤖</span>
                                     <span>LLM Settings</span>
                                 </a>
                             </li>
                             <li>
-                                <a class="menu-item" href="FACEBOOK-SETTINGS.html#guardrails" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <a class="menu-item" href="FACEBOOK-SETTINGS.html#guardrails"
+                                    style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
                                     <span>🛡️</span>
                                     <span>Guardrails</span>
                                 </a>
                             </li>
                             <li>
-                                <a class="menu-item" href="FACEBOOK-SETTINGS.html#integrations" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <a class="menu-item" href="FACEBOOK-SETTINGS.html#integrations"
+                                    style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
                                     <span>🔗</span>
                                     <span>Integrations</span>
                                 </a>
                             </li>
                             <li>
-                                <a class="menu-item" href="FACEBOOK-SETTINGS.html#products" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <a class="menu-item" href="FACEBOOK-SETTINGS.html#products"
+                                    style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
                                     <span>📦</span>
                                     <span>Products</span>
                                 </a>
@@ -1226,7 +1282,7 @@
                 <div class="content-card">
                     <h2>Upload Inspiration</h2>
                     <p class="subtitle">Start with a creative you want to emulate</p>
-                    
+
                     <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
                         <div class="upload-icon">📤</div>
                         <h3>Drag & drop files here</h3>
@@ -1245,36 +1301,44 @@
                             <div class="type-card" data-type="image" onclick="selectTargetType('image')">
                                 <div class="type-icon">🖼️</div>
                                 <strong>Image</strong>
-                                <p style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Single static post</p>
+                                <p style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Single static
+                                    post</p>
                             </div>
                             <div class="type-card selected" data-type="carousel" onclick="selectTargetType('carousel')">
                                 <div class="type-icon">📱</div>
                                 <strong>Carousel</strong>
-                                <p style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Multi-panel story</p>
+                                <p style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Multi-panel
+                                    story</p>
                             </div>
                             <div class="type-card" data-type="gif" onclick="selectTargetType('gif')">
                                 <div class="type-icon">🎞️</div>
                                 <strong>GIF</strong>
-                                <p style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Looping animation</p>
+                                <p style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Looping
+                                    animation</p>
                             </div>
                             <div class="type-card" data-type="reel" onclick="selectTargetType('reel')">
                                 <div class="type-icon">🎬</div>
                                 <strong>Reel</strong>
-                                <p style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Short-form video</p>
+                                <p style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Short-form
+                                    video</p>
                             </div>
                         </div>
-                        <div style="margin-top: 16px; padding: 12px; background: #eef2ff; border-radius: 8px; font-size: 13px;" id="typeHint">
-                            <strong>💡 Tip:</strong> <span id="typeHintText">We'll analyze your inspiration and create a multi-panel carousel with strategic storytelling.</span>
+                        <div style="margin-top: 16px; padding: 12px; background: #eef2ff; border-radius: 8px; font-size: 13px;"
+                            id="typeHint">
+                            <strong>💡 Tip:</strong> <span id="typeHintText">We'll analyze your inspiration and create a
+                                multi-panel carousel with strategic storytelling.</span>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label>What do you like about this creative? (Optional)</label>
-                        <textarea placeholder="E.g., The bold colors, the dynamic composition, the way it showcases the product..."></textarea>
+                        <textarea
+                            placeholder="E.g., The bold colors, the dynamic composition, the way it showcases the product..."></textarea>
                     </div>
 
                     <div style="display: flex; justify-content: flex-end; margin-top: 32px;">
-                        <button class="btn btn-primary" onclick="nextStep(1)" id="analyzeBtn">Analyze Creative DNA →</button>
+                        <button class="btn btn-primary" onclick="nextStep(1)" id="analyzeBtn">Analyze Creative DNA
+                            →</button>
                     </div>
                 </div>
             </div>
@@ -1286,12 +1350,16 @@
                     <p class="subtitle">See the creative's DNA and blueprint</p>
 
                     <!-- Creative Type Summary -->
-                    <div style="background: linear-gradient(135deg, #eef2ff, #fce7f3); padding: 20px; border-radius: 12px; margin-bottom: 24px; border-left: 4px solid var(--primary);">
+                    <div
+                        style="background: linear-gradient(135deg, #eef2ff, #fce7f3); padding: 20px; border-radius: 12px; margin-bottom: 24px; border-left: 4px solid var(--primary);">
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <span style="font-size: 32px;" id="summaryIcon">📱</span>
                             <div>
-                                <strong style="font-size: 16px;">Creating: <span id="summaryType">Carousel</span></strong><br>
-                                <span style="font-size: 13px; color: var(--text-secondary);" id="summaryDescription">Multi-panel storytelling with hook, features, proof, and CTA</span>
+                                <strong style="font-size: 16px;">Creating: <span
+                                        id="summaryType">Carousel</span></strong><br>
+                                <span style="font-size: 13px; color: var(--text-secondary);"
+                                    id="summaryDescription">Multi-panel storytelling with hook, features, proof, and
+                                    CTA</span>
                             </div>
                         </div>
                     </div>
@@ -1325,7 +1393,8 @@
                         <div class="analysis-grid">
                             <div class="analysis-section">
                                 <h4>Focal Points</h4>
-                                <p>Primary focus on product with 60% saliency, secondary background elements create depth</p>
+                                <p>Primary focus on product with 60% saliency, secondary background elements create
+                                    depth</p>
                             </div>
                             <div class="analysis-section">
                                 <h4>Typography Style</h4>
@@ -1334,8 +1403,11 @@
                         </div>
                         <div class="content-card mt-4">
                             <h3>📝 Prompt Reconstruction</h3>
-                            <p style="background: var(--bg-main); padding: 16px; border-radius: 8px; font-family: monospace; font-size: 13px;">
-                                "Professional product photography, athletic shoe on gradient background, dramatic studio lighting, high contrast, bold orange and navy color scheme, modern minimalist composition, commercial advertising style --ar 1:1 --style raw"
+                            <p
+                                style="background: var(--bg-main); padding: 16px; border-radius: 8px; font-family: monospace; font-size: 13px;">
+                                "Professional product photography, athletic shoe on gradient background, dramatic studio
+                                lighting, high contrast, bold orange and navy color scheme, modern minimalist
+                                composition, commercial advertising style --ar 1:1 --style raw"
                             </p>
                         </div>
                     </div>
@@ -1372,7 +1444,8 @@
                         <div class="analysis-grid">
                             <div class="analysis-section">
                                 <span class="role-badge hook">Hook</span>
-                                <p style="margin-top: 8px;">Pattern-interrupt visual + 4–6 word punchline. Win the swipe.</p>
+                                <p style="margin-top: 8px;">Pattern-interrupt visual + 4–6 word punchline. Win the
+                                    swipe.</p>
                             </div>
                             <div class="analysis-section">
                                 <span class="role-badge feature">Feature</span>
@@ -1417,11 +1490,13 @@
                         <h3>🎬 Scene Breakdown & Structure</h3>
                         <div class="analysis-section">
                             <h4>Hook (0:00-0:03)</h4>
-                            <p>Fast cut intro with product reveal, text overlay "Wait for it...", trending audio fade-in</p>
+                            <p>Fast cut intro with product reveal, text overlay "Wait for it...", trending audio fade-in
+                            </p>
                         </div>
                         <div class="analysis-section" style="margin-top: 16px;">
                             <h4>Build-up (0:03-0:10)</h4>
-                            <p>3 quick scenes showing product features, dynamic transitions, upbeat music intensifies</p>
+                            <p>3 quick scenes showing product features, dynamic transitions, upbeat music intensifies
+                            </p>
                         </div>
                         <div class="analysis-section" style="margin-top: 16px;">
                             <h4>Payoff (0:10-0:15)</h4>
@@ -1523,7 +1598,8 @@
                             </div>
                             <div class="form-group full-width">
                                 <label>Subheadline (Optional)</label>
-                                <input type="text" placeholder="Carbon plate technology for elite performance" maxlength="100">
+                                <input type="text" placeholder="Carbon plate technology for elite performance"
+                                    maxlength="100">
                             </div>
                             <div class="form-group full-width">
                                 <label>CTA Text (Optional)</label>
@@ -1537,7 +1613,8 @@
                         <div class="storyboard-header">
                             <h3>🎬 Storyboard Editor</h3>
                             <div class="storyboard-tools">
-                                <button class="btn btn-secondary" onclick="autoFillCopy()">Auto-fill Copy with AI</button>
+                                <button class="btn btn-secondary" onclick="autoFillCopy()">Auto-fill Copy with
+                                    AI</button>
                                 <button class="btn btn-secondary" onclick="addPanel()">+ Add Panel</button>
                             </div>
                         </div>
@@ -1572,12 +1649,14 @@
                                     </div>
                                     <div class="form-group full-width">
                                         <label>Headline (≤48 chars)</label>
-                                        <input type="text" placeholder="Speed, Unleashed." maxlength="48" oninput="updateCharCount(this, 48)">
+                                        <input type="text" placeholder="Speed, Unleashed." maxlength="48"
+                                            oninput="updateCharCount(this, 48)">
                                         <div class="char-count">0 / 48</div>
                                     </div>
                                     <div class="form-group full-width">
                                         <label>Body Copy (≤120 chars, optional)</label>
-                                        <textarea placeholder="Carbon plate power for every stride." maxlength="120" oninput="updateCharCount(this, 120)"></textarea>
+                                        <textarea placeholder="Carbon plate power for every stride." maxlength="120"
+                                            oninput="updateCharCount(this, 120)"></textarea>
                                         <div class="char-count">0 / 120</div>
                                     </div>
                                 </div>
@@ -1612,12 +1691,14 @@
                                     </div>
                                     <div class="form-group full-width">
                                         <label>Headline (≤48 chars)</label>
-                                        <input type="text" placeholder="Carbon Fiber Technology" maxlength="48" oninput="updateCharCount(this, 48)">
+                                        <input type="text" placeholder="Carbon Fiber Technology" maxlength="48"
+                                            oninput="updateCharCount(this, 48)">
                                         <div class="char-count">0 / 48</div>
                                     </div>
                                     <div class="form-group full-width">
                                         <label>Body Copy (≤120 chars, optional)</label>
-                                        <textarea placeholder="Advanced carbon plate delivers explosive energy return" maxlength="120" oninput="updateCharCount(this, 120)"></textarea>
+                                        <textarea placeholder="Advanced carbon plate delivers explosive energy return"
+                                            maxlength="120" oninput="updateCharCount(this, 120)"></textarea>
                                         <div class="char-count">0 / 120</div>
                                     </div>
                                 </div>
@@ -1651,12 +1732,14 @@
                                     </div>
                                     <div class="form-group full-width">
                                         <label>Headline (≤48 chars)</label>
-                                        <input type="text" placeholder="Built for Distance" maxlength="48" oninput="updateCharCount(this, 48)">
+                                        <input type="text" placeholder="Built for Distance" maxlength="48"
+                                            oninput="updateCharCount(this, 48)">
                                         <div class="char-count">0 / 48</div>
                                     </div>
                                     <div class="form-group full-width">
                                         <label>Body Copy (≤120 chars, optional)</label>
-                                        <textarea placeholder="Engineered foam cushioning for marathon comfort" maxlength="120" oninput="updateCharCount(this, 120)"></textarea>
+                                        <textarea placeholder="Engineered foam cushioning for marathon comfort"
+                                            maxlength="120" oninput="updateCharCount(this, 120)"></textarea>
                                         <div class="char-count">0 / 120</div>
                                     </div>
                                 </div>
@@ -1690,12 +1773,14 @@
                                     </div>
                                     <div class="form-group full-width">
                                         <label>Headline (≤48 chars)</label>
-                                        <input type="text" placeholder="Trusted by Champions" maxlength="48" oninput="updateCharCount(this, 48)">
+                                        <input type="text" placeholder="Trusted by Champions" maxlength="48"
+                                            oninput="updateCharCount(this, 48)">
                                         <div class="char-count">0 / 48</div>
                                     </div>
                                     <div class="form-group full-width">
                                         <label>Body Copy (≤120 chars, optional)</label>
-                                        <textarea placeholder="Used by elite athletes in 50+ marathons worldwide" maxlength="120" oninput="updateCharCount(this, 120)"></textarea>
+                                        <textarea placeholder="Used by elite athletes in 50+ marathons worldwide"
+                                            maxlength="120" oninput="updateCharCount(this, 120)"></textarea>
                                         <div class="char-count">0 / 120</div>
                                     </div>
                                 </div>
@@ -1729,12 +1814,14 @@
                                     </div>
                                     <div class="form-group full-width">
                                         <label>Headline (≤48 chars)</label>
-                                        <input type="text" placeholder="Run Further. Run Faster." maxlength="48" oninput="updateCharCount(this, 48)">
+                                        <input type="text" placeholder="Run Further. Run Faster." maxlength="48"
+                                            oninput="updateCharCount(this, 48)">
                                         <div class="char-count">0 / 48</div>
                                     </div>
                                     <div class="form-group full-width">
                                         <label>Body Copy (≤120 chars, optional)</label>
-                                        <textarea placeholder="Shop now at sportflex.com" maxlength="120" oninput="updateCharCount(this, 120)"></textarea>
+                                        <textarea placeholder="Shop now at sportflex.com" maxlength="120"
+                                            oninput="updateCharCount(this, 120)"></textarea>
                                         <div class="char-count">0 / 120</div>
                                     </div>
                                 </div>
@@ -1862,7 +1949,8 @@
 
                 <div style="display: flex; justify-content: space-between; margin-top: 32px;">
                     <button class="btn btn-secondary" onclick="prevStep(3)">← Back</button>
-                    <button class="btn btn-primary" onclick="generateCreative()" id="generateBtn">Generate Variants →</button>
+                    <button class="btn btn-primary" onclick="generateCreative()" id="generateBtn">Generate Variants
+                        →</button>
                 </div>
             </div>
 
@@ -1874,7 +1962,8 @@
 
                     <div style="margin-bottom: 24px;">
                         <strong>Variant Selector:</strong>
-                        <button class="btn btn-secondary" style="margin-left: 12px;" onclick="selectVariant('A')">Variant A</button>
+                        <button class="btn btn-secondary" style="margin-left: 12px;"
+                            onclick="selectVariant('A')">Variant A</button>
                         <button class="btn btn-secondary" onclick="selectVariant('B')">Variant B</button>
                         <button class="btn btn-secondary" onclick="selectVariant('C')">Variant C</button>
                     </div>
@@ -1883,7 +1972,8 @@
                     <div class="type-specific" data-show-for="image">
                         <h3>🖼️ Image Variants</h3>
                         <div class="variant-gallery">
-                            <div class="variant-card selected" onclick="event.currentTarget.classList.toggle('selected')">
+                            <div class="variant-card selected"
+                                onclick="event.currentTarget.classList.toggle('selected')">
                                 <div class="variant-preview">Variant A</div>
                                 <div class="variant-scores">
                                     <div class="score-row">
@@ -1901,7 +1991,9 @@
                                 </div>
                             </div>
                             <div class="variant-card" onclick="event.currentTarget.classList.toggle('selected')">
-                                <div class="variant-preview" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Variant B</div>
+                                <div class="variant-preview"
+                                    style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Variant B
+                                </div>
                                 <div class="variant-scores">
                                     <div class="score-row">
                                         <span>Brand Fit:</span>
@@ -1918,7 +2010,9 @@
                                 </div>
                             </div>
                             <div class="variant-card" onclick="event.currentTarget.classList.toggle('selected')">
-                                <div class="variant-preview" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Variant C</div>
+                                <div class="variant-preview"
+                                    style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Variant C
+                                </div>
                                 <div class="variant-scores">
                                     <div class="score-row">
                                         <span>Brand Fit:</span>
@@ -1971,7 +2065,9 @@
                             </div>
 
                             <div class="matrix-panel" onclick="selectMatrixPanel(2)">
-                                <div class="matrix-preview" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Panel 2<br>Feature</div>
+                                <div class="matrix-preview"
+                                    style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Panel
+                                    2<br>Feature</div>
                                 <div class="matrix-info">
                                     <div class="panel-num">Panel 2</div>
                                     <span class="role-badge feature">Feature</span>
@@ -1985,7 +2081,9 @@
                             </div>
 
                             <div class="matrix-panel" onclick="selectMatrixPanel(3)">
-                                <div class="matrix-preview" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Panel 3<br>Feature</div>
+                                <div class="matrix-preview"
+                                    style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Panel
+                                    3<br>Feature</div>
                                 <div class="matrix-info">
                                     <div class="panel-num">Panel 3</div>
                                     <span class="role-badge feature">Feature</span>
@@ -1999,7 +2097,9 @@
                             </div>
 
                             <div class="matrix-panel" onclick="selectMatrixPanel(4)">
-                                <div class="matrix-preview" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">Panel 4<br>Proof</div>
+                                <div class="matrix-preview"
+                                    style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">Panel
+                                    4<br>Proof</div>
                                 <div class="matrix-info">
                                     <div class="panel-num">Panel 4</div>
                                     <span class="role-badge proof">Proof</span>
@@ -2013,7 +2113,9 @@
                             </div>
 
                             <div class="matrix-panel" onclick="selectMatrixPanel(5)">
-                                <div class="matrix-preview" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">Panel 5<br>CTA</div>
+                                <div class="matrix-preview"
+                                    style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">Panel
+                                    5<br>CTA</div>
                                 <div class="matrix-info">
                                     <div class="panel-num">Panel 5</div>
                                     <span class="role-badge cta">CTA</span>
@@ -2030,22 +2132,25 @@
                         <div class="content-card mt-4">
                             <h3>Panel Detail Editor</h3>
                             <p class="subtitle">Currently editing: Panel 1</p>
-                            
+
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
                                 <div>
-                                    <div style="width: 100%; height: 300px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: 600;">
+                                    <div
+                                        style="width: 100%; height: 300px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: 600;">
                                         Panel 1 Preview<br>
                                         <small style="font-size: 14px; font-weight: 400;">Speed, Unleashed</small>
                                     </div>
                                     <div style="margin-top: 16px;">
-                                        <button class="btn btn-secondary" onclick="reRenderPanel()">Re-render Panel</button>
+                                        <button class="btn btn-secondary" onclick="reRenderPanel()">Re-render
+                                            Panel</button>
                                         <button class="btn btn-secondary" onclick="lockPanel()">🔒 Lock Panel</button>
                                     </div>
                                 </div>
                                 <div>
                                     <div class="form-group">
                                         <label>Headline</label>
-                                        <input type="text" value="Speed, Unleashed." onchange="showToast('Panel updated!')">
+                                        <input type="text" value="Speed, Unleashed."
+                                            onchange="showToast('Panel updated!')">
                                     </div>
                                     <div class="form-group">
                                         <label>Body Copy</label>
@@ -2072,7 +2177,8 @@
 
                         <div class="content-card mt-4">
                             <h3>🎯 Consistency Score</h3>
-                            <div style="font-size: 48px; font-weight: 700; color: var(--success); text-align: center; margin: 24px 0;">
+                            <div
+                                style="font-size: 48px; font-weight: 700; color: var(--success); text-align: center; margin: 24px 0;">
                                 94
                             </div>
                             <p style="text-align: center; color: var(--text-secondary);">
@@ -2085,7 +2191,8 @@
                     <div class="type-specific" data-show-for="gif">
                         <h3>🎞️ GIF Variants</h3>
                         <div class="variant-gallery">
-                            <div class="variant-card selected" onclick="event.currentTarget.classList.toggle('selected')">
+                            <div class="variant-card selected"
+                                onclick="event.currentTarget.classList.toggle('selected')">
                                 <div class="variant-preview">Variant A<br>2.0s Loop</div>
                                 <div class="variant-scores">
                                     <div class="score-row">
@@ -2103,7 +2210,9 @@
                                 </div>
                             </div>
                             <div class="variant-card" onclick="event.currentTarget.classList.toggle('selected')">
-                                <div class="variant-preview" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Variant B<br>2.0s Loop</div>
+                                <div class="variant-preview"
+                                    style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Variant
+                                    B<br>2.0s Loop</div>
                                 <div class="variant-scores">
                                     <div class="score-row">
                                         <span>Loop Smoothness:</span>
@@ -2120,7 +2229,9 @@
                                 </div>
                             </div>
                             <div class="variant-card" onclick="event.currentTarget.classList.toggle('selected')">
-                                <div class="variant-preview" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Variant C<br>2.0s Loop</div>
+                                <div class="variant-preview"
+                                    style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Variant
+                                    C<br>2.0s Loop</div>
                                 <div class="variant-scores">
                                     <div class="score-row">
                                         <span>Loop Smoothness:</span>
@@ -2143,8 +2254,10 @@
                             <p style="color: var(--text-secondary); margin-bottom: 16px;">
                                 Playback controls and smoothness analysis
                             </p>
-                            <div style="background: var(--bg-main); padding: 24px; border-radius: 12px; text-align: center;">
-                                <div style="width: 100%; height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; margin-bottom: 16px;">
+                            <div
+                                style="background: var(--bg-main); padding: 24px; border-radius: 12px; text-align: center;">
+                                <div
+                                    style="width: 100%; height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; margin-bottom: 16px;">
                                     🔄 GIF Loop Preview
                                 </div>
                                 <button class="btn btn-secondary">▶️ Play</button>
@@ -2158,7 +2271,8 @@
                     <div class="type-specific" data-show-for="reel">
                         <h3>🎬 Reel Variants</h3>
                         <div class="variant-gallery">
-                            <div class="variant-card selected" onclick="event.currentTarget.classList.toggle('selected')">
+                            <div class="variant-card selected"
+                                onclick="event.currentTarget.classList.toggle('selected')">
                                 <div class="variant-preview">Variant A<br>15s</div>
                                 <div class="variant-scores">
                                     <div class="score-row">
@@ -2176,7 +2290,9 @@
                                 </div>
                             </div>
                             <div class="variant-card" onclick="event.currentTarget.classList.toggle('selected')">
-                                <div class="variant-preview" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Variant B<br>15s</div>
+                                <div class="variant-preview"
+                                    style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Variant
+                                    B<br>15s</div>
                                 <div class="variant-scores">
                                     <div class="score-row">
                                         <span>Hook Quality:</span>
@@ -2193,7 +2309,9 @@
                                 </div>
                             </div>
                             <div class="variant-card" onclick="event.currentTarget.classList.toggle('selected')">
-                                <div class="variant-preview" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Variant C<br>15s</div>
+                                <div class="variant-preview"
+                                    style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Variant
+                                    C<br>15s</div>
                                 <div class="variant-scores">
                                     <div class="score-row">
                                         <span>Hook Quality:</span>
@@ -2213,24 +2331,37 @@
 
                         <div class="content-card mt-4">
                             <h4>🎞️ Scene Strip</h4>
-                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px;">
-                                <div style="background: var(--bg-main); padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; border: 2px solid var(--primary);">
-                                    <div style="width: 100%; height: 80px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 6px; margin-bottom: 8px;"></div>
+                            <div
+                                style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px;">
+                                <div
+                                    style="background: var(--bg-main); padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; border: 2px solid var(--primary);">
+                                    <div
+                                        style="width: 100%; height: 80px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 6px; margin-bottom: 8px;">
+                                    </div>
                                     <strong style="font-size: 12px;">Scene 1: Hook</strong><br>
                                     <span style="font-size: 11px; color: var(--text-secondary);">0:00-0:03</span>
                                 </div>
-                                <div style="background: var(--bg-main); padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; border: 2px solid var(--border);">
-                                    <div style="width: 100%; height: 80px; background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); border-radius: 6px; margin-bottom: 8px;"></div>
+                                <div
+                                    style="background: var(--bg-main); padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; border: 2px solid var(--border);">
+                                    <div
+                                        style="width: 100%; height: 80px; background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); border-radius: 6px; margin-bottom: 8px;">
+                                    </div>
                                     <strong style="font-size: 12px;">Scene 2: Feature</strong><br>
                                     <span style="font-size: 11px; color: var(--text-secondary);">0:03-0:08</span>
                                 </div>
-                                <div style="background: var(--bg-main); padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; border: 2px solid var(--border);">
-                                    <div style="width: 100%; height: 80px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 6px; margin-bottom: 8px;"></div>
+                                <div
+                                    style="background: var(--bg-main); padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; border: 2px solid var(--border);">
+                                    <div
+                                        style="width: 100%; height: 80px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 6px; margin-bottom: 8px;">
+                                    </div>
                                     <strong style="font-size: 12px;">Scene 3: Action</strong><br>
                                     <span style="font-size: 11px; color: var(--text-secondary);">0:08-0:12</span>
                                 </div>
-                                <div style="background: var(--bg-main); padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; border: 2px solid var(--border);">
-                                    <div style="width: 100%; height: 80px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 6px; margin-bottom: 8px;"></div>
+                                <div
+                                    style="background: var(--bg-main); padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; border: 2px solid var(--border);">
+                                    <div
+                                        style="width: 100%; height: 80px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 6px; margin-bottom: 8px;">
+                                    </div>
                                     <strong style="font-size: 12px;">Scene 4: CTA</strong><br>
                                     <span style="font-size: 11px; color: var(--text-secondary);">0:12-0:15</span>
                                 </div>
@@ -2238,8 +2369,10 @@
 
                             <div class="form-group">
                                 <label>Caption Preview</label>
-                                <div style="background: var(--bg-main); padding: 16px; border-radius: 8px; font-size: 14px;">
-                                    <strong style="color: var(--primary);">Speed, Unleashed.</strong> Carbon plate technology for elite runners. 🏃‍♂️⚡
+                                <div
+                                    style="background: var(--bg-main); padding: 16px; border-radius: 8px; font-size: 14px;">
+                                    <strong style="color: var(--primary);">Speed, Unleashed.</strong> Carbon plate
+                                    technology for elite runners. 🏃‍♂️⚡
                                 </div>
                             </div>
                         </div>
@@ -2315,8 +2448,10 @@
                                 <input type="text" placeholder="ultrarun_pro">
                             </div>
                         </div>
-                        <div style="background: var(--bg-main); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 12px;">
-                            https://sportflex.com?utm_campaign=spring_launch_2025&utm_source=instagram&utm_medium=<span id="utmMediumDisplay">carousel</span>&utm_content=ultrarun_pro
+                        <div
+                            style="background: var(--bg-main); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 12px;">
+                            https://sportflex.com?utm_campaign=spring_launch_2025&utm_source=instagram&utm_medium=<span
+                                id="utmMediumDisplay">carousel</span>&utm_content=ultrarun_pro
                         </div>
                     </div>
                 </div>
@@ -2340,7 +2475,7 @@
             const container = element.closest('.submenu-container');
             const submenu = container.querySelector('.submenu');
             const arrow = element.querySelector('.submenu-arrow');
-            
+
             if (submenu.style.display === 'none' || submenu.style.display === '') {
                 submenu.style.display = 'block';
                 arrow.textContent = '▼';
@@ -2356,7 +2491,7 @@
         let uploadedFiles = [];
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             updateStepperUI();
             setupFileUpload();
             // Set initial type
@@ -2454,9 +2589,45 @@
             });
         }
 
-        function handleFiles(files) {
+        async function handleFiles(files) {
             uploadedFiles = Array.from(files);
             displayUploadedFiles();
+
+            if (uploadedFiles.length > 0) {
+                // Upload and analyze
+                const formData = new FormData();
+                formData.append('file', uploadedFiles[0]);
+
+                showToast('Analyzing image...');
+
+                try {
+                    const response = await fetch('/api/analyze-image', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.description) {
+                            window.imageDescription = data.description;
+                            console.log("Image Description Saved:", window.imageDescription);
+                            showToast('Image analyzed successfully! Description saved.');
+
+                            // Also try to update the textarea if it exists
+                            const textarea = document.querySelector('textarea[placeholder*="E.g., The bold colors"]');
+                            if (textarea) {
+                                textarea.value = data.description;
+                            }
+                        }
+                    } else {
+                        console.error('Analysis failed');
+                        showToast('Analysis failed');
+                    }
+                } catch (e) {
+                    console.error('Error analyzing image:', e);
+                    showToast('Error analyzing image');
+                }
+            }
         }
 
         function displayUploadedFiles() {
@@ -2467,16 +2638,18 @@
             }
 
             container.classList.remove('hidden');
-            container.innerHTML = uploadedFiles.map((file, index) => `
+            container.innerHTML = uploadedFiles.map((file, index) => {
+                const imageUrl = URL.createObjectURL(file);
+                return `
                 <div class="file-preview">
                     <button class="remove-file" onclick="removeFile(${index})">×</button>
-                    <img src="https://via.placeholder.com/200x150?text=${file.name}" alt="${file.name}">
+                    <img src="${imageUrl}" alt="${file.name}">
                     <div class="file-info">
                         <strong>${file.name}</strong><br>
-                        ${(file.size / 1024).toFixed(1)} KB
+                        ${(file.size / 1024 / 1024).toFixed(2)} MB
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         function removeFile(index) {
@@ -2492,7 +2665,7 @@
             });
             document.querySelector(`[data-type="${type}"]`).classList.add('selected');
             document.getElementById('typebadge').textContent = type.charAt(0).toUpperCase() + type.slice(1);
-            
+
             // Update type hint
             const hints = {
                 image: "We'll analyze your inspiration and create a brand-aligned image with strategic composition and copy.",
@@ -2516,9 +2689,9 @@
                 };
                 analyzeBtn.textContent = analyzeBtnTexts[type];
             }
-            
+
             showToast(`Target type set to ${type}`);
-            
+
             // Update journey based on type
             updateJourneyForType(type);
             updateExportContent();
@@ -2527,7 +2700,7 @@
         function updateJourneyForType(type) {
             // This will be used to show/hide different content in subsequent steps
             document.body.setAttribute('data-creative-type', type);
-            
+
             // Update button text in Step 3
             const generateBtn = document.getElementById('generateBtn');
             if (generateBtn) {
@@ -2582,10 +2755,52 @@
         }
 
         // Step Navigation
-        function nextStep(current) {
+        async function nextStep(current) {
             if (current === 1 && uploadedFiles.length === 0) {
                 showToast('Please upload at least one file');
                 return;
+            }
+
+            // TRIGGER GENERATION IF STEP 1 AND IMAGE TYPE
+            if (current === 1 && selectedType === 'image') {
+                const textarea = document.querySelector('textarea[placeholder*="E.g., The bold colors"]');
+                let promptToUse = window.imageDescription || "";
+
+                if (textarea && textarea.value.trim() !== "") {
+                    promptToUse = textarea.value.trim();
+                }
+
+                if (promptToUse) {
+                    showToast('🎨 Generating DALL-E image from your brief...');
+
+                    try {
+                        const response = await fetch('/api/generate-creative', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ prompt: promptToUse, type: 'image' })
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.success) {
+                                showToast('✨ Image Generated Successfully!');
+                                console.log("Generated Image:", data.local_path);
+                                // Optionally show it somewhere or just notify as requested
+                            } else {
+                                showToast('Generation failed: ' + (data.error || 'Unknown error'));
+                            }
+                        } else {
+                            showToast('Generation request failed');
+                        }
+                    } catch (e) {
+                        console.error("Generation error:", e);
+                        showToast('Error generating image');
+                    }
+                } else {
+                    console.log("No prompt available for generation");
+                }
             }
 
             currentStep = current + 1;
@@ -2627,7 +2842,7 @@
             document.querySelectorAll('.step').forEach((step, index) => {
                 const stepNum = index + 1;
                 step.classList.remove('active', 'completed');
-                
+
                 if (stepNum === currentStep) {
                     step.classList.add('active');
                 } else if (stepNum < currentStep) {
@@ -2742,7 +2957,7 @@
             const charCount = parent.querySelector('.char-count');
             const length = element.value.length;
             charCount.textContent = `${length} / ${maxChars}`;
-            
+
             if (length > maxChars * 0.9) {
                 charCount.style.color = 'var(--warning)';
             } else {
@@ -2761,4 +2976,5 @@
         }
     </script>
 </body>
+
 </html>

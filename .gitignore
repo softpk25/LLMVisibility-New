@@ -1,0 +1,32 @@
+# Environment files (NEVER commit these)
+.env
+*.env
+inspire me/.env
+!.env.example
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Generated files
+generated/
+temp_uploads/
+image_analysis/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

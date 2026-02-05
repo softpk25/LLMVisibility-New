@@ -1,0 +1,22 @@
+{
+  "source_filename": "Coca-Cola.jpg",
+  "analysis": {
+    "visual_dna": {
+      "composition": "Centralized product focus, symmetrical balance",
+      "palette": "Coca-Cola red (#F40009) 80%, white text for contrast",
+      "lighting": "Even and direct lighting highlighting texture",
+      "style": "Classic, iconic branding with modern elements"
+    },
+    "strategic_analysis": {
+      "tone": "Nostalgic yet contemporary, refreshing",
+      "cta_style": "Implied enjoyment and pause",
+      "emotional_angle": "Relaxation and social engagement",
+      "audience": "Broad, all ages, brand loyalists and casual consumers"
+    },
+    "image_composition_analysis": {
+      "focal_points": "Center-aligned bottle with high saliency; large, bold typography draws focus",
+      "typography_style": "Bold sans-serif, balanced with iconic script, high visibility"
+    },
+    "prompt_reconstruction": "Classic product photography, Coca-Cola bottle on red background, even lighting, strong contrast, Coca-Cola brand colors, symmetrical composition, commercial advertising style --ar 16:9 --style iconic"
+  }
+}
