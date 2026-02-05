@@ -844,7 +844,7 @@
                                         <span>Formality</span>
                                         <span>Casual ← → Formal</span>
                                     </div>
-                                    <input type="range" x-model="brand.blueprint.voice.formality" min="0" max="100" class="range-slider">
+                                    <input type="range" x-model="brand.blueprint.voice.formality" min="0" max="100" class="range-slider" @input="onBlueprintChange()">
                                 </div>
                                 
                                 <div class="voice-slider">
@@ -852,7 +852,7 @@
                                         <span>Humor</span>
                                         <span>Serious ← → Playful</span>
                                     </div>
-                                    <input type="range" x-model="brand.blueprint.voice.humor" min="0" max="100" class="range-slider">
+                                    <input type="range" x-model="brand.blueprint.voice.humor" min="0" max="100" class="range-slider" @input="onBlueprintChange()">
                                 </div>
                                 
                                 <div class="voice-slider">
@@ -860,12 +860,12 @@
                                         <span>Warmth</span>
                                         <span>Direct ← → Warm</span>
                                     </div>
-                                    <input type="range" x-model="brand.blueprint.voice.warmth" min="0" max="100" class="range-slider">
+                                    <input type="range" x-model="brand.blueprint.voice.warmth" min="0" max="100" class="range-slider" @input="onBlueprintChange()">
                                 </div>
                                 
                                 <div style="margin-top: 1rem;">
                                     <label class="form-label">Emoji Policy</label>
-                                    <select x-model="brand.blueprint.voice.emojiPolicy" class="form-control">
+                                    <select x-model="brand.blueprint.voice.emojiPolicy" class="form-control" @change="onBlueprintChange()">
                                         <option value="none">None</option>
                                         <option value="light">Light</option>
                                         <option value="medium">Medium</option>
@@ -1678,8 +1678,16 @@
                 
                 generateBrandBlueprint() {
                     this.isGeneratingBlueprint = true;
+                    
+                    // Save current settings first
+                    this.saveSettings();
+                    
                     setTimeout(() => {
                         this.brand.blueprint.status = 'generated';
+                        
+                        // Auto-save the generated blueprint
+                        this.saveBlueprint();
+                        
                         this.isGeneratingBlueprint = false;
                         this.activeTab = 'blueprint';
                     }, 3000);
@@ -1691,16 +1699,19 @@
                         description: '',
                         weight: 0
                     });
+                    this.onBlueprintChange();
                 },
                 
                 removePillar(index) {
                     this.brand.blueprint.pillars.splice(index, 1);
+                    this.onBlueprintChange();
                 },
                 
                 addForbiddenPhrase() {
                     if (this.newForbiddenPhrase.trim()) {
                         this.brand.blueprint.policies.forbiddenPhrases.push(this.newForbiddenPhrase.trim());
                         this.newForbiddenPhrase = '';
+                        this.onBlueprintChange();
                     }
                 },
                 
@@ -1709,6 +1720,7 @@
                         const hashtag = this.newBrandHashtag.startsWith('#') ? this.newBrandHashtag : '#' + this.newBrandHashtag;
                         this.brand.blueprint.policies.brandHashtags.push(hashtag);
                         this.newBrandHashtag = '';
+                        this.onBlueprintChange();
                     }
                 },
                 
