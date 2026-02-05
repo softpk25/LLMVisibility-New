@@ -15,6 +15,10 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), 'inspire me'))
 from newimg import ImageRater
 
+# Import brand registration API
+sys.path.append(os.path.join(os.path.dirname(__file__), 'brand registration'))
+from brand_registration_api import router as brand_router
+
 # Load environment variables
 load_dotenv(os.path.join(os.path.dirname(__file__), 'inspire me', '.env'))
 
@@ -28,6 +32,9 @@ app.add_middleware(
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers
 )
+
+# Include brand registration router
+app.include_router(brand_router)
 
 # Initialize ImageRater
 api_key = os.getenv('OPENAI_API_KEY')
@@ -52,6 +59,11 @@ async def root():
 @app.get("/FACEBOOK-INSPIRE-ME.html", response_class=HTMLResponse)
 async def read_item():
     with open("templates/FACEBOOK-INSPIRE-ME.html", "r", encoding="utf-8") as f:
+        return f.read()
+
+@app.get("/FACEBOOK-BRAND-REGISTRATION.html", response_class=HTMLResponse)
+async def read_brand_registration():
+    with open("templates/FACEBOOK-BRAND-REGISTRATION.html", "r", encoding="utf-8") as f:
         return f.read()
 
 from pydantic import BaseModel

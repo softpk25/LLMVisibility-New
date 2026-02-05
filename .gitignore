@@ -18,6 +18,10 @@ generated/
 temp_uploads/
 image_analysis/
 
+# Brand registration data
+brand_registrations.json
+brand registration/uploads/
+
 # IDE
 .vscode/
 .idea/
