@@ -342,7 +342,10 @@
                             <span x-show="isSaving">💾 Saving...</span>
                         </button>
                         <button class="btn-success" :disabled="brand.blueprint.status === 'approved'">Approve Blueprint</button>
-                        <button class="btn-secondary">Re-generate from Doc</button>
+                        <button class="btn-secondary" @click="regenerateBlueprintFromDoc()" :disabled="!brand.guidelineDoc.path || isRegenerating">
+                            <span x-show="!isRegenerating">Re-generate from Doc</span>
+                            <span x-show="isRegenerating">🔄 Regenerating...</span>
+                        </button>
                     </div>
                 </div>
                 <div class="card-body">
