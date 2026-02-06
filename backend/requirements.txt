@@ -1,0 +1,28 @@
+# Core FastAPI dependencies
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.11.9
+pydantic-settings==2.11.0
+python-multipart==0.0.6
+
+# Environment and configuration
+python-dotenv==1.1.1
+
+# Async support
+aiofiles==23.2.1
+
+# LLM providers (optional - install as needed)
+openai==1.70.0
+anthropic==0.7.0
+google-generativeai==0.7.0
+
+# File handling
+python-magic==0.4.27
+Pillow==10.1.0
+
+# HTTP client
+httpx==0.28.1
+
+# Development dependencies
+pytest==7.4.3
+pytest-asyncio==0.21.1

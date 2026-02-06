@@ -1,0 +1,124 @@
+{
+  "asset_id": "asset-creative-12345",
+  "analysis_type": "visual_dna",
+  "visual_dna": {
+    "color_palette": [
+      "#5046e5",
+      "#00c4cc",
+      "#ffffff",
+      "#1a202c",
+      "#f7fafc",
+      "#4a5568"
+    ],
+    "dominant_colors": [
+      "#5046e5",
+      "#00c4cc"
+    ],
+    "style_keywords": [
+      "modern",
+      "professional",
+      "clean",
+      "vibrant",
+      "minimalist",
+      "tech-forward",
+      "gradient",
+      "geometric"
+    ],
+    "mood": "professional and approachable with energetic undertones",
+    "composition": "balanced with strong focal point and clear visual hierarchy",
+    "lighting": "bright and even with subtle shadows for depth",
+    "texture": "smooth gradients with clean geometric elements",
+    "visual_weight": "medium with strategic use of contrast",
+    "brand_elements": [
+      "logo placement",
+      "brand colors",
+      "typography style",
+      "geometric patterns"
+    ],
+    "confidence_score": 0.87
+  },
+  "style_analysis": {
+    "photography_style": "corporate lifestyle with modern aesthetic",
+    "color_grading": "vibrant with slight cool tone bias",
+    "composition_rules": [
+      "rule of thirds",
+      "leading lines",
+      "negative space utilization"
+    ],
+    "visual_hierarchy": "clear with primary, secondary, and tertiary elements",
+    "typography_style": "sans-serif, clean, modern",
+    "brand_consistency": 0.92,
+    "recommendations": [
+      "Maintain consistent color temperature across campaign",
+      "Use similar geometric elements for brand recognition",
+      "Keep typography hierarchy consistent",
+      "Ensure sufficient contrast for accessibility"
+    ]
+  },
+  "content_analysis": {
+    "subject_matter": [
+      "technology workspace",
+      "team collaboration",
+      "productivity tools",
+      "modern office environment"
+    ],
+    "emotions_conveyed": [
+      "confidence",
+      "innovation",
+      "collaboration",
+      "efficiency",
+      "professionalism"
+    ],
+    "target_audience_fit": 0.89,
+    "message_clarity": 0.85,
+    "call_to_action_present": true,
+    "brand_message_alignment": 0.91
+  },
+  "generative_prompt": {
+    "base_prompt": "Modern professional workspace with diverse team collaborating on productivity software, clean minimalist design",
+    "style_modifiers": [
+      "corporate photography style",
+      "bright even lighting",
+      "modern aesthetic",
+      "clean composition"
+    ],
+    "color_instructions": [
+      "use brand colors #5046e5 and #00c4cc as accents",
+      "maintain white/light gray background",
+      "ensure high contrast for readability"
+    ],
+    "composition_instructions": [
+      "follow rule of thirds",
+      "create clear focal point",
+      "use negative space effectively",
+      "maintain visual balance"
+    ],
+    "mood_instructions": [
+      "professional yet approachable",
+      "innovative and forward-thinking",
+      "collaborative and team-focused",
+      "energetic but not overwhelming"
+    ],
+    "technical_parameters": {
+      "aspect_ratio": "16:9",
+      "resolution": "high",
+      "lighting": "soft professional",
+      "depth_of_field": "moderate"
+    }
+  },
+  "processing_time": 4.2,
+  "timestamp": "2024-01-15T11:15:00Z",
+  "llm_metadata": {
+    "provider_used": "openai",
+    "model": "gpt-4-vision-preview",
+    "analysis_confidence": 0.87,
+    "processing_steps": [
+      "image_preprocessing",
+      "visual_element_extraction", 
+      "color_analysis",
+      "composition_analysis",
+      "brand_alignment_check",
+      "prompt_reconstruction"
+    ]
+  }
+}

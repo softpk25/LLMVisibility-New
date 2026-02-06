@@ -1,0 +1,161 @@
+{
+  "id": "brand-67890-ijkl-mnop",
+  "brand_name": "TechFlow Solutions",
+  "industry": "technology",
+  "description": "Leading provider of workflow automation and productivity solutions for modern teams",
+  "website_url": "https://techflowsolutions.com",
+  "voice_profile": {
+    "formality": "casual",
+    "humor": "moderate", 
+    "tone": "enthusiastic",
+    "personality_traits": [
+      "innovative",
+      "approachable",
+      "expert",
+      "reliable",
+      "forward-thinking"
+    ],
+    "do_phrases": [
+      "We believe in empowering teams",
+      "Let's explore new possibilities",
+      "Together we can achieve more",
+      "Innovation starts here",
+      "Your success is our mission"
+    ],
+    "dont_phrases": [
+      "Never possible",
+      "Impossible to achieve", 
+      "Can't be done",
+      "Too complicated",
+      "Old-fashioned way"
+    ]
+  },
+  "content_pillars": [
+    {
+      "id": "pillar-innovation",
+      "name": "Innovation Spotlight",
+      "type": "educational",
+      "description": "Showcasing cutting-edge technology solutions and industry insights",
+      "keywords": [
+        "innovation",
+        "technology",
+        "future",
+        "automation",
+        "AI",
+        "productivity"
+      ],
+      "percentage": 40
+    },
+    {
+      "id": "pillar-community",
+      "name": "Community Stories", 
+      "type": "community",
+      "description": "Highlighting user success stories, testimonials, and community achievements",
+      "keywords": [
+        "community",
+        "success",
+        "stories",
+        "testimonials",
+        "achievements",
+        "customers"
+      ],
+      "percentage": 30
+    },
+    {
+      "id": "pillar-product",
+      "name": "Product Excellence",
+      "type": "promotional",
+      "description": "Demonstrating product features, benefits, and use cases",
+      "keywords": [
+        "product",
+        "features",
+        "benefits",
+        "workflow",
+        "solutions",
+        "tools"
+      ],
+      "percentage": 30
+    }
+  ],
+  "brand_guidelines": {
+    "logo_usage": {
+      "minimum_size": "24px",
+      "clear_space": "2x logo height",
+      "acceptable_backgrounds": ["white", "light gray", "brand blue"],
+      "prohibited_modifications": ["stretching", "rotating", "changing colors"]
+    },
+    "color_palette": [
+      "#5046e5",
+      "#00c4cc", 
+      "#1a202c",
+      "#f7fafc",
+      "#4a5568",
+      "#e2e8f0"
+    ],
+    "typography": {
+      "primary": "Inter",
+      "secondary": "Arial",
+      "headings": "Inter Bold",
+      "body": "Inter Regular"
+    },
+    "imagery_style": {
+      "style": "modern and clean",
+      "mood": "professional yet approachable",
+      "colors": "vibrant but not overwhelming",
+      "composition": "balanced with clear focal points",
+      "subjects": "diverse teams, modern workspaces, technology"
+    },
+    "messaging_guidelines": {
+      "tone": "conversational but expert",
+      "voice": "confident and helpful",
+      "style": "clear and concise",
+      "approach": "solution-focused"
+    },
+    "compliance_rules": [
+      "Always include appropriate disclaimers for product claims",
+      "Ensure accessibility compliance in all visual content",
+      "Respect user privacy in testimonials and case studies",
+      "Follow platform-specific content guidelines"
+    ]
+  },
+  "target_demographics": {
+    "primary_audience": {
+      "age_range": "25-45",
+      "job_titles": ["Team Lead", "Project Manager", "Operations Manager", "CEO", "CTO"],
+      "company_size": "10-500 employees",
+      "industries": ["Technology", "Consulting", "Marketing", "Finance"]
+    },
+    "geographic_focus": [
+      "North America",
+      "Europe", 
+      "Australia"
+    ],
+    "psychographics": [
+      "Values efficiency and productivity",
+      "Embraces new technology",
+      "Seeks work-life balance",
+      "Collaborative mindset"
+    ]
+  },
+  "brand_values": [
+    "Innovation drives everything we do",
+    "Simplicity in complex solutions",
+    "Customer success is our success",
+    "Transparency in all interactions",
+    "Continuous improvement and learning"
+  ],
+  "ai_generated_blueprint": {
+    "content": "Based on the brand analysis, TechFlow Solutions should focus on creating content that demonstrates thought leadership in workflow automation while maintaining an approachable, human-centered approach. The brand voice should balance technical expertise with accessibility, ensuring complex concepts are communicated clearly. Content should emphasize real-world applications and customer success stories to build trust and credibility.",
+    "generated_at": "2024-01-15T10:32:00Z",
+    "llm_metadata": {
+      "provider_used": "openai",
+      "model": "gpt-4",
+      "processing_time": 3.1,
+      "confidence_score": 0.92
+    }
+  },
+  "status": "active",
+  "created_at": "2024-01-15T09:15:00Z",
+  "updated_at": "2024-01-15T10:32:00Z",
+  "version": "v2"
+}
