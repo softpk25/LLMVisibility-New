@@ -1,0 +1,111 @@
+{
+  "comment_id": "comment-fb-789012345",
+  "classification": {
+    "intent": "question",
+    "sentiment": "neutral",
+    "priority": "medium",
+    "confidence_score": 0.82,
+    "keywords": [
+      "pricing",
+      "features",
+      "comparison",
+      "trial"
+    ],
+    "topics": [
+      "product inquiry",
+      "pricing information",
+      "feature comparison"
+    ],
+    "requires_human_review": false,
+    "escalation_reason": null
+  },
+  "response_draft": {
+    "content": "Hi there! Thanks for your interest in WorkFlow Pro! 🚀 We'd be happy to help you compare our features. Our pricing starts at $29.99/month and includes automated task routing, real-time collaboration, and advanced analytics. We also offer a 14-day free trial so you can experience all features firsthand. Would you like me to send you a detailed comparison guide or help you get started with the trial?",
+    "tone": "friendly and helpful",
+    "confidence_score": 0.88,
+    "reasoning": "User is asking a genuine product question with neutral sentiment. Response provides specific information while maintaining brand voice and includes a clear call-to-action for next steps.",
+    "suggested_actions": [
+      "Send detailed pricing guide",
+      "Offer free trial signup",
+      "Schedule product demo if interested",
+      "Follow up within 24 hours"
+    ],
+    "brand_alignment_score": 0.91
+  },
+  "analysis_timestamp": "2024-01-15T14:22:00Z",
+  "processing_time": 1.8,
+  "original_comment": {
+    "id": "comment-fb-789012345",
+    "platform": "facebook",
+    "post_id": "post-12345",
+    "author_id": "user-67890",
+    "author_name": "Sarah Johnson",
+    "content": "Hi! I'm looking at different workflow tools for my team. Can you tell me more about your pricing and how it compares to other solutions? Do you offer a free trial?",
+    "timestamp": "2024-01-15T14:20:00Z",
+    "parent_comment_id": null,
+    "likes_count": 2,
+    "replies_count": 0,
+    "metadata": {
+      "user_verified": true,
+      "user_follower_count": 1250,
+      "user_engagement_history": "active"
+    }
+  },
+  "context_analysis": {
+    "user_profile": {
+      "engagement_history": "positive",
+      "previous_interactions": 0,
+      "follower_status": "not_following",
+      "account_type": "personal"
+    },
+    "post_context": {
+      "post_type": "product_announcement",
+      "post_engagement": "high",
+      "other_comments_sentiment": "mostly_positive"
+    },
+    "timing_analysis": {
+      "response_urgency": "standard",
+      "business_hours": true,
+      "optimal_response_window": "within_2_hours"
+    }
+  },
+  "llm_analysis": {
+    "provider_used": "openai",
+    "model": "gpt-4",
+    "processing_steps": [
+      "intent_classification",
+      "sentiment_analysis",
+      "keyword_extraction",
+      "priority_assessment",
+      "response_generation",
+      "brand_alignment_check"
+    ],
+    "confidence_breakdown": {
+      "intent_confidence": 0.85,
+      "sentiment_confidence": 0.78,
+      "response_quality": 0.88,
+      "brand_alignment": 0.91
+    }
+  },
+  "decision": null,
+  "response_templates_considered": [
+    {
+      "template_id": "template-pricing-inquiry",
+      "match_score": 0.92,
+      "used": true
+    },
+    {
+      "template_id": "template-general-question",
+      "match_score": 0.67,
+      "used": false
+    }
+  ],
+  "automated_actions": {
+    "notifications_sent": [
+      "customer_service_team",
+      "sales_team"
+    ],
+    "crm_updated": true,
+    "lead_score_updated": true
+  }
+}

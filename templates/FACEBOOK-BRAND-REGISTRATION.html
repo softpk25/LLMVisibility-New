@@ -461,6 +461,12 @@
             background-color: rgba(80, 70, 229, 0.02);
         }
         
+        .upload-area.uploading {
+            border-color: var(--warning);
+            background-color: rgba(245, 158, 11, 0.05);
+            cursor: not-allowed;
+        }
+        
         .blueprint-panel {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -698,26 +704,100 @@
         <!-- Header -->
         <div class="header">
             <div class="title-section">
-                <h1>🎨 Brand Content Management</h1>
+                <h1 style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="font-size: 1.75rem;">🎨</span>
+                    Brand Content Management
+                </h1>
                 <p class="subtitle">AI-powered content creation with brand guidelines and HITL controls</p>
             </div>
-            <div style="display: flex; gap: 0.75rem;">
-                <button class="btn-secondary">
-                    <span>📤</span>
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <button class="btn-secondary" type="button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
                     Export Package
                 </button>
-                <button class="btn-primary" @click="generateBrandBlueprint()">
-                    <span>✨</span>
-                    Generate Blueprint
+                <button class="btn-primary" type="button" @click="generateBrandBlueprint()" :disabled="isGeneratingBlueprint">
+                    <span x-show="!isGeneratingBlueprint">✨</span>
+                    <span x-show="isGeneratingBlueprint">🔄</span>
+                    <span x-text="isGeneratingBlueprint ? 'Generating...' : 'Generate Blueprint'"></span>
                 </button>
             </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 2rem; border-bottom: 1px solid #e2e8f0;">
+            <button 
+                class="tab-button" 
+                :class="{ 'active': activeTab === 'onboarding' }"
+                @click="activeTab = 'onboarding'"
+                style="padding: 0.75rem 1rem; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; font-weight: 500; transition: all 0.2s;"
+                :style="activeTab === 'onboarding' ? 'border-bottom-color: var(--primary); color: var(--primary);' : 'color: var(--text-light);'"
+            >
+                🚀 Onboarding
+            </button>
+            <button 
+                class="tab-button" 
+                :class="{ 'active': activeTab === 'blueprint' }"
+                @click="activeTab = 'blueprint'"
+                style="padding: 0.75rem 1rem; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; font-weight: 500; transition: all 0.2s;"
+                :style="activeTab === 'blueprint' ? 'border-bottom-color: var(--primary); color: var(--primary);' : 'color: var(--text-light);'"
+            >
+                📋 Blueprint
+            </button>
+            <button 
+                class="tab-button" 
+                :class="{ 'active': activeTab === 'planner' }"
+                @click="activeTab = 'planner'"
+                style="padding: 0.75rem 1rem; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; font-weight: 500; transition: all 0.2s;"
+                :style="activeTab === 'planner' ? 'border-bottom-color: var(--primary); color: var(--primary);' : 'color: var(--text-light);'"
+            >
+                📅 Planner
+            </button>
+            <button 
+                class="tab-button" 
+                :class="{ 'active': activeTab === 'creator' }"
+                @click="activeTab = 'creator'"
+                style="padding: 0.75rem 1rem; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; font-weight: 500; transition: all 0.2s;"
+                :style="activeTab === 'creator' ? 'border-bottom-color: var(--primary); color: var(--primary);' : 'color: var(--text-light);'"
+            >
+                ✍️ Creator
+            </button>
+            <button 
+                class="tab-button" 
+                :class="{ 'active': activeTab === 'calendar' }"
+                @click="activeTab = 'calendar'"
+                style="padding: 0.75rem 1rem; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; font-weight: 500; transition: all 0.2s;"
+                :style="activeTab === 'calendar' ? 'border-bottom-color: var(--primary); color: var(--primary);' : 'color: var(--text-light);'"
+            >
+                📅 Calendar
+            </button>
+            <button 
+                class="tab-button" 
+                :class="{ 'active': activeTab === 'insights' }"
+                @click="activeTab = 'insights'"
+                style="padding: 0.75rem 1rem; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; font-weight: 500; transition: all 0.2s;"
+                :style="activeTab === 'insights' ? 'border-bottom-color: var(--primary); color: var(--primary);' : 'color: var(--text-light);'"
+            >
+                📈 Insights
+            </button>
+            <button 
+                class="tab-button" 
+                :class="{ 'active': activeTab === 'settings' }"
+                @click="activeTab = 'settings'"
+                style="padding: 0.75rem 1rem; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; font-weight: 500; transition: all 0.2s;"
+                :style="activeTab === 'settings' ? 'border-bottom-color: var(--primary); color: var(--primary);' : 'color: var(--text-light);'"
+            >
+                ⚙️ Settings
+            </button>
         </div>
 
         <!-- Onboarding Tab -->
         <div x-show="activeTab === 'onboarding'">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">🚀 Welcome to Brand Content Management</h2>
+                    <h2 class="card-title" style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span>🚀</span>
+                        Welcome to Brand Content Management
+                    </h2>
                 </div>
                 <div class="card-body">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
@@ -728,18 +808,43 @@
                                 PDF/DOCX up to 50 MB. We'll extract your voice, pillars, and policies.
                             </p>
                             
-                            <div class="upload-area" @click="$refs.guidelineUpload.click()">
-                                <div style="font-size: 2rem; margin-bottom: 1rem;">📤</div>
-                                <p style="font-weight: 500; margin-bottom: 0.5rem;">Upload Document</p>
-                                <p style="font-size: 0.875rem; color: var(--text-light);">Scanned? We'll OCR it automatically.</p>
-                                <input x-ref="guidelineUpload" type="file" style="display: none;" accept=".pdf,.docx" @change="handleGuidelineUpload($event)">
+                            <div class="upload-area"
+                                 :class="{ 'uploading': isUploading }"
+                                 @click="$refs.guidelineUpload.click()">
+                                <div style="font-size: 2rem; margin-bottom: 1rem;">
+                                    <span x-show="!isUploading">📤</span>
+                                    <span x-show="isUploading">🔄</span>
+                                </div>
+                                <p style="font-weight: 500; margin-bottom: 0.5rem;">
+                                    <span x-show="!isUploading">Upload Document</span>
+                                    <span x-show="isUploading">Uploading...</span>
+                                </p>
+                                <p style="font-size: 0.875rem; color: var(--text-light);">
+                                    <span x-show="!isUploading">Scanned? We'll OCR it automatically.</span>
+                                    <span x-show="isUploading">Please wait...</span>
+                                </p>
+                                <input x-ref="guidelineUpload" type="file" style="display: none;" accept=".pdf,.docx,.doc" @change="handleGuidelineUpload($event)" :disabled="isUploading">
                             </div>
                             
-                            <div x-show="guidelineDoc.name" class="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-                                <div class="flex items-center gap-2">
-                                    <span>✅</span>
-                                    <span x-text="guidelineDoc.name"></span>
-                                    <span class="text-sm text-green-600" x-text="guidelineDoc.status"></span>
+                            <!-- Upload Status -->
+                            <div x-show="guidelineDoc.name" style="margin-top: 1rem; padding: 0.75rem; border-radius: 0.5rem;" 
+                                 :class="{
+                                     'bg-yellow-50 border border-yellow-200': guidelineDoc.status === 'uploading',
+                                     'bg-green-50 border border-green-200': guidelineDoc.status === 'uploaded' || guidelineDoc.status === 'parsed',
+                                     'bg-red-50 border border-red-200': guidelineDoc.status === 'error'
+                                 }">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span x-show="guidelineDoc.status === 'uploading'">⏳</span>
+                                    <span x-show="guidelineDoc.status === 'uploaded'">✅</span>
+                                    <span x-show="guidelineDoc.status === 'parsed'">🎯</span>
+                                    <span x-show="guidelineDoc.status === 'error'">❌</span>
+                                    
+                                    <span x-text="guidelineDoc.name" style="font-weight: 500;"></span>
+                                    
+                                    <span x-show="guidelineDoc.status === 'uploading'" style="color: #d97706;">Uploading...</span>
+                                    <span x-show="guidelineDoc.status === 'uploaded'" style="color: #059669;">Uploaded</span>
+                                    <span x-show="guidelineDoc.status === 'parsed'" style="color: #059669;">Processed</span>
+                                    <span x-show="guidelineDoc.status === 'error'" style="color: #dc2626;">Upload Failed</span>
                                 </div>
                             </div>
                         </div>
@@ -750,7 +855,7 @@
                             
                             <div class="form-group">
                                 <label class="form-label">Choose default content language</label>
-                                <select x-model="settings.defaultLanguage" class="form-control">
+                                <select x-model="settings.defaultLanguage" class="form-control" @change="onSettingsChange()">
                                     <option value="en">English</option>
                                     <option value="es">Spanish</option>
                                     <option value="fr">French</option>
@@ -761,7 +866,7 @@
                             
                             <div class="form-group">
                                 <label class="form-label">Choose default model (change anytime)</label>
-                                <select x-model="settings.defaultLLM" class="form-control">
+                                <select x-model="settings.defaultLLM" class="form-control" @change="onSettingsChange()">
                                     <option value="gpt-4.1">GPT-4.1 (Recommended)</option>
                                     <option value="claude-3.5">Claude 3.5 Sonnet</option>
                                     <option value="gemini-pro">Gemini Pro</option>
@@ -771,16 +876,17 @@
                             <div class="form-group">
                                 <label class="form-label">What share of posts should include the product?</label>
                                 <div style="display: flex; align-items: center; gap: 1rem;">
-                                    <input type="range" x-model="brand.blueprint.productDefaultPct" min="0" max="100" class="range-slider" style="flex: 1;">
-                                    <span x-text="brand.blueprint.productDefaultPct + '%'" style="font-weight: 600; color: var(--primary);"></span>
+                                    <input type="range" x-model="settings.productDefaultPct" min="0" max="100" class="range-slider" style="flex: 1;" @input="onSettingsChange()">
+                                    <span x-text="settings.productDefaultPct + '%'" style="font-weight: 600; color: var(--primary);"></span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
                     <div style="text-align: center; margin-top: 2rem;">
-                        <button class="btn-primary" @click="generateBrandBlueprint()" style="padding: 1rem 2rem; font-size: 1.1rem;">
-                            Generate Brand Content Blueprint
+                        <button class="btn-primary" type="button" @click="generateBrandBlueprint()" :disabled="isGeneratingBlueprint" style="width: 100%; padding: 1rem 2rem; font-size: 1.1rem;">
+                            <span x-show="!isGeneratingBlueprint">Generate Brand Content Blueprint</span>
+                            <span x-show="isGeneratingBlueprint">🔄 Generating Blueprint...</span>
                         </button>
                     </div>
                 </div>
@@ -797,7 +903,7 @@
                     </div>
                     <div style="display: flex; gap: 0.5rem; align-items: center;">
                         <span class="version-badge" x-text="'v' + brand.blueprint.version + ' ' + brand.blueprint.status"></span>
-                        <button class="btn-secondary">Save Draft</button>
+                        <button class="btn-secondary" @click="downloadJSON()">Save JSON</button>
                         <button class="btn-success" :disabled="brand.blueprint.status === 'approved'">Approve Blueprint</button>
                         <button class="btn-secondary">Re-generate from Doc</button>
                     </div>
@@ -815,7 +921,7 @@
                                         <span>Formality</span>
                                         <span>Casual ← → Formal</span>
                                     </div>
-                                    <input type="range" x-model="brand.blueprint.voice.formality" min="0" max="100" class="range-slider">
+                                    <input type="range" x-model="brand.blueprint.voice.formality" min="0" max="100" class="range-slider" @input="onBlueprintChange()">
                                 </div>
                                 
                                 <div class="voice-slider">
@@ -823,7 +929,7 @@
                                         <span>Humor</span>
                                         <span>Serious ← → Playful</span>
                                     </div>
-                                    <input type="range" x-model="brand.blueprint.voice.humor" min="0" max="100" class="range-slider">
+                                    <input type="range" x-model="brand.blueprint.voice.humor" min="0" max="100" class="range-slider" @input="onBlueprintChange()">
                                 </div>
                                 
                                 <div class="voice-slider">
@@ -831,12 +937,12 @@
                                         <span>Warmth</span>
                                         <span>Direct ← → Warm</span>
                                     </div>
-                                    <input type="range" x-model="brand.blueprint.voice.warmth" min="0" max="100" class="range-slider">
+                                    <input type="range" x-model="brand.blueprint.voice.warmth" min="0" max="100" class="range-slider" @input="onBlueprintChange()">
                                 </div>
                                 
                                 <div style="margin-top: 1rem;">
                                     <label class="form-label">Emoji Policy</label>
-                                    <select x-model="brand.blueprint.voice.emojiPolicy" class="form-control">
+                                    <select x-model="brand.blueprint.voice.emojiPolicy" class="form-control" @change="onBlueprintChange()">
                                         <option value="none">None</option>
                                         <option value="light">Light</option>
                                         <option value="medium">Medium</option>
@@ -852,11 +958,11 @@
                                 <template x-for="(pillar, index) in brand.blueprint.pillars" :key="index">
                                     <div class="pillar-item">
                                         <div style="flex: 1;">
-                                            <input x-model="pillar.name" placeholder="Pillar name" class="form-control" style="margin-bottom: 0.5rem;">
-                                            <input x-model="pillar.description" placeholder="Description" class="form-control">
+                                            <input x-model="pillar.name" placeholder="Pillar name" class="form-control" style="margin-bottom: 0.5rem;" @input="onBlueprintChange()">
+                                            <input x-model="pillar.description" placeholder="Description" class="form-control" @input="onBlueprintChange()">
                                         </div>
                                         <div style="width: 80px;">
-                                            <input x-model="pillar.weight" type="number" min="0" max="100" class="form-control" placeholder="%" style="text-align: center;">
+                                            <input x-model="pillar.weight" type="number" min="0" max="100" class="form-control" placeholder="%" style="text-align: center;" @input="onBlueprintChange()">
                                         </div>
                                         <button @click="removePillar(index)" style="color: var(--danger); border: none; background: none; cursor: pointer;">×</button>
                                     </div>
@@ -875,7 +981,7 @@
                                         <template x-for="(phrase, index) in brand.blueprint.policies.forbiddenPhrases" :key="index">
                                             <span class="chip">
                                                 <span x-text="phrase"></span>
-                                                <span class="chip-remove" @click="brand.blueprint.policies.forbiddenPhrases.splice(index, 1)">×</span>
+                                                <span class="chip-remove" @click="removeForbiddenPhrase(index)">×</span>
                                             </span>
                                         </template>
                                     </div>
@@ -887,7 +993,7 @@
                                 
                                 <div style="margin-bottom: 1rem;">
                                     <label class="form-label">Max Hashtags</label>
-                                    <input x-model="brand.blueprint.policies.maxHashtags" type="number" min="1" max="30" class="form-control">
+                                    <input x-model="brand.blueprint.policies.maxHashtags" type="number" min="1" max="30" class="form-control" @input="onBlueprintChange()">
                                 </div>
                                 
                                 <div>
@@ -896,7 +1002,7 @@
                                         <template x-for="(tag, index) in brand.blueprint.policies.brandHashtags" :key="index">
                                             <span class="chip">
                                                 <span x-text="tag"></span>
-                                                <span class="chip-remove" @click="brand.blueprint.policies.brandHashtags.splice(index, 1)">×</span>
+                                                <span class="chip-remove" @click="removeBrandHashtag(index)">×</span>
                                             </span>
                                         </template>
                                     </div>
@@ -1526,12 +1632,37 @@
                 newForbiddenPhrase: '',
                 newBrandHashtag: '',
                 guidelineDoc: { name: '', status: 'none' },
+                isUploading: false,
+                isSaving: false,
                 
                 // Calendar data
                 calendarDays: [],
                 
                 init() {
                     this.generateCalendarDays();
+                    this.loadBrandData();
+                },
+
+                async loadBrandData() {
+                    try {
+                        const response = await fetch(`/api/brand-registration/brand/${this.brand.id}`);
+                        if (response.ok) {
+                            const brandData = await response.json();
+                            // Update brand data with loaded data
+                            if (brandData.settings) {
+                                this.settings = { ...this.settings, ...brandData.settings };
+                            }
+                            if (brandData.blueprint) {
+                                this.brand.blueprint = { ...this.brand.blueprint, ...brandData.blueprint };
+                            }
+                            if (brandData.guidelineDoc) {
+                                this.brand.guidelineDoc = brandData.guidelineDoc;
+                                this.guidelineDoc = brandData.guidelineDoc;
+                            }
+                        }
+                    } catch (error) {
+                        console.log('No existing brand data found, using defaults');
+                    }
                 },
                 
                 generateCalendarDays() {
@@ -1556,28 +1687,279 @@
                     return this.campaign.posts.filter(post => post.status === 'approved').length;
                 },
                 
-                handleGuidelineUpload(event) {
+                async handleGuidelineUpload(event) {
                     const file = event.target.files[0];
-                    if (file) {
-                        this.guidelineDoc = {
-                            name: file.name,
-                            size: file.size,
-                            status: 'uploaded'
-                        };
-                        // Simulate parsing
-                        setTimeout(() => {
-                            this.guidelineDoc.status = 'parsed';
-                        }, 2000);
+                    if (!file) return;
+
+                    // Validate file
+                    const allowedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword'];
+                    if (!allowedTypes.includes(file.type)) {
+                        alert('Please upload only PDF or DOCX files');
+                        return;
                     }
+
+                    if (file.size > 50 * 1024 * 1024) {
+                        alert('File size must be less than 50MB');
+                        return;
+                    }
+
+                    this.isUploading = true;
+                    this.guidelineDoc = {
+                        name: file.name,
+                        size: file.size,
+                        status: 'uploading'
+                    };
+
+                    try {
+                        // Create FormData for file upload
+                        const formData = new FormData();
+                        formData.append('file', file);
+
+                        // Upload to backend API
+                        const response = await fetch(`/api/brand-registration/upload-guideline/${this.brand.id}`, {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`Upload failed: ${response.statusText}`);
+                        }
+
+                        const result = await response.json();
+                        
+                        this.guidelineDoc.status = 'uploaded';
+                        this.brand.guidelineDoc = {
+                            name: result.original_name,
+                            size: result.size,
+                            status: 'uploaded',
+                            path: result.path,
+                            uploadTime: result.upload_time
+                        };
+
+                        // If the backend returned a generated blueprint, hydrate
+                        // the Blueprint tab with those values so the user sees
+                        // an auto-filled voice profile, pillars, and policies.
+                        if (result.blueprint) {
+                            this.brand.blueprint = {
+                                ...this.brand.blueprint,
+                                ...result.blueprint
+                            };
+
+                            if (typeof result.blueprint.productDefaultPct === 'number') {
+                                this.settings.productDefaultPct = result.blueprint.productDefaultPct;
+                            }
+
+                            this.guidelineDoc.status = 'parsed';
+                            this.brand.guidelineDoc.status = 'parsed';
+                        } else {
+                            // Fallback: keep previous simulated processing
+                            setTimeout(() => {
+                                this.guidelineDoc.status = 'parsed';
+                                this.brand.guidelineDoc.status = 'parsed';
+                            }, 2000);
+                        }
+                        
+                    } catch (error) {
+                        console.error('Upload error:', error);
+                        this.guidelineDoc.status = 'error';
+                        alert('Upload failed: ' + error.message);
+                    } finally {
+                        this.isUploading = false;
+                    }
+                },
+
+                async saveSettings() {
+                    try {
+                        const response = await fetch(`/api/brand-registration/save-settings/${this.brand.id}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(this.settings)
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`Failed to save settings: ${response.statusText}`);
+                        }
+
+                        const result = await response.json();
+                        console.log('Settings saved:', result);
+                        this.showSaveIndicator();
+                    } catch (error) {
+                        console.error('Error saving settings:', error);
+                        this.showErrorIndicator('Failed to save settings');
+                    }
+                },
+
+                async saveBlueprint() {
+                    try {
+                        const response = await fetch(`/api/brand-registration/save-blueprint/${this.brand.id}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(this.brand.blueprint)
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`Failed to save blueprint: ${response.statusText}`);
+                        }
+
+                        const result = await response.json();
+                        console.log('Blueprint saved:', result);
+                        this.brand.blueprint.status = 'saved';
+                        this.showSaveIndicator();
+                    } catch (error) {
+                        console.error('Error saving blueprint:', error);
+                        this.showErrorIndicator('Failed to save blueprint');
+                    }
+                },
+
+                showSaveIndicator(message = 'Saved!') {
+                    // Show a temporary save indicator
+                    const indicator = document.createElement('div');
+                    indicator.innerHTML = `💾 ${message}`;
+                    indicator.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: var(--success);
+                        color: white;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        z-index: 1000;
+                        font-weight: 500;
+                    `;
+                    document.body.appendChild(indicator);
+                    
+                    setTimeout(() => {
+                        document.body.removeChild(indicator);
+                    }, 2000);
+                },
+
+                showErrorIndicator(message) {
+                    // Show a temporary error indicator
+                    const indicator = document.createElement('div');
+                    indicator.innerHTML = `❌ ${message}`;
+                    indicator.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: var(--danger);
+                        color: white;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        z-index: 1000;
+                        font-weight: 500;
+                    `;
+                    document.body.appendChild(indicator);
+                    
+                    setTimeout(() => {
+                        document.body.removeChild(indicator);
+                    }, 3000);
+                },
+
+                async onSettingsChange() {
+                    // Debounce auto-save
+                    clearTimeout(this.saveTimeout);
+                    this.saveTimeout = setTimeout(() => {
+                        this.saveSettings();
+                    }, 1000);
+                },
+
+                async onBlueprintChange() {
+                    // Debounce auto-save
+                    clearTimeout(this.blueprintSaveTimeout);
+                    this.blueprintSaveTimeout = setTimeout(() => {
+                        this.saveBlueprint();
+                    }, 2000);
                 },
                 
                 generateBrandBlueprint() {
                     this.isGeneratingBlueprint = true;
+                    
+                    // Save current settings first
+                    this.saveSettings();
+                    
                     setTimeout(() => {
                         this.brand.blueprint.status = 'generated';
+                        
+                        // Auto-save the generated blueprint
+                        this.saveBlueprint();
+                        
                         this.isGeneratingBlueprint = false;
                         this.activeTab = 'blueprint';
                     }, 3000);
+                },
+
+                downloadJSON() {
+                    // Option 1: Client-side JSON generation and download
+                    this.downloadJSONClientSide();
+                    
+                    // Option 2: Also save to backend for server-side download
+                    this.downloadJSONServerSide();
+                },
+
+                downloadJSONClientSide() {
+                    // Collect all form data
+                    const exportData = {
+                        brand: {
+                            id: this.brand.id,
+                            name: this.brand.name,
+                            guidelineDoc: this.brand.guidelineDoc,
+                            blueprint: this.brand.blueprint
+                        },
+                        settings: this.settings,
+                        campaign: {
+                            objective: this.campaign.objective,
+                            duration: this.campaign.duration,
+                            startDate: this.campaign.startDate,
+                            language: this.campaign.language,
+                            llm: this.campaign.llm,
+                            productPct: this.campaign.productPct,
+                            plan: this.campaign.plan,
+                            posts: this.campaign.posts
+                        },
+                        creatorSettings: this.creatorSettings,
+                        exportedAt: new Date().toISOString(),
+                        exportVersion: '1.0.0',
+                        exportMethod: 'client-side'
+                    };
+
+                    // Create and download JSON file
+                    const jsonString = JSON.stringify(exportData, null, 2);
+                    const blob = new Blob([jsonString], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    // Create download link
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `brand-content-data-${this.brand.id}-${new Date().toISOString().split('T')[0]}.json`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Clean up
+                    URL.revokeObjectURL(url);
+                    
+                    // Show success message
+                    this.showSaveIndicator('JSON Downloaded!');
+                },
+
+                async downloadJSONServerSide() {
+                    try {
+                        // First save current data to backend
+                        await this.saveSettings();
+                        await this.saveBlueprint();
+                        
+                        // Then trigger server-side download
+                        const downloadUrl = `/api/brand-registration/export-json/${this.brand.id}`;
+                        window.open(downloadUrl, '_blank');
+                        
+                    } catch (error) {
+                        console.error('Server-side download failed:', error);
+                        // Client-side download already completed, so this is just a backup
+                    }
                 },
                 
                 addPillar() {
@@ -1586,17 +1968,25 @@
                         description: '',
                         weight: 0
                     });
+                    this.onBlueprintChange();
                 },
                 
                 removePillar(index) {
                     this.brand.blueprint.pillars.splice(index, 1);
+                    this.onBlueprintChange();
                 },
                 
                 addForbiddenPhrase() {
                     if (this.newForbiddenPhrase.trim()) {
                         this.brand.blueprint.policies.forbiddenPhrases.push(this.newForbiddenPhrase.trim());
                         this.newForbiddenPhrase = '';
+                        this.onBlueprintChange();
                     }
+                },
+
+                removeForbiddenPhrase(index) {
+                    this.brand.blueprint.policies.forbiddenPhrases.splice(index, 1);
+                    this.onBlueprintChange();
                 },
                 
                 addBrandHashtag() {
@@ -1604,7 +1994,13 @@
                         const hashtag = this.newBrandHashtag.startsWith('#') ? this.newBrandHashtag : '#' + this.newBrandHashtag;
                         this.brand.blueprint.policies.brandHashtags.push(hashtag);
                         this.newBrandHashtag = '';
+                        this.onBlueprintChange();
                     }
+                },
+
+                removeBrandHashtag(index) {
+                    this.brand.blueprint.policies.brandHashtags.splice(index, 1);
+                    this.onBlueprintChange();
                 },
                 
                 generatePlan() {

@@ -1,0 +1,35 @@
+{
+  "id": "persona-business-professional",
+  "name": "Business Professional",
+  "age_range": "30-45",
+  "gender": "Mixed",
+  "location": "Metropolitan areas",
+  "interests": [
+    "business",
+    "leadership",
+    "productivity",
+    "networking"
+  ],
+  "behaviors": [
+    "Decision maker",
+    "Values efficiency",
+    "Seeks ROI"
+  ],
+  "pain_points": [
+    "Time management",
+    "Team coordination",
+    "Budget constraints"
+  ],
+  "preferred_content": [
+    "Case studies",
+    "Best practices",
+    "Industry insights"
+  ],
+  "social_platforms": [
+    "LinkedIn",
+    "Facebook",
+    "Twitter"
+  ],
+  "created_at": "2026-02-05T08:04:46.063988",
+  "updated_at": "2026-02-05T08:04:46.063988"
+}
