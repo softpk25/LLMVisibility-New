@@ -459,6 +459,212 @@ class ImageRater:
                 "error": error_msg
             }
 
+    def transform_image_with_reference(
+        self,
+        base_image_path: Union[str, Path],
+        reference_image_path: Union[str, Path],
+        prompt: str,
+        output_path: Union[str, Path],
+        size: str = "1024x1024",
+        transformation_instructions: Optional[str] = None
+    ) -> Dict:
+        """
+        Transform a base image using a reference image and prompt with gpt-image-1.
+        
+        This method takes an original image (base), a reference image, and a prompt
+        to generate a new image that combines elements from both according to the prompt.
+        
+        Args:
+            base_image_path: Path to the original/base image
+            reference_image_path: Path to the reference image to incorporate
+            prompt: The transformation prompt (e.g., from prompt_reconstruction)
+            output_path: Path to save the generated image
+            size: Size of output image (default 1024x1024)
+            transformation_instructions: Optional specific instructions for the transformation
+            
+        Returns:
+            Dictionary with result info including success status and path
+        """
+        print(f"Transforming image with reference...")
+        print(f"  Base image: {base_image_path}")
+        print(f"  Reference image: {reference_image_path}")
+        print(f"  Prompt: {prompt[:100]}...")
+        
+        # Encode both images to base64
+        base_image_b64 = self.encode_image(base_image_path)
+        reference_image_b64 = self.encode_image(reference_image_path)
+        
+        # Build the transformation prompt
+        if transformation_instructions:
+            full_prompt = f"""
+{transformation_instructions}
+
+Base creative style and composition guidance:
+{prompt}
+
+Instructions:
+- Use the first image as the base composition and style reference
+- Incorporate elements from the second (reference) image as specified
+- Preserve lighting, shadows, reflections, and camera angle from the base
+- Maintain the overall aesthetic and brand feel
+- Do not change elements that aren't specifically mentioned
+"""
+        else:
+            full_prompt = f"""
+Using the provided images as references, create a new creative that:
+- Follows the composition and style of the first image (base)
+- Incorporates or is inspired by elements from the second image (reference)
+- Maintains professional commercial quality
+
+Creative brief:
+{prompt}
+
+Preserve lighting, shadows, reflections, camera angle, and background style.
+Create a cohesive, polished final result suitable for advertising.
+"""
+        
+        try:
+            # Use OpenAI Responses API with image_generation tool
+            from openai import OpenAI
+            client = OpenAI(api_key=self.api_key)
+            
+            # Read both images and convert to base64 data URLs
+            base_path = Path(base_image_path)
+            ref_path = Path(reference_image_path)
+            
+            # Create base64 data URLs for both images
+            with open(base_path, "rb") as f:
+                base_b64 = base64.b64encode(f.read()).decode('utf-8')
+            with open(ref_path, "rb") as f:
+                ref_b64 = base64.b64encode(f.read()).decode('utf-8')
+            
+            # Determine image types
+            base_ext = base_path.suffix.lower().replace('.', '')
+            ref_ext = ref_path.suffix.lower().replace('.', '')
+            base_mime = f"image/{base_ext}" if base_ext in ['png', 'jpg', 'jpeg', 'gif', 'webp'] else "image/jpeg"
+            ref_mime = f"image/{ref_ext}" if ref_ext in ['png', 'jpg', 'jpeg', 'gif', 'webp'] else "image/jpeg"
+            
+            base_data_url = f"data:{base_mime};base64,{base_b64}"
+            ref_data_url = f"data:{ref_mime};base64,{ref_b64}"
+            
+            # Use Responses API with image_generation tool
+            response = client.responses.create(
+                model="gpt-4.1",
+                input=[
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "input_text", "text": full_prompt},
+                            {
+                                "type": "input_image",
+                                "image_url": base_data_url,
+                            },
+                            {
+                                "type": "input_image",
+                                "image_url": ref_data_url,
+                            },
+                        ],
+                    }
+                ],
+                tools=[{"type": "image_generation", "input_fidelity": "high", "action": "edit"}],
+            )
+            
+            # Extract the edited image
+            image_data = [
+                output.result
+                for output in response.output
+                if output.type == "image_generation_call"
+            ]
+            
+            if image_data:
+                image_base64 = image_data[0]
+                
+                # Save output
+                output_path = Path(output_path)
+                with open(output_path, "wb") as f:
+                    f.write(base64.b64decode(image_base64))
+                
+                print(f"  ✅ Image saved to: {output_path}")
+                
+                return {
+                    "success": True,
+                    "path": str(output_path),
+                    "prompt_used": full_prompt[:500] + "..." if len(full_prompt) > 500 else full_prompt
+                }
+            else:
+                return {
+                    "success": False,
+                    "error": "No image generated in response"
+                }
+            
+        except Exception as e:
+            error_msg = f"gpt-image-1 transformation failed: {str(e)}"
+            print(f"  ❌ Error: {error_msg}")
+            return {
+                "success": False,
+                "error": error_msg
+            }
+
+    def transform_from_analysis(
+        self,
+        base_image_path: Union[str, Path],
+        reference_image_path: Union[str, Path],
+        analysis_json: Dict,
+        output_path: Union[str, Path],
+        size: str = "1024x1024",
+        custom_instructions: Optional[str] = None
+    ) -> Dict:
+        """
+        Transform an image using a reference and analysis data from get_image_description.
+        
+        This is a convenience method that extracts the prompt_reconstruction from
+        the analysis JSON and uses it for the transformation.
+        
+        Args:
+            base_image_path: Path to the original/base image
+            reference_image_path: Path to the reference image
+            analysis_json: Analysis data from get_image_description() containing prompt_reconstruction
+            output_path: Path to save the generated image
+            size: Size of output image
+            custom_instructions: Optional additional instructions for transformation
+            
+        Returns:
+            Dictionary with result info
+        """
+        # Extract prompt from analysis
+        prompt = analysis_json.get("prompt_reconstruction", "")
+        
+        if not prompt:
+            return {
+                "success": False,
+                "error": "No prompt_reconstruction found in analysis JSON"
+            }
+        
+        # Build enhanced instructions if we have visual DNA
+        transformation_instructions = None
+        if "visual_dna" in analysis_json:
+            vd = analysis_json["visual_dna"]
+            transformation_instructions = f"""
+Create a new image that combines elements from both provided images.
+
+Visual DNA to preserve from base:
+- Composition: {vd.get('composition', 'N/A')}
+- Color Palette: {vd.get('palette', 'N/A')}
+- Lighting: {vd.get('lighting', 'N/A')}
+- Style: {vd.get('style', 'N/A')}
+"""
+            if custom_instructions:
+                transformation_instructions += f"\nAdditional instructions: {custom_instructions}"
+        
+        return self.transform_image_with_reference(
+            base_image_path=base_image_path,
+            reference_image_path=reference_image_path,
+            prompt=prompt,
+            output_path=output_path,
+            size=size,
+            transformation_instructions=transformation_instructions
+        )
+
 
 # Example usage
 if __name__ == "__main__":

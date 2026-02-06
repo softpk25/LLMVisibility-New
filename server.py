@@ -1,7 +1,7 @@
 import os
 import json
 import uvicorn
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Form
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,8 +15,8 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), 'inspire me'))
 from newimg import ImageRater
 
-# Load environment variables
-load_dotenv(os.path.join(os.path.dirname(__file__), 'inspire me', '.env'))
+# Load environment variables from root .env
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 app = FastAPI()
 
@@ -107,8 +107,137 @@ async def generate_creative(request: GenerationRequest):
 # Create generated directory if it doesn't exist
 Path("generated").mkdir(exist_ok=True)
 
+# Create creative_briefs directory if it doesn't exist
+Path("creative_briefs").mkdir(exist_ok=True)
+
 # Mount generated directory
 app.mount("/generated", StaticFiles(directory="generated"), name="generated")
+
+@app.post("/api/save-brief")
+async def save_brief(brief_data: dict):
+    """Save creative brief data to JSON file"""
+    try:
+        # Generate filename with timestamp
+        timestamp = int(time.time())
+        creative_type = brief_data.get("creative_type", "unknown")
+        filename = f"brief_{creative_type}_{timestamp}.json"
+        
+        brief_path = Path("creative_briefs") / filename
+        
+        with open(brief_path, "w", encoding="utf-8") as f:
+            json.dump(brief_data, f, ensure_ascii=False, indent=2)
+        
+        return {
+            "success": True,
+            "filename": filename,
+            "path": str(brief_path)
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/transform-image")
+async def transform_image(
+    base_image: UploadFile = File(...),
+    reference_image: UploadFile = File(...),
+    prompt: str = Form(None),
+    analysis_json: str = Form(None),
+    custom_instructions: str = Form(None)
+):
+    """
+    Transform a base image using a reference image and prompt with gpt-image-1.
+    
+    Args:
+        base_image: The original image to transform
+        reference_image: The reference image to incorporate
+        prompt: Direct prompt for transformation (optional if analysis_json provided)
+        analysis_json: JSON string from image analysis (optional, will extract prompt_reconstruction)
+        custom_instructions: Additional transformation instructions
+    """
+    if not rater:
+        raise HTTPException(status_code=500, detail="Server not configured with OpenAI API Key")
+    
+    # Create temp directory for uploaded files
+    temp_dir = Path("temp_uploads")
+    temp_dir.mkdir(exist_ok=True)
+    
+    # Create output directory
+    transformed_dir = Path("transformed")
+    transformed_dir.mkdir(exist_ok=True)
+    
+    try:
+        # Save base image temporarily
+        base_path = temp_dir / f"base_{int(time.time())}_{base_image.filename}"
+        with open(base_path, "wb") as buffer:
+            shutil.copyfileobj(base_image.file, buffer)
+        
+        # Save reference image temporarily
+        ref_path = temp_dir / f"ref_{int(time.time())}_{reference_image.filename}"
+        with open(ref_path, "wb") as buffer:
+            shutil.copyfileobj(reference_image.file, buffer)
+        
+        # Generate output path
+        timestamp = int(time.time())
+        output_filename = f"transformed_{timestamp}.png"
+        output_path = transformed_dir / output_filename
+        
+        # Determine which method to use
+        if analysis_json:
+            # Parse analysis JSON and use transform_from_analysis
+            try:
+                analysis_data = json.loads(analysis_json)
+            except json.JSONDecodeError:
+                raise HTTPException(status_code=400, detail="Invalid analysis_json format")
+            
+            result = rater.transform_from_analysis(
+                base_image_path=base_path,
+                reference_image_path=ref_path,
+                analysis_json=analysis_data,
+                output_path=output_path,
+                custom_instructions=custom_instructions
+            )
+        elif prompt:
+            # Use direct prompt
+            result = rater.transform_image_with_reference(
+                base_image_path=base_path,
+                reference_image_path=ref_path,
+                prompt=prompt,
+                output_path=output_path,
+                transformation_instructions=custom_instructions
+            )
+        else:
+            raise HTTPException(status_code=400, detail="Either prompt or analysis_json is required")
+        
+        # Clean up temp files
+        if base_path.exists():
+            os.remove(base_path)
+        if ref_path.exists():
+            os.remove(ref_path)
+        
+        if result.get("success"):
+            return {
+                "success": True,
+                "image_url": f"/transformed/{output_filename}",
+                "local_path": str(output_path),
+                "prompt_used": result.get("prompt_used", "")
+            }
+        else:
+            raise HTTPException(status_code=500, detail=result.get("error", "Unknown error"))
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        # Clean up on error
+        if 'base_path' in locals() and base_path.exists():
+            os.remove(base_path)
+        if 'ref_path' in locals() and ref_path.exists():
+            os.remove(ref_path)
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Mount transformed directory
+Path("transformed").mkdir(exist_ok=True)
+app.mount("/transformed", StaticFiles(directory="transformed"), name="transformed")
+
 
 @app.post("/api/analyze-image")
 async def analyze_image(file: UploadFile = File(...)):
@@ -150,7 +279,25 @@ async def analyze_image(file: UploadFile = File(...)):
             if isinstance(result, dict):
                 result.setdefault("metadata_save_error", str(e))
         
-        # Clean up
+        # Save image for later transformation use
+        try:
+            analyzed_images_dir = Path("analyzed_images")
+            analyzed_images_dir.mkdir(exist_ok=True)
+            
+            # Store with same naming as the analysis JSON
+            image_ext = Path(file.filename).suffix or ".jpg"
+            stored_image_path = analyzed_images_dir / f"{safe_stem}_{timestamp}{image_ext}"
+            shutil.copy(temp_path, stored_image_path)
+            
+            # Add stored path to result
+            if isinstance(result, dict):
+                result["stored_image_path"] = str(stored_image_path)
+                result["stored_image_url"] = f"/analyzed_images/{stored_image_path.name}"
+        except Exception as e:
+            if isinstance(result, dict):
+                result.setdefault("image_save_error", str(e))
+        
+        # Clean up temp file
         os.remove(temp_path)
         
         return result
@@ -159,6 +306,10 @@ async def analyze_image(file: UploadFile = File(...)):
         if temp_path.exists():
             os.remove(temp_path)
         raise HTTPException(status_code=500, detail=str(e))
+
+# Mount analyzed_images directory
+Path("analyzed_images").mkdir(exist_ok=True)
+app.mount("/analyzed_images", StaticFiles(directory="analyzed_images"), name="analyzed_images")
 
 if __name__ == "__main__":
     import logging

@@ -1,0 +1,39 @@
+{
+  "creative_type": "image",
+  "timestamp": 1770291541817,
+  "source_analysis": {
+    "visual_dna": {
+      "composition": "Centered product with bold typography",
+      "palette": "Rich red (#D32F2F) 70%, white (#FFFFFF) 20%, subtle dark accents",
+      "lighting": "Studio lighting highlighting texture and condensation",
+      "style": "Classic, iconic, brand-focused"
+    },
+    "strategic_analysis": {
+      "tone": "Nostalgic, refreshing, celebratory",
+      "cta_style": "Implied engagement through event timing",
+      "emotional_angle": "Enjoyment & tradition",
+      "audience": "Coke enthusiasts, event watchers, broad age range"
+    },
+    "image_composition_analysis": {
+      "focal_points": "Central product focus with equal emphasis on text, ensuring brand recall",
+      "typography_style": "Bold sans-serif and script, contrasting for emphasis"
+    },
+    "prompt_reconstruction": "Studio shot of a classic Coke bottle with condensation, centered on a rich red background, bold white text to the sides, iconic and timeless style, commercial advertisement context --ar 16:9 --style classic",
+    "stored_image_path": "analyzed_images\\Coca-Cola_1770291521.jpg",
+    "stored_image_url": "/analyzed_images/Coca-Cola_1770291521.jpg"
+  },
+  "transformation_instructions": "replace the coke bottle with pepsi, changing the text and background colours as well",
+  "common": {
+    "objective": "Product Launch",
+    "product": "UltraRun Pro Shoes",
+    "platform": "Instagram",
+    "aspect_ratio": "1:1 (Square)"
+  },
+  "image_settings": {
+    "style_emphasis": "Product-focused",
+    "background_mood": "Studio/Clean",
+    "headline": "",
+    "subheadline": "",
+    "cta_text": ""
+  }
+}
