@@ -1735,12 +1735,29 @@
                             path: result.path,
                             uploadTime: result.upload_time
                         };
-                        
-                        // Simulate processing completion
-                        setTimeout(() => {
+
+                        // If the backend returned a generated blueprint, hydrate
+                        // the Blueprint tab with those values so the user sees
+                        // an auto-filled voice profile, pillars, and policies.
+                        if (result.blueprint) {
+                            this.brand.blueprint = {
+                                ...this.brand.blueprint,
+                                ...result.blueprint
+                            };
+
+                            if (typeof result.blueprint.productDefaultPct === 'number') {
+                                this.settings.productDefaultPct = result.blueprint.productDefaultPct;
+                            }
+
                             this.guidelineDoc.status = 'parsed';
                             this.brand.guidelineDoc.status = 'parsed';
-                        }, 2000);
+                        } else {
+                            // Fallback: keep previous simulated processing
+                            setTimeout(() => {
+                                this.guidelineDoc.status = 'parsed';
+                                this.brand.guidelineDoc.status = 'parsed';
+                            }, 2000);
+                        }
                         
                     } catch (error) {
                         console.error('Upload error:', error);

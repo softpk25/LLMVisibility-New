@@ -268,21 +268,43 @@ function enhancedBrandContentSystem() {
 
             try {
                 const result = await client.uploadGuideline(this.brand.id, file);
-                
+
                 this.guidelineDoc = {
                     name: result.original_name,
                     size: result.size,
                     status: 'uploaded'
                 };
 
-                // Update brand data
-                this.brand.guidelineDoc = this.guidelineDoc;
-                
-                // Simulate processing
-                setTimeout(() => {
+                // Update brand data with file details
+                this.brand.guidelineDoc = {
+                    ...this.guidelineDoc,
+                    path: result.path,
+                    uploadTime: result.upload_time
+                };
+
+                // If the backend managed to generate a draft blueprint from
+                // the document, immediately hydrate the Blueprint tab with it
+                // so the user sees auto-filled sliders, pillars, and policies.
+                if (result.blueprint) {
+                    this.brand.blueprint = {
+                        ...this.brand.blueprint,
+                        ...result.blueprint
+                    };
+
+                    // Keep the onboarding product slider in sync when possible
+                    if (typeof result.blueprint.productDefaultPct === 'number') {
+                        this.settings.productDefaultPct = result.blueprint.productDefaultPct;
+                    }
+
                     this.guidelineDoc.status = 'parsed';
                     this.brand.guidelineDoc.status = 'parsed';
-                }, 2000);
+                } else {
+                    // Fallback: keep the existing "processing" behaviour
+                    setTimeout(() => {
+                        this.guidelineDoc.status = 'parsed';
+                        this.brand.guidelineDoc.status = 'parsed';
+                    }, 2000);
+                }
 
             } catch (error) {
                 console.error('Upload failed:', error);
