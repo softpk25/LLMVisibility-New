@@ -17,6 +17,13 @@ __pycache__/
 generated/
 temp_uploads/
 image_analysis/
+transformed/
+temp_uploads/
+image_analysis/
+image_analysis/
+generated/
+creative/
+analyzed_images/
 
 # IDE
 .vscode/
@@ -30,3 +37,4 @@ Thumbs.db
 
 # Logs
 *.log
+
