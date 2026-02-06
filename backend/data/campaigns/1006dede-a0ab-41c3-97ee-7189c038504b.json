@@ -1,0 +1,22 @@
+{
+  "campaign_name": "Test Campaign",
+  "campaign_objective": "awareness",
+  "target_audience": "Tech enthusiasts",
+  "start_date": "2024-06-01",
+  "end_date": "2024-08-31",
+  "frequency": 2,
+  "selected_personas": [
+    "persona-1"
+  ],
+  "selected_brand_id": "28e24da4-6dd4-4673-a736-0f35325f7b62",
+  "product_integration_enabled": false,
+  "selected_products": [],
+  "language_config": {
+    "primary_language": "en",
+    "multilingual_enabled": false,
+    "additional_languages": []
+  },
+  "id": "1006dede-a0ab-41c3-97ee-7189c038504b",
+  "created_at": "2026-02-05T07:20:34.973957",
+  "updated_at": "2026-02-05T07:20:34.973957"
+}

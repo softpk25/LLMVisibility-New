@@ -1,0 +1,25 @@
+# Minimal requirements for Prometrix backend
+# Install these first to avoid dependency conflicts
+
+# Core framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# Data validation (install in order)
+pydantic==2.11.9
+pydantic-settings==2.11.0
+
+# Environment and HTTP
+python-dotenv==1.1.1
+httpx==0.28.1
+
+# File handling
+python-multipart==0.0.6
+aiofiles==23.2.1
+
+# LLM providers (optional)
+openai>=1.70.0
+anthropic>=0.7.0
+
+# Basic utilities
+Pillow>=10.1.0

@@ -1,0 +1,167 @@
+{
+  "id": "campaign-12345-abcd-efgh",
+  "campaign_metadata": {
+    "id": "campaign-12345-abcd-efgh",
+    "name": "Summer Tech Launch 2024",
+    "objective": "awareness",
+    "target_audience": "Tech-savvy millennials aged 25-35 interested in productivity tools",
+    "start_date": "2024-06-01",
+    "end_date": "2024-08-31",
+    "frequency": 2,
+    "status": "active",
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:30:00Z"
+  },
+  "brand_context": {
+    "brand_id": "brand-67890-ijkl-mnop",
+    "brand_name": "TechFlow Solutions",
+    "voice_profile": {
+      "formality": "casual",
+      "humor": "moderate",
+      "tone": "enthusiastic",
+      "personality_traits": ["innovative", "approachable", "expert"],
+      "do_phrases": ["We believe", "Let's explore", "Together we can"],
+      "dont_phrases": ["Never", "Impossible", "Can't be done"]
+    },
+    "content_pillars": [
+      {
+        "id": "pillar-1",
+        "name": "Innovation Spotlight",
+        "type": "educational",
+        "description": "Showcasing cutting-edge technology solutions",
+        "keywords": ["innovation", "technology", "future"],
+        "percentage": 40
+      },
+      {
+        "id": "pillar-2", 
+        "name": "Community Stories",
+        "type": "community",
+        "description": "Highlighting user success stories and community",
+        "keywords": ["community", "success", "stories"],
+        "percentage": 30
+      },
+      {
+        "id": "pillar-3",
+        "name": "Product Excellence",
+        "type": "promotional", 
+        "description": "Demonstrating product features and benefits",
+        "keywords": ["product", "features", "benefits"],
+        "percentage": 30
+      }
+    ],
+    "guidelines": {
+      "logo_usage": {
+        "minimum_size": "24px",
+        "clear_space": "2x logo height"
+      },
+      "color_palette": ["#5046e5", "#00c4cc", "#1a202c", "#f7fafc"],
+      "typography": {
+        "primary": "Inter",
+        "secondary": "Arial"
+      },
+      "messaging_guidelines": {
+        "tone": "conversational",
+        "voice": "expert but approachable"
+      }
+    }
+  },
+  "personas": [
+    {
+      "id": "persona-tech-lead",
+      "name": "Tech Lead Sarah",
+      "age_range": "28-35",
+      "interests": ["productivity", "automation", "team management"],
+      "demographics": {
+        "location": "Urban areas",
+        "income": "$80k-120k",
+        "education": "Bachelor's or higher"
+      },
+      "behavior_patterns": [
+        "Active on LinkedIn and Twitter",
+        "Reads tech blogs regularly",
+        "Values efficiency and innovation"
+      ]
+    },
+    {
+      "id": "persona-startup-founder",
+      "name": "Startup Founder Mike",
+      "age_range": "25-32",
+      "interests": ["entrepreneurship", "scaling", "technology"],
+      "demographics": {
+        "location": "Tech hubs",
+        "income": "Variable",
+        "education": "Bachelor's or higher"
+      },
+      "behavior_patterns": [
+        "Heavy social media user",
+        "Seeks growth solutions",
+        "Values cost-effectiveness"
+      ]
+    }
+  ],
+  "products": [
+    {
+      "id": "product-workflow-pro",
+      "name": "WorkFlow Pro",
+      "category": "productivity",
+      "price": 29.99,
+      "description": "Advanced workflow automation tool for teams",
+      "features": [
+        "Automated task routing",
+        "Real-time collaboration",
+        "Advanced analytics",
+        "Custom integrations"
+      ]
+    },
+    {
+      "id": "product-team-sync",
+      "name": "TeamSync",
+      "category": "communication",
+      "price": 19.99,
+      "description": "Seamless team communication platform",
+      "features": [
+        "Instant messaging",
+        "Video conferencing",
+        "File sharing",
+        "Project tracking"
+      ]
+    }
+  ],
+  "language_config": {
+    "primary_language": "en",
+    "multilingual_enabled": true,
+    "additional_languages": ["es", "fr"]
+  },
+  "post_mix": {
+    "educational": 40,
+    "promotional": 25,
+    "behind_scenes": 15,
+    "user_generated": 10,
+    "seasonal": 5,
+    "trending": 5
+  },
+  "content_types": ["image", "carousel", "video"],
+  "content_plan": {
+    "generated_plan": "Week 1: Focus on innovation spotlight with educational content about workflow automation...",
+    "generated_at": "2024-01-15T10:35:00Z",
+    "llm_metadata": {
+      "provider_used": "openai",
+      "model": "gpt-4",
+      "processing_time": 2.3
+    }
+  },
+  "posts": {
+    "post-001": {
+      "caption": "🚀 Revolutionize your team's productivity with WorkFlow Pro! Our latest automation features help you focus on what matters most. #ProductivityHack #WorkFlowPro #TeamWork",
+      "hashtags": ["#ProductivityHack", "#WorkFlowPro", "#TeamWork", "#Automation"],
+      "scheduled_time": "2024-06-01T09:00:00Z",
+      "content_type": "image",
+      "status": "scheduled",
+      "updated_at": "2024-01-15T10:40:00Z"
+    }
+  },
+  "status": "active",
+  "version": "v1",
+  "created_at": "2024-01-15T10:30:00Z",
+  "updated_at": "2024-01-15T10:40:00Z"
+}
