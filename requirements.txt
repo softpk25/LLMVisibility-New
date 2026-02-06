@@ -1,0 +1,21 @@
+# FastAPI and server dependencies
+fastapi>=0.68.0
+uvicorn[standard]>=0.15.0
+pydantic>=1.8.0
+python-multipart>=0.0.5
+
+# CORS support (included with FastAPI but explicit)
+# Already included via FastAPI middleware
+
+# Environment variable management
+python-dotenv>=0.19.0
+
+# PDF and DOCX parsing for brand guideline extraction
+PyPDF2>=3.0.0
+python-docx>=0.8.11
+
+# Image processing for Inspire Me module
+Pillow>=9.0.0
+
+# HTTP requests for OpenAI API integration
+requests>=2.28.0
