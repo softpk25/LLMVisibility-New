@@ -161,7 +161,24 @@ class BrandRegistrationService:
 # Initialize service
 brand_service = BrandRegistrationService()
 
-# API Endpoints
+def handle_guideline_upload(event):
+    file = event.target.files[0]
+    reader = PdfReader(file)
+    text = ''
+    for page in reader.pages:
+        text += page.extract_text() + '\n'
+    extracted_info = parse_guidelines(text)
+    save_to_json(extracted_info)
+
+
+def parse_guidelines(text):
+    # Implement your parsing logic here
+    return extracted_info
+
+
+def save_to_json(data):
+    with open('brand_guidelines.json', 'w') as json_file:
+        json.dump(data, json_file)
 
 @router.post("/upload-guideline/{brand_id}")
 async def upload_brand_guideline(

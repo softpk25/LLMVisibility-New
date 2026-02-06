@@ -12,7 +12,7 @@ __pycache__/
 *.pyd
 .Python
 *.so
-
+.kiro/
 # Generated files
 generated/
 temp_uploads/
