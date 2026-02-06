@@ -6,7 +6,7 @@
 class BrandRegistrationClient {
     constructor(baseUrl = '') {
         this.baseUrl = baseUrl;
-        this.apiBase = `${baseUrl}/api/brand-registration`;
+        this.apiBase = `${baseUrl}/api/v1/brands`;
     }
 
     /**
@@ -17,7 +17,8 @@ class BrandRegistrationClient {
         formData.append('file', file);
 
         try {
-            const response = await fetch(`${this.apiBase}/upload-guideline/${brandId}`, {
+            // Note: v1 API has a generic /upload endpoint
+            const response = await fetch(`${this.apiBase}/upload`, {
                 method: 'POST',
                 body: formData
             });
@@ -35,37 +36,13 @@ class BrandRegistrationClient {
     }
 
     /**
-     * Save brand settings (language, LLM, product percentage)
-     */
-    async saveSettings(brandId, settings) {
-        try {
-            const response = await fetch(`${this.apiBase}/save-settings/${brandId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(settings)
-            });
-
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.detail || 'Failed to save settings');
-            }
-
-            return await response.json();
-        } catch (error) {
-            console.error('Settings save error:', error);
-            throw error;
-        }
-    }
-
-    /**
-     * Save brand blueprint (voice, pillars, policies)
+     * Save brand settings/blueprint (voice, pillars, policies)
+     * Backend uses a single PUT /{brand_id}/blueprint endpoint
      */
     async saveBlueprint(brandId, blueprint) {
         try {
-            const response = await fetch(`${this.apiBase}/save-blueprint/${brandId}`, {
-                method: 'POST',
+            const response = await fetch(`${this.apiBase}/${brandId}/blueprint`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -85,11 +62,18 @@ class BrandRegistrationClient {
     }
 
     /**
+     * Alias for saveBlueprint to maintain compatibility
+     */
+    async saveSettings(brandId, settings) {
+        return this.saveBlueprint(brandId, settings);
+    }
+
+    /**
      * Get brand data
      */
     async getBrand(brandId) {
         try {
-            const response = await fetch(`${this.apiBase}/brand/${brandId}`);
+            const response = await fetch(`${this.apiBase}/${brandId}`);
 
             if (!response.ok) {
                 const error = await response.json();
@@ -108,7 +92,7 @@ class BrandRegistrationClient {
      */
     async listBrands() {
         try {
-            const response = await fetch(`${this.apiBase}/brands`);
+            const response = await fetch(`${this.apiBase}/`);
 
             if (!response.ok) {
                 const error = await response.json();
@@ -123,11 +107,11 @@ class BrandRegistrationClient {
     }
 
     /**
-     * Create new brand
+     * Create new brand (Register)
      */
     async createBrand(brandData) {
         try {
-            const response = await fetch(`${this.apiBase}/create-brand`, {
+            const response = await fetch(`${this.apiBase}/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -146,31 +130,31 @@ class BrandRegistrationClient {
             throw error;
         }
     }
-
+}
     /**
      * Update brand data
      */
     async updateBrand(brandId, updates) {
-        try {
-            const response = await fetch(`${this.apiBase}/update-brand/${brandId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(updates)
-            });
+    try {
+        const response = await fetch(`${this.apiBase}/update-brand/${brandId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updates)
+        });
 
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.detail || 'Failed to update brand');
-            }
-
-            return await response.json();
-        } catch (error) {
-            console.error('Update brand error:', error);
-            throw error;
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail || 'Failed to update brand');
         }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Update brand error:', error);
+        throw error;
     }
+}
 }
 
 /**
@@ -178,13 +162,13 @@ class BrandRegistrationClient {
  */
 function enhancedBrandContentSystem() {
     const client = new BrandRegistrationClient();
-    
+
     return {
         // ... existing properties from original function
         activeTab: 'onboarding',
         isGeneratingPlan: false,
         isGeneratingBlueprint: false,
-        
+
         // Brand data
         brand: {
             id: 'brand-001',
@@ -213,21 +197,21 @@ function enhancedBrandContentSystem() {
                 productDefaultPct: 30
             }
         },
-        
+
         // Settings
         settings: {
             defaultLanguage: 'en',
             defaultLLM: 'gpt-4.1',
             productDefaultPct: 30
         },
-        
+
         // UI state
         newForbiddenPhrase: '',
         newBrandHashtag: '',
         guidelineDoc: { name: '', status: 'none' },
         isUploading: false,
         isSaving: false,
-        
+
         // Initialize
         async init() {
             // Try to load existing brand data
@@ -268,7 +252,7 @@ function enhancedBrandContentSystem() {
 
             try {
                 const result = await client.uploadGuideline(this.brand.id, file);
-                
+
                 this.guidelineDoc = {
                     name: result.original_name,
                     size: result.size,
@@ -277,7 +261,7 @@ function enhancedBrandContentSystem() {
 
                 // Update brand data
                 this.brand.guidelineDoc = this.guidelineDoc;
-                
+
                 // Simulate processing
                 setTimeout(() => {
                     this.guidelineDoc.status = 'parsed';
@@ -298,7 +282,7 @@ function enhancedBrandContentSystem() {
          */
         async saveSettings() {
             this.isSaving = true;
-            
+
             try {
                 await client.saveSettings(this.brand.id, this.settings);
                 console.log('Settings saved successfully');
@@ -315,7 +299,7 @@ function enhancedBrandContentSystem() {
          */
         async saveBlueprint() {
             this.isSaving = true;
-            
+
             try {
                 await client.saveBlueprint(this.brand.id, this.brand.blueprint);
                 console.log('Blueprint saved successfully');
@@ -333,16 +317,16 @@ function enhancedBrandContentSystem() {
          */
         async generateBrandBlueprint() {
             this.isGeneratingBlueprint = true;
-            
+
             // Save current settings first
             await this.saveSettings();
-            
+
             setTimeout(async () => {
                 this.brand.blueprint.status = 'generated';
-                
+
                 // Auto-save the generated blueprint
                 await this.saveBlueprint();
-                
+
                 this.isGeneratingBlueprint = false;
                 this.activeTab = 'blueprint';
             }, 3000);
