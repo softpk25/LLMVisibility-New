@@ -1,0 +1,39 @@
+{
+  "creative_type": "image",
+  "timestamp": 1770291807709,
+  "source_analysis": {
+    "visual_dna": {
+      "composition": "Central bottle with balanced typography on either side",
+      "palette": "Rich red (#D21034) 70%, White 20%, Black 10%",
+      "lighting": "Studio lighting emphasizing glass and condensation",
+      "style": "Classic, bold, beverage-focused"
+    },
+    "strategic_analysis": {
+      "tone": "Inviting, refreshing, celebratory",
+      "cta_style": "Implied enjoyment, subtle urgency",
+      "emotional_angle": "Moment of refreshment & celebration",
+      "audience": "General consumers, 15-40, enjoyment-oriented"
+    },
+    "image_composition_analysis": {
+      "focal_points": "Primary focus on bottle with ~70% saliency; text complements visually",
+      "typography_style": "Bold sans-serif, high contrast, reinforces message"
+    },
+    "prompt_reconstruction": "Product shot of Coca-Cola bottle, centered, dramatic studio lighting, condensation visible, rich red and white color scheme, bold typography, commercial advertising style --ar 16:9 --style photorealistic",
+    "stored_image_path": "analyzed_images\\Coca-Cola_1770291780.jpg",
+    "stored_image_url": "/analyzed_images/Coca-Cola_1770291780.jpg"
+  },
+  "transformation_instructions": "replace the coca cola bottle with pepsi bottle and change the colour and text accordingly",
+  "common": {
+    "objective": "Product Launch",
+    "product": "UltraRun Pro Shoes",
+    "platform": "Instagram",
+    "aspect_ratio": "1:1 (Square)"
+  },
+  "image_settings": {
+    "style_emphasis": "Product-focused",
+    "background_mood": "Studio/Clean",
+    "headline": "",
+    "subheadline": "",
+    "cta_text": ""
+  }
+}

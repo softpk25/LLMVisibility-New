@@ -17,6 +17,13 @@ __pycache__/
 generated/
 temp_uploads/
 image_analysis/
+transformed/
+temp_uploads/
+image_analysis/
+image_analysis/
+generated/
+creative/
+analyzed_images/
 
 # Brand registration data
 brand_registrations.json
@@ -34,3 +41,4 @@ Thumbs.db
 
 # Logs
 *.log
+
