@@ -7,11 +7,25 @@ import os
 import json
 import time
 import shutil
+import re
 from pathlib import Path
 from typing import Dict, Any, Optional
+
 from fastapi import APIRouter, UploadFile, File, HTTPException, Form
 from pydantic import BaseModel
 from datetime import datetime
+
+try:
+    # Lightweight PDF parsing for text extraction
+    from PyPDF2 import PdfReader  # type: ignore
+except ImportError:  # pragma: no cover - optional dependency
+    PdfReader = None  # type: ignore
+
+try:
+    # Optional DOCX support
+    import docx  # type: ignore
+except ImportError:  # pragma: no cover - optional dependency
+    docx = None  # type: ignore
 
 # Create router for brand registration endpoints
 router = APIRouter(prefix="/api/brand-registration", tags=["brand-registration"])
@@ -161,7 +175,214 @@ class BrandRegistrationService:
 # Initialize service
 brand_service = BrandRegistrationService()
 
-# API Endpoints
+
+def _extract_text_from_guideline(path: Path) -> str:
+    """
+    Best-effort text extraction from an uploaded guideline document.
+    - PDF: uses PyPDF2 if available
+    - DOCX: uses python-docx if available
+    If the required parser is not installed, returns an empty string so that
+    upload still succeeds and the UI can function normally.
+    """
+    suffix = path.suffix.lower()
+
+    try:
+        if suffix == ".pdf" and PdfReader is not None:
+            text_parts = []
+            with open(path, "rb") as f:
+                reader = PdfReader(f)
+                for page in reader.pages:
+                    page_text = page.extract_text() or ""
+                    text_parts.append(page_text)
+            return "\n".join(text_parts)
+
+        if suffix in {".docx", ".doc"} and docx is not None:
+            # python-docx cannot read legacy .doc files, but this at least
+            # works for modern .docx guidelines.
+            document = docx.Document(str(path))
+            return "\n".join(p.text for p in document.paragraphs if p.text.strip())
+    except Exception:
+        # Parsing issues should never break the upload flow
+        return ""
+
+    return ""
+
+
+def _infer_voice_profile(text: str) -> VoiceProfile:
+    """Derive a rough voice profile from free-form guideline text."""
+    lowered = text.lower()
+
+    # Defaults
+    formality = 50
+    humor = 40
+    warmth = 60
+
+    # Formality
+    if re.search(r"\bformal\b|\bprofessional\b", lowered):
+        formality = 80
+    elif re.search(r"\bcasual\b|\bconversational\b|\brelaxed\b", lowered):
+        formality = 30
+
+    # Humor
+    if re.search(r"\bserious\b|\bno jokes\b|\bno humor\b", lowered):
+        humor = 20
+    elif re.search(r"\bplayful\b|\bfun\b|\bhumorous\b|\bquirky\b", lowered):
+        humor = 70
+
+    # Warmth
+    if re.search(r"\bwarm\b|\bfriendly\b|\bapproachable\b|\bempathetic\b", lowered):
+        warmth = 80
+    elif re.search(r"\bclinical\b|\bimpersonal\b|\bcorporate\b", lowered):
+        warmth = 40
+
+    # Emoji policy
+    emoji_policy = "medium"
+    if re.search(r"\bno emojis\b|\bavoid emojis\b|\bwithout emojis\b", lowered):
+        emoji_policy = "none"
+    elif re.search(r"\bsparingly\b.*emoji|\blight use of emojis\b", lowered):
+        emoji_policy = "light"
+    elif re.search(r"\bemoji[- ]rich\b|\bheavy use of emojis\b", lowered):
+        emoji_policy = "rich"
+
+    return VoiceProfile(
+        formality=formality,
+        humor=humor,
+        warmth=warmth,
+        emojiPolicy=emoji_policy,
+    )
+
+
+def _infer_product_share(text: str, default_pct: int = 30) -> int:
+    """
+    Try to infer 'what share of posts should include the product' from text,
+    e.g. '70% of posts can be product-led'.
+    """
+    match = re.search(r"(\d{1,2})\s*%[^.\n]{0,80}\bproduct", text, flags=re.IGNORECASE)
+    if match:
+        try:
+            value = int(match.group(1))
+            if 0 <= value <= 100:
+                return value
+        except ValueError:
+            pass
+    return default_pct
+
+
+def _infer_pillars(text: str) -> list[ContentPillar]:
+    """
+    Build a set of content pillars from bullet-style lines in the guideline.
+    This is heuristic but gives the user a helpful starting point.
+    """
+    lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
+    bullet_lines = [
+        ln for ln in lines if ln.startswith(("-", "•", "*", "·"))
+    ]
+
+    pillars: list[ContentPillar] = []
+
+    for ln in bullet_lines:
+        # Strip the bullet character
+        clean = ln.lstrip("-•*·").strip()
+        if not clean:
+            continue
+
+        name = clean
+        description = ""
+
+        # Split "Name – Description" or "Name: Description"
+        for sep in (" - ", " – ", " — ", ": "):
+            if sep in clean:
+                name, description = [part.strip() for part in clean.split(sep, 1)]
+                break
+
+        # Avoid obviously non-pillar lines (too short)
+        if len(name) < 3:
+            continue
+
+        pillars.append(
+            ContentPillar(
+                name=name,
+                description=description,
+                weight=0,
+            )
+        )
+
+        if len(pillars) >= 8:
+            break
+
+    # If we didn't find any, return an empty list and fall back to defaults
+    return pillars
+
+
+def _infer_policies(text: str) -> BrandPolicies:
+    """
+    Extract basic guardrails:
+    - forbidden phrases from quoted strings after 'avoid', 'do not', 'never say'
+    - brand hashtags from text like '#BrandName'
+    """
+    lowered = text.lower()
+
+    # Forbidden phrases in quotes after common guardrail verbs
+    forbidden: list[str] = []
+    guardrail_matches = re.finditer(
+        r"(avoid|do not|never say)[^\"'\n]*[\"']([^\"']+)[\"']",
+        lowered,
+        flags=re.IGNORECASE,
+    )
+    for m in guardrail_matches:
+        phrase = m.group(2).strip()
+        if phrase and phrase not in forbidden:
+            forbidden.append(phrase)
+
+    # Brand hashtags
+    hashtags = sorted(
+        {tag for tag in re.findall(r"#\w+", text) if len(tag) > 1}
+    )
+
+    # Reasonable default cap on hashtags
+    max_hashtags = 5
+
+    return BrandPolicies(
+        forbiddenPhrases=forbidden,
+        maxHashtags=max_hashtags,
+        brandHashtags=hashtags[:30],
+    )
+
+
+def parse_guidelines_to_blueprint(
+    text: str, existing_blueprint: Optional[Dict[str, Any]] = None
+) -> Optional[BrandBlueprint]:
+    """
+    Convert free-form guideline text into a draft BrandBlueprint.
+    This is intentionally heuristic but gives the Blueprint page a useful
+    auto-filled starting point that the user can refine.
+    """
+    if not text or not text.strip():
+        return None
+
+    # Start from existing blueprint if we have one, otherwise defaults
+    if isinstance(existing_blueprint, dict):
+        base = BrandBlueprint(**existing_blueprint)
+    else:
+        base = BrandBlueprint()
+
+    voice = _infer_voice_profile(text)
+    product_pct = _infer_product_share(text, default_pct=base.productDefaultPct)
+    pillars = _infer_pillars(text)
+    policies = _infer_policies(text)
+
+    # If we didn't infer any pillars, keep existing ones
+    if not pillars:
+        pillars = base.pillars
+
+    return BrandBlueprint(
+        version=base.version,
+        status="generated-from-doc",
+        voice=voice,
+        pillars=pillars,
+        policies=policies,
+        productDefaultPct=product_pct,
+    )
 
 @router.post("/upload-guideline/{brand_id}")
 async def upload_brand_guideline(
@@ -188,18 +409,39 @@ async def upload_brand_guideline(
     
     # Save file
     file_info = brand_service.save_uploaded_file(file, brand_id)
-    
-    # Update brand data with file info
+
+    # Best-effort parse of the uploaded document into a draft blueprint
+    extracted_text = _extract_text_from_guideline(Path(file_info["path"]))
+
+    existing_blueprint_dict: Optional[Dict[str, Any]] = None
     try:
-        brand_service.update_brand(brand_id, {
-            "guidelineDoc": {
-                "name": file_info["original_name"],
-                "size": file_info["size"],
-                "status": "uploaded",
-                "path": file_info["path"],
-                "uploadTime": file_info["upload_time"]
-            }
-        })
+        existing_brand = brand_service.get_brand(brand_id)
+        existing_blueprint_dict = existing_brand.get("blueprint")  # type: ignore[attr-defined]
+    except HTTPException as e:
+        if e.status_code != 404:
+            raise
+
+    generated_blueprint = parse_guidelines_to_blueprint(
+        extracted_text, existing_blueprint=existing_blueprint_dict
+    )
+
+    # Prepare updates for brand record
+    updates: Dict[str, Any] = {
+        "guidelineDoc": {
+            "name": file_info["original_name"],
+            "size": file_info["size"],
+            "status": "uploaded",
+            "path": file_info["path"],
+            "uploadTime": file_info["upload_time"]
+        }
+    }
+
+    if generated_blueprint is not None:
+        updates["blueprint"] = generated_blueprint.dict()
+
+    # Update or create brand data with file + generated blueprint
+    try:
+        brand_service.update_brand(brand_id, updates)
     except HTTPException as e:
         if e.status_code == 404:
             # Brand doesn't exist, create it
@@ -207,21 +449,22 @@ async def upload_brand_guideline(
             brand_data = BrandRegistrationData(
                 id=brand_id,
                 name=f"Brand {brand_id}",
-                guidelineDoc={
-                    "name": file_info["original_name"],
-                    "size": file_info["size"],
-                    "status": "uploaded",
-                    "path": file_info["path"],
-                    "uploadTime": file_info["upload_time"]
-                },
+                guidelineDoc=updates["guidelineDoc"],
+                blueprint=generated_blueprint or BrandBlueprint(),  # type: ignore[arg-type]
                 createdAt=now,
                 updatedAt=now
             )
             brand_service.create_brand(brand_data)
         else:
             raise e
-    
-    return file_info
+
+    # Return file info plus any generated blueprint so the frontend can
+    # immediately update the Blueprint page without an extra API call.
+    response_payload = dict(file_info)
+    if generated_blueprint is not None:
+        response_payload["blueprint"] = generated_blueprint.dict()
+
+    return response_payload
 
 @router.post("/save-settings/{brand_id}")
 async def save_brand_settings(
