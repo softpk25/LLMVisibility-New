@@ -239,6 +239,8 @@ Path("transformed").mkdir(exist_ok=True)
 app.mount("/transformed", StaticFiles(directory="transformed"), name="transformed")
 
 
+from fastapi.concurrency import run_in_threadpool
+
 @app.post("/api/analyze-image")
 async def analyze_image(file: UploadFile = File(...)):
     if not rater:
@@ -253,9 +255,10 @@ async def analyze_image(file: UploadFile = File(...)):
         with open(temp_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
             
-        # Get description
-        result = rater.get_image_description(temp_path)
-        
+        # Get description for image
+        # Run rater in threadpool as it uses OpenAI sync client
+        result = await run_in_threadpool(rater.get_image_description, temp_path)
+            
         # Persist analysis JSON for later reuse / auditing
         try:
             analysis_dir = Path("image_analysis")
@@ -304,12 +307,154 @@ async def analyze_image(file: UploadFile = File(...)):
         
     except Exception as e:
         if temp_path.exists():
-            os.remove(temp_path)
+            try:
+                os.remove(temp_path)
+            except:
+                pass
+        # Log the full error for debugging
+        print(f"Error in analyze_image: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/analyze-video")
+async def analyze_video_endpoint(file: UploadFile = File(...)):
+    """
+    Endpoint specifically for analyzing video files.
+    """
+    # Save uploaded file temporarily
+    temp_dir = Path("temp_uploads")
+    temp_dir.mkdir(exist_ok=True)
+    temp_path = temp_dir / file.filename
+    
+    try:
+        with open(temp_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+            
+        file_ext = Path(file.filename).suffix.lower()
+        if file_ext not in ['.mp4', '.mov', '.avi', '.mkv', '.webm']:
+             raise HTTPException(status_code=400, detail="Invalid video file format")
+
+        # Import on demand to avoid circular imports or startup issues if not used
+        try:
+            sys.path.append(os.path.join(os.path.dirname(__file__), 'inspire me', 'video gen'))
+            from videounderstand import analyze_video
+        except ImportError as e:
+            raise HTTPException(status_code=500, detail=f"Could not import videounderstand: {e}")
+
+        # Analyze video in threadpool to avoid blocking event loop
+        video_prompt = await run_in_threadpool(analyze_video, str(temp_path))
+        
+        # Construct a response that mimics the image analysis structure so frontend doesn't break
+        result = {
+            "analysis": {
+                "visual_dna": {
+                    "composition": "Video content",
+                    "palette": "Dynamic video palette",
+                    "lighting": "Video lighting",
+                    "style": "Video style"
+                },
+                "strategic_analysis": {
+                    "tone": "Video tone",
+                    "cta_style": "Video CTA",
+                    "emotional_angle": "Video emotion",
+                    "audience": "Video audience"
+                },
+                "image_composition_analysis": {
+                    "focal_points": "Video subjects",
+                    "typography_style": "N/A"
+                },
+                "prompt_reconstruction": video_prompt
+            }
+        }
+        
+        # Clean up temp file
+        os.remove(temp_path)
+        
+        return result
+
+    except Exception as e:
+        if temp_path.exists():
+             try:
+                os.remove(temp_path)
+             except:
+                pass
+        print(f"Error in analyze_video_endpoint: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 # Mount analyzed_images directory
 Path("analyzed_images").mkdir(exist_ok=True)
 app.mount("/analyzed_images", StaticFiles(directory="analyzed_images"), name="analyzed_images")
+
+
+
+# Import video processor
+try:
+    sys.path.append(os.path.join(os.path.dirname(__file__), 'inspire me', 'video gen'))
+    from video_processor import process_creative_request
+except ImportError as e:
+    print(f"Warning: Could not import video_processor: {e}")
+
+@app.post("/api/generate-video")
+async def generate_video_endpoint(
+    file: UploadFile = File(...),
+    instructions: str = Form(None),
+    creative_type: str = Form("reel") # 'reel' or 'gif'
+):
+    """
+    Endpoint to generate video from uploaded image or video.
+    """
+    # Create temp directory for uploads
+    temp_dir = Path("temp_uploads")
+    temp_dir.mkdir(exist_ok=True)
+    
+    # Save uploaded file
+    file_ext = Path(file.filename).suffix
+    temp_filename = f"upload_{int(time.time())}{file_ext}"
+    temp_path = temp_dir / temp_filename
+    
+    try:
+        with open(temp_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+            
+        # Determine file type
+        file_type = "image"
+        if file_ext.lower() in ['.mp4', '.mov', '.avi']:
+            file_type = "video"
+            
+        # Define output path
+        generated_dir = Path("generated")
+        generated_dir.mkdir(exist_ok=True)
+        output_filename = f"gen_video_{int(time.time())}.mp4"
+        output_path = generated_dir / output_filename
+        
+        # Process request
+        # Run in threadpool to avoid blocking
+        result = await run_in_threadpool(
+            process_creative_request,
+            file_path=str(temp_path),
+            file_type=file_type,
+            instructions=instructions or "",
+            output_path=str(output_path)
+        )
+        
+        # Clean up temp input
+        if temp_path.exists():
+            os.remove(temp_path)
+            
+        if result.get("success"):
+            return {
+                "success": True,
+                "video_url": f"/generated/{output_filename}",
+                "analysis": result.get("analysis_text"),
+                "prompt": result.get("final_prompt")
+            }
+        else:
+            raise HTTPException(status_code=500, detail=result.get("error"))
+            
+    except Exception as e:
+        if temp_path.exists():
+            os.remove(temp_path)
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 if __name__ == "__main__":
     import logging

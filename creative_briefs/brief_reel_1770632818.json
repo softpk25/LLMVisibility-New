@@ -1,0 +1,20 @@
+{
+  "creative_type": "reel",
+  "timestamp": 1770632818415,
+  "source_analysis": null,
+  "transformation_instructions": "make a cinematic advertisment for this image ",
+  "common": {
+    "objective": "Product Launch",
+    "product": "UltraRun Pro Shoes",
+    "platform": "Instagram",
+    "aspect_ratio": "1:1 (Square)"
+  },
+  "reel_settings": {
+    "scene_count": "4 Scenes (Standard)",
+    "total_duration": "15 seconds",
+    "hook_length": "3 seconds",
+    "music_style": "Upbeat/Energetic",
+    "voiceover": "No",
+    "captions": "Yes - Auto-highlight keywords"
+  }
+}

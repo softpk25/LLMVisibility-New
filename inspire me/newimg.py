@@ -39,6 +39,16 @@ class ImageRater:
                 new_size = tuple(int(dim * ratio) for dim in img.size)
                 img = img.resize(new_size, Image.Resampling.LANCZOS)
             
+            # Convert to RGB if necessary (e.g. for PNGs with transparency)
+            if img.mode in ('RGBA', 'LA') or (img.mode == 'P' and 'transparency' in img.info):
+                bg = Image.new('RGB', img.size, (255, 255, 255))
+                if img.mode == 'P':
+                     img = img.convert('RGBA')
+                bg.paste(img, mask=img.split()[3])
+                img = bg
+            elif img.mode != 'RGB':
+                img = img.convert('RGB')
+            
             # Convert to base64
             buffer = io.BytesIO()
             img.save(buffer, format="JPEG")

@@ -80,6 +80,7 @@ def generate_video_from_prompt(prompt, output_filename="generated_video.mp4"):
             print(f"✅ Video generated successfully!")
             
             output_path = os.path.join(os.path.dirname(__file__), output_filename)
+            client.files.download(file=generated_video.video)
             generated_video.video.save(output_path)
             print(f"💾 Video saved to: {output_path}")
             return output_path
