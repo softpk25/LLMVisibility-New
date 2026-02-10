@@ -1,0 +1,61 @@
+{
+  "creative_type": "reel",
+  "timestamp": 1770713912627,
+  "source_analysis": {
+    "visual_dna": {
+      "composition": "Centered figure with symmetrical natural elements",
+      "palette": "Vibrant orange (#FF4500) 40%, Deep green (#228B22) 35%, plus warm forest tones",
+      "lighting": "Soft, natural lighting with sun rays",
+      "style": "Mythical, adventurous, fantasy art"
+    },
+    "strategic_analysis": {
+      "tone": "Empowering, serene, mystical",
+      "cta_style": "Inspirational message with exploration theme",
+      "emotional_angle": "Strength & tranquility",
+      "audience": "Fantasy enthusiasts, 18-35, adventure seekers"
+    },
+    "image_composition_analysis": {
+      "focal_points": "Primary focus on character with ~70% saliency; harmonious background enhances setting",
+      "typography_style": "Elegant serif for titles, minimal text for mystique"
+    },
+    "prompt_reconstruction": "Epic fantasy art, mythical warrior sitting in a serene forest, diffused natural lighting, vibrant orange and deep green color scheme, adventurous and mystical style --ar 16:9 --style raw",
+    "video_prompt_json": {
+      "scene": "enchanted forest with ambient nature sounds",
+      "subjects": [
+        {
+          "type": "mythical warrior",
+          "description": "muscular, adorned with mystical jewelry",
+          "position": "center"
+        }
+      ],
+      "style": "cinematic fantasy animation",
+      "color_palette": [
+        "vibrant orange #FF4500",
+        "deep green #228B22",
+        "warm earth tones"
+      ],
+      "lighting": "soft, glowing with ambient sun rays",
+      "mood": "calm, powerful, enchanting",
+      "camera": "slow pan from left to right revealing the forest",
+      "movement": "gentle breeze effect in the trees, soft light transitions",
+      "duration_suggestion": "10-15 seconds"
+    },
+    "stored_image_path": "analyzed_images\\mayank-hanuman-ji_1770713901.jpg",
+    "stored_image_url": "/analyzed_images/mayank-hanuman-ji_1770713901.jpg"
+  },
+  "transformation_instructions": "make an ad for our company \"sanjeevni\" a \"herb that give you power like hanuman ji\" use the slogan in voice. use pan and zoom and animated movements ",
+  "common": {
+    "objective": "Product Launch",
+    "product": "UltraRun Pro Shoes",
+    "platform": "Instagram",
+    "aspect_ratio": "1:1 (Square)"
+  },
+  "reel_settings": {
+    "scene_count": "4 Scenes (Standard)",
+    "total_duration": "15 seconds",
+    "hook_length": "3 seconds",
+    "music_style": "Upbeat/Energetic",
+    "voiceover": "No",
+    "captions": "Yes - Auto-highlight keywords"
+  }
+}
