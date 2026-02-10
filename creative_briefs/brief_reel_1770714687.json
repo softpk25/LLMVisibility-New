@@ -1,0 +1,61 @@
+{
+  "creative_type": "reel",
+  "timestamp": 1770714687316,
+  "source_analysis": {
+    "visual_dna": {
+      "composition": "Centered character with lush, detailed background",
+      "palette": "Vibrant orange 40%, deep green 35%, natural earth tones",
+      "lighting": "Natural sunlight filtering through foliage",
+      "style": "Epic, mythical, illustrative"
+    },
+    "strategic_analysis": {
+      "tone": "Mythical, powerful, serene",
+      "cta_style": "Implicit engagement through narrative",
+      "emotional_angle": "Strength & tranquility",
+      "audience": "Fantasy enthusiasts, 18-35, engaged in storytelling"
+    },
+    "image_composition_analysis": {
+      "focal_points": "Dominant figure occupying ~70% of the frame; background elements provide narrative context",
+      "typography_style": "N/A, focused on visuals"
+    },
+    "prompt_reconstruction": "Epic fantasy illustration, mythical creature meditating near a serene lake, vibrant orange attire, deep green forest backdrop, sunlight filtering through leaves, dynamic and powerful composition --ar 16:9 --style raw",
+    "video_prompt_json": {
+      "scene": "fantasy forest setting with a tranquil lake",
+      "subjects": [
+        {
+          "type": "mythical creature",
+          "description": "powerful creature in orange attire, seated in meditation",
+          "position": "center"
+        }
+      ],
+      "style": "cinematic fantasy, dynamic character focus",
+      "color_palette": [
+        "vibrant orange",
+        "deep green",
+        "earth tones"
+      ],
+      "lighting": "sunlight dappling through forest canopy",
+      "mood": "serene, powerful, mythical",
+      "camera": "slow zoom and pan around character",
+      "movement": "gentle sway of trees and ripple in water",
+      "duration_suggestion": "10-15 seconds"
+    },
+    "stored_image_path": "analyzed_images\\mayank-hanuman-ji_1770714683.jpg",
+    "stored_image_url": "/analyzed_images/mayank-hanuman-ji_1770714683.jpg"
+  },
+  "transformation_instructions": "make an ad for our company \"sanjeevni\" a \"herb that give you power like hanuman ji\" use the slogan in voice. use pan and zoom and make it as real as possible , do not use any animated cartoonish style",
+  "common": {
+    "objective": "Product Launch",
+    "product": "UltraRun Pro Shoes",
+    "platform": "Instagram",
+    "aspect_ratio": "1:1 (Square)"
+  },
+  "reel_settings": {
+    "scene_count": "4 Scenes (Standard)",
+    "total_duration": "15 seconds",
+    "hook_length": "3 seconds",
+    "music_style": "Upbeat/Energetic",
+    "voiceover": "No",
+    "captions": "Yes - Auto-highlight keywords"
+  }
+}
