@@ -1,0 +1,115 @@
+{
+  "campaign_metadata": {
+    "id": "0b5a535b-6130-43fb-a044-f6f7c68ddf8a",
+    "name": "Antigravity Verification Campaign",
+    "objective": "awareness",
+    "target_audience": "Tech enthusiasts in their 30s",
+    "start_date": "2024-02-05",
+    "end_date": "2024-03-05",
+    "frequency": 1,
+    "status": "draft",
+    "created_at": "2026-02-05 11:50:39.845157",
+    "updated_at": "2026-02-05 11:50:39.845157"
+  },
+  "brand_context": {
+    "brand_id": "brand-techflow-solutions",
+    "brand_name": "TechFlow Solutions",
+    "voice_profile": {
+      "formality": "casual",
+      "humor": "moderate",
+      "tone": "enthusiastic",
+      "personality_traits": [
+        "innovative",
+        "approachable",
+        "expert"
+      ],
+      "do_phrases": [
+        "We believe",
+        "Let's explore",
+        "Together we can"
+      ],
+      "dont_phrases": [
+        "Never",
+        "Impossible",
+        "Can't"
+      ]
+    },
+    "content_pillars": [
+      {
+        "id": "pillar-innovation",
+        "name": "Innovation Spotlight",
+        "type": "educational",
+        "description": "Showcasing cutting-edge technology solutions",
+        "keywords": [
+          "innovation",
+          "technology",
+          "future"
+        ],
+        "percentage": 40
+      },
+      {
+        "id": "pillar-community",
+        "name": "Community Stories",
+        "type": "community",
+        "description": "Highlighting user success stories",
+        "keywords": [
+          "community",
+          "success",
+          "stories"
+        ],
+        "percentage": 30
+      },
+      {
+        "id": "pillar-product",
+        "name": "Product Excellence",
+        "type": "promotional",
+        "description": "Demonstrating product features",
+        "keywords": [
+          "product",
+          "features",
+          "benefits"
+        ],
+        "percentage": 30
+      }
+    ],
+    "guidelines": {
+      "color_palette": [
+        "#5046e5",
+        "#00c4cc",
+        "#1a202c",
+        "#f7fafc"
+      ],
+      "typography": {
+        "primary": "Inter",
+        "secondary": "Arial"
+      }
+    }
+  },
+  "personas": [
+    {
+      "id": "persona-1",
+      "name": "Persona persona-1",
+      "age_range": "25-35",
+      "interests": [
+        "technology",
+        "lifestyle"
+      ],
+      "demographics": {},
+      "behavior_patterns": []
+    }
+  ],
+  "products": [],
+  "language_config": {
+    "primary_language": "en",
+    "multilingual_enabled": false,
+    "additional_languages": []
+  },
+  "post_mix": null,
+  "content_types": [],
+  "content_plan": null,
+  "status": "draft",
+  "version": "v1",
+  "id": "18be57d6-8a40-4a38-b715-342117161bae",
+  "created_at": "2026-02-05T11:50:39.846680",
+  "updated_at": "2026-02-05T11:50:39.846680"
+}

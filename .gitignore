@@ -12,7 +12,7 @@ __pycache__/
 *.pyd
 .Python
 *.so
-
+.kiro/
 # Generated files
 generated/
 temp_uploads/
@@ -24,6 +24,10 @@ image_analysis/
 generated/
 creative/
 analyzed_images/
+
+# Brand registration data
+brand_registrations.json
+brand registration/uploads/
 
 # IDE
 .vscode/

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Content Management - Prometrix</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.2/cdn.min.js" defer></script>
+    <script src="/brand registration/brand_registration_client.js"></script>
+    
+    <!-- Include all the existing CSS styles from the original file -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --primary: #5046e5;
+            --primary-dark: #4039c0;
+            --secondary: #00c4cc;
+            --text-dark: #1a202c;
+            --text-light: #718096;
+            --bg-light: #f7fafc;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: var(--primary);
+            border: 1px solid #e2e8f0;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(80, 70, 229, 0.05);
+            border-color: var(--primary);
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* Include all other CSS from original file... */
+        .upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary);
+            background-color: rgba(80, 70, 229, 0.02);
+        }
+        
+        .upload-area.uploading {
+            border-color: var(--warning);
+            background-color: rgba(245, 158, 11, 0.05);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(80, 70, 229, 0.1);
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .status-uploading {
+            background-color: #fef3c7;
+            color: #d97706;
+        }
+        
+        .status-uploaded {
+            background-color: #dcfce7;
+            color: #059669;
+        }
+        
+        .status-error {
+            background-color: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .auto-save-indicator {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: var(--success);
+            color: white;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+        
+        .auto-save-indicator.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body x-data="enhancedBrandContentSystem()" x-init="init()">
+    <!-- Auto-save indicator -->
+    <div class="auto-save-indicator" :class="{ 'show': isSaving }">
+        💾 Saving...
+    </div>
+
+    <!-- Sidebar (same as original) -->
+    <aside class="sidebar">
+        <!-- Include sidebar content from original file -->
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div class="title-section">
+                <h1 style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="font-size: 1.75rem;">🎨</span>
+                    Brand Content Management
+                </h1>
+                <p class="subtitle">AI-powered content creation with brand guidelines and HITL controls</p>
+            </div>
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <button class="btn-secondary" type="button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                    Export Package
+                </button>
+                <button class="btn-primary" type="button" @click="generateBrandBlueprint()" :disabled="isGeneratingBlueprint">
+                    <span x-show="!isGeneratingBlueprint">✨</span>
+                    <span x-show="isGeneratingBlueprint">🔄</span>
+                    <span x-text="isGeneratingBlueprint ? 'Generating...' : 'Generate Blueprint'"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Onboarding Tab -->
+        <div x-show="activeTab === 'onboarding'">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title" style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span>🚀</span>
+                        Welcome to Brand Content Management
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <!-- Brand Guideline Upload -->
+                        <div>
+                            <h3 style="font-weight: 600; margin-bottom: 1rem;">Upload Brand Guideline</h3>
+                            <p style="color: var(--text-light); margin-bottom: 1rem;">
+                                PDF/DOCX up to 50 MB. We'll extract your voice, pillars, and policies.
+                            </p>
+                            
+                            <div class="upload-area" 
+                                 :class="{ 'uploading': isUploading }"
+                                 @click="$refs.guidelineUpload.click()">
+                                <div style="font-size: 2rem; margin-bottom: 1rem;">
+                                    <span x-show="!isUploading">📤</span>
+                                    <span x-show="isUploading">🔄</span>
+                                </div>
+                                <p style="font-weight: 500; margin-bottom: 0.5rem;">
+                                    <span x-show="!isUploading">Upload Document</span>
+                                    <span x-show="isUploading">Uploading...</span>
+                                </p>
+                                <p style="font-size: 0.875rem; color: var(--text-light);">
+                                    <span x-show="!isUploading">Scanned? We'll OCR it automatically.</span>
+                                    <span x-show="isUploading">Please wait...</span>
+                                </p>
+                                <input x-ref="guidelineUpload" 
+                                       type="file" 
+                                       style="display: none;" 
+                                       accept=".pdf,.docx,.doc" 
+                                       @change="handleGuidelineUpload($event)"
+                                       :disabled="isUploading">
+                            </div>
+                            
+                            <!-- Upload Status -->
+                            <div x-show="guidelineDoc.name" class="mt-4">
+                                <div class="status-indicator"
+                                     :class="{
+                                         'status-uploading': guidelineDoc.status === 'uploading',
+                                         'status-uploaded': guidelineDoc.status === 'uploaded' || guidelineDoc.status === 'parsed',
+                                         'status-error': guidelineDoc.status === 'error'
+                                     }">
+                                    <span x-show="guidelineDoc.status === 'uploading'">⏳</span>
+                                    <span x-show="guidelineDoc.status === 'uploaded'">✅</span>
+                                    <span x-show="guidelineDoc.status === 'parsed'">🎯</span>
+                                    <span x-show="guidelineDoc.status === 'error'">❌</span>
+                                    
+                                    <span x-text="guidelineDoc.name"></span>
+                                    
+                                    <span x-show="guidelineDoc.status === 'uploading'">Uploading...</span>
+                                    <span x-show="guidelineDoc.status === 'uploaded'">Uploaded</span>
+                                    <span x-show="guidelineDoc.status === 'parsed'">Processed</span>
+                                    <span x-show="guidelineDoc.status === 'error'">Upload Failed</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Defaults -->
+                        <div>
+                            <h3 style="font-weight: 600; margin-bottom: 1rem;">Set Defaults</h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Choose default content language</label>
+                                <select x-model="settings.defaultLanguage" 
+                                        class="form-control"
+                                        @change="onSettingsChange()">
+                                    <option value="en">English</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="hi">Hindi</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Choose default model (change anytime)</label>
+                                <select x-model="settings.defaultLLM" 
+                                        class="form-control"
+                                        @change="onSettingsChange()">
+                                    <option value="gpt-4.1">GPT-4.1 (Recommended)</option>
+                                    <option value="claude-3.5">Claude 3.5 Sonnet</option>
+                                    <option value="gemini-pro">Gemini Pro</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">What share of posts should include the product?</label>
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <input type="range" 
+                                           x-model="settings.productDefaultPct" 
+                                           min="0" max="100" 
+                                           class="range-slider" 
+                                           style="flex: 1;"
+                                           @input="onSettingsChange()">
+                                    <span x-text="settings.productDefaultPct + '%'" 
+                                          style="font-weight: 600; color: var(--primary);"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <button class="btn-primary" type="button"
+                                @click="generateBrandBlueprint()" 
+                                :disabled="isGeneratingBlueprint"
+                                style="width: 100%; padding: 1rem 2rem; font-size: 1.1rem;">
+                            <span x-show="!isGeneratingBlueprint">Generate Brand Content Blueprint</span>
+                            <span x-show="isGeneratingBlueprint">🔄 Generating Blueprint...</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Brand Blueprint Tab -->
+        <div x-show="activeTab === 'blueprint'">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <h2 class="card-title">Brand Content Blueprint</h2>
+                        <p style="color: var(--text-light); margin-top: 0.25rem;">Edit once. All content uses this as source of truth.</p>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <span class="version-badge" x-text="'v' + brand.blueprint.version + ' ' + brand.blueprint.status"></span>
+                        <button class="btn-secondary" @click="saveBlueprint()" :disabled="isSaving">
+                            <span x-show="!isSaving">Save Draft</span>
+                            <span x-show="isSaving">💾 Saving...</span>
+                        </button>
+                        <button class="btn-success" :disabled="brand.blueprint.status === 'approved'">Approve Blueprint</button>
+                        <button class="btn-secondary">Re-generate from Doc</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Blueprint content with auto-save integration -->
+                    <div class="blueprint-panel">
+                        <!-- Voice Profile -->
+                        <div>
+                            <div style="margin-bottom: 2rem;">
+                                <h3 style="font-weight: 600; margin-bottom: 1rem;">🎭 Voice Profile</h3>
+                                
+                                <div class="voice-slider">
+                                    <div class="slider-label">
+                                        <span>Formality</span>
+                                        <span>Casual ← → Formal</span>
+                                    </div>
+                                    <input type="range" 
+                                           x-model="brand.blueprint.voice.formality" 
+                                           min="0" max="100" 
+                                           class="range-slider"
+                                           @input="onBlueprintChange()">
+                                </div>
+                                
+                                <div class="voice-slider">
+                                    <div class="slider-label">
+                                        <span>Humor</span>
+                                        <span>Serious ← → Playful</span>
+                                    </div>
+                                    <input type="range" 
+                                           x-model="brand.blueprint.voice.humor" 
+                                           min="0" max="100" 
+                                           class="range-slider"
+                                           @input="onBlueprintChange()">
+                                </div>
+                                
+                                <div class="voice-slider">
+                                    <div class="slider-label">
+                                        <span>Warmth</span>
+                                        <span>Direct ← → Warm</span>
+                                    </div>
+                                    <input type="range" 
+                                           x-model="brand.blueprint.voice.warmth" 
+                                           min="0" max="100" 
+                                           class="range-slider"
+                                           @input="onBlueprintChange()">
+                                </div>
+                                
+                                <div style="margin-top: 1rem;">
+                                    <label class="form-label">Emoji Policy</label>
+                                    <select x-model="brand.blueprint.voice.emojiPolicy" 
+                                            class="form-control"
+                                            @change="onBlueprintChange()">
+                                        <option value="none">None</option>
+                                        <option value="light">Light</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="rich">Rich</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Content Pillars with auto-save -->
+                            <div style="margin-bottom: 2rem;">
+                                <h3 style="font-weight: 600; margin-bottom: 1rem;">🏛️ Content Pillars</h3>
+                                
+                                <template x-for="(pillar, index) in brand.blueprint.pillars" :key="index">
+                                    <div class="pillar-item">
+                                        <div style="flex: 1;">
+                                            <input x-model="pillar.name" 
+                                                   placeholder="Pillar name" 
+                                                   class="form-control" 
+                                                   style="margin-bottom: 0.5rem;"
+                                                   @input="onBlueprintChange()">
+                                            <input x-model="pillar.description" 
+                                                   placeholder="Description" 
+                                                   class="form-control"
+                                                   @input="onBlueprintChange()">
+                                        </div>
+                                        <div style="width: 80px;">
+                                            <input x-model="pillar.weight" 
+                                                   type="number" 
+                                                   min="0" max="100" 
+                                                   class="form-control" 
+                                                   placeholder="%" 
+                                                   style="text-align: center;"
+                                                   @input="onBlueprintChange()">
+                                        </div>
+                                        <button @click="removePillar(index)" 
+                                                style="color: var(--danger); border: none; background: none; cursor: pointer;">×</button>
+                                    </div>
+                                </template>
+                                
+                                <button @click="addPillar()" class="btn-secondary" style="width: 100%;">+ Add Pillar</button>
+                            </div>
+                            
+                            <!-- Policies with auto-save -->
+                            <div>
+                                <h3 style="font-weight: 600; margin-bottom: 1rem;">📋 Policies</h3>
+                                
+                                <div style="margin-bottom: 1rem;">
+                                    <label class="form-label">Forbidden Phrases</label>
+                                    <div style="margin-bottom: 0.5rem;">
+                                        <template x-for="(phrase, index) in brand.blueprint.policies.forbiddenPhrases" :key="index">
+                                            <span class="chip">
+                                                <span x-text="phrase"></span>
+                                                <span class="chip-remove" @click="brand.blueprint.policies.forbiddenPhrases.splice(index, 1); onBlueprintChange()">×</span>
+                                            </span>
+                                        </template>
+                                    </div>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <input x-model="newForbiddenPhrase" 
+                                               placeholder="Add phrase" 
+                                               class="form-control" 
+                                               style="flex: 1;" 
+                                               @keyup.enter="addForbiddenPhrase()">
+                                        <button @click="addForbiddenPhrase()" class="btn-secondary">Add</button>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 1rem;">
+                                    <label class="form-label">Max Hashtags</label>
+                                    <input x-model="brand.blueprint.policies.maxHashtags" 
+                                           type="number" 
+                                           min="1" max="30" 
+                                           class="form-control"
+                                           @input="onBlueprintChange()">
+                                </div>
+                                
+                                <div>
+                                    <label class="form-label">Brand Hashtags</label>
+                                    <div style="margin-bottom: 0.5rem;">
+                                        <template x-for="(tag, index) in brand.blueprint.policies.brandHashtags" :key="index">
+                                            <span class="chip">
+                                                <span x-text="tag"></span>
+                                                <span class="chip-remove" @click="brand.blueprint.policies.brandHashtags.splice(index, 1); onBlueprintChange()">×</span>
+                                            </span>
+                                        </template>
+                                    </div>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <input x-model="newBrandHashtag" 
+                                               placeholder="Add hashtag" 
+                                               class="form-control" 
+                                               style="flex: 1;" 
+                                               @keyup.enter="addBrandHashtag()">
+                                        <button @click="addBrandHashtag()" class="btn-secondary">Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Column: Live Preview (same as original) -->
+                        <div>
+                            <h3 style="font-weight: 600; margin-bottom: 1rem;">👁️ Live Blueprint Preview</h3>
+                            <!-- Include preview content from original file -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Other tabs remain the same as original -->
+    </main>
+</body>
+</html>
