@@ -2019,7 +2019,8 @@
                             <h4>Generation Details</h4>
                             <div class="form-group full-width" style="margin-bottom: 12px;">
                                 <label>Prompt Used</label>
-                                <p id="generatedImagePrompt" style="color: var(--text-secondary); font-size: 13px; line-height: 1.5;">—</p>
+                                <p id="generatedImagePrompt"
+                                    style="color: var(--text-secondary); font-size: 13px; line-height: 1.5;">—</p>
                             </div>
                             <button class="btn btn-secondary" onclick="generateCreative()">Re-generate Image</button>
                         </div>
@@ -2027,142 +2028,42 @@
 
                     <!-- CAROUSEL REVIEW -->
                     <div class="type-specific" data-show-for="carousel">
-                        <h3 style="margin-bottom: 16px;">📱 Panel Matrix - All Screens at Once</h3>
-                        <div class="panel-matrix">
-                            <div class="matrix-panel selected" onclick="selectMatrixPanel(1)">
-                                <div class="matrix-preview">Panel 1<br>Hook</div>
-                                <div class="matrix-info">
-                                    <div class="panel-num">Panel 1</div>
-                                    <span class="role-badge hook">Hook</span>
-                                    <div style="margin-top: 8px; font-size: 11px;">Speed, Unleashed</div>
-                                    <div class="consistency-markers">
-                                        <div class="marker good" title="Brand Fit: 95%">🎨</div>
-                                        <div class="marker good" title="Layout: 92%">📐</div>
-                                        <div class="marker good" title="Legibility: 96%">🔤</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="matrix-panel" onclick="selectMatrixPanel(2)">
-                                <div class="matrix-preview"
-                                    style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Panel
-                                    2<br>Feature</div>
-                                <div class="matrix-info">
-                                    <div class="panel-num">Panel 2</div>
-                                    <span class="role-badge feature">Feature</span>
-                                    <div style="margin-top: 8px; font-size: 11px;">Carbon Fiber Technology</div>
-                                    <div class="consistency-markers">
-                                        <div class="marker good" title="Brand Fit: 94%">🎨</div>
-                                        <div class="marker good" title="Layout: 90%">📐</div>
-                                        <div class="marker warning" title="Legibility: 88%">🔤</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="matrix-panel" onclick="selectMatrixPanel(3)">
-                                <div class="matrix-preview"
-                                    style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Panel
-                                    3<br>Feature</div>
-                                <div class="matrix-info">
-                                    <div class="panel-num">Panel 3</div>
-                                    <span class="role-badge feature">Feature</span>
-                                    <div style="margin-top: 8px; font-size: 11px;">Built for Distance</div>
-                                    <div class="consistency-markers">
-                                        <div class="marker good" title="Brand Fit: 96%">🎨</div>
-                                        <div class="marker good" title="Layout: 94%">📐</div>
-                                        <div class="marker good" title="Legibility: 95%">🔤</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="matrix-panel" onclick="selectMatrixPanel(4)">
-                                <div class="matrix-preview"
-                                    style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">Panel
-                                    4<br>Proof</div>
-                                <div class="matrix-info">
-                                    <div class="panel-num">Panel 4</div>
-                                    <span class="role-badge proof">Proof</span>
-                                    <div style="margin-top: 8px; font-size: 11px;">Trusted by Champions</div>
-                                    <div class="consistency-markers">
-                                        <div class="marker good" title="Brand Fit: 93%">🎨</div>
-                                        <div class="marker good" title="Layout: 91%">📐</div>
-                                        <div class="marker good" title="Legibility: 94%">🔤</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="matrix-panel" onclick="selectMatrixPanel(5)">
-                                <div class="matrix-preview"
-                                    style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">Panel
-                                    5<br>CTA</div>
-                                <div class="matrix-info">
-                                    <div class="panel-num">Panel 5</div>
-                                    <span class="role-badge cta">CTA</span>
-                                    <div style="margin-top: 8px; font-size: 11px;">Run Further. Run Faster.</div>
-                                    <div class="consistency-markers">
-                                        <div class="marker good" title="Brand Fit: 97%">🎨</div>
-                                        <div class="marker good" title="Layout: 95%">📐</div>
-                                        <div class="marker good" title="Legibility: 98%">🔤</div>
-                                    </div>
-                                </div>
+                        <h3 style="margin-bottom: 16px;">📱 Generated Carousel Panels</h3>
+                        <div id="carouselPanelsContainer" class="panel-matrix">
+                            <!-- Panels will be dynamically inserted here by showCarouselResult() -->
+                            <div style="padding: 40px; text-align: center; color: var(--text-secondary);">
+                                <p>Carousel panels will appear here after generation</p>
                             </div>
                         </div>
 
                         <div class="content-card mt-4">
-                            <h3>Panel Detail Editor</h3>
-                            <p class="subtitle">Currently editing: Panel 1</p>
+                            <h3>Panel Details</h3>
+                            <p class="subtitle" id="carouselCurrentPanel">Select a panel above to view details</p>
 
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
-                                <div>
-                                    <div
-                                        style="width: 100%; height: 300px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: 600;">
-                                        Panel 1 Preview<br>
-                                        <small style="font-size: 14px; font-weight: 400;">Speed, Unleashed</small>
-                                    </div>
-                                    <div style="margin-top: 16px;">
-                                        <button class="btn btn-secondary" onclick="reRenderPanel()">Re-render
-                                            Panel</button>
-                                        <button class="btn btn-secondary" onclick="lockPanel()">🔒 Lock Panel</button>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="form-group">
-                                        <label>Headline</label>
-                                        <input type="text" value="Speed, Unleashed."
-                                            onchange="showToast('Panel updated!')">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Body Copy</label>
-                                        <textarea>Carbon plate power for every stride.</textarea>
-                                    </div>
-                                    <div style="margin-top: 16px;">
-                                        <strong>Score Breakdown:</strong>
-                                        <div class="score-row">
-                                            <span>Brand Fit:</span>
-                                            <span class="score-value">95%</span>
+                            <div id="carouselPanelDetail" style="display: none; margin-top: 24px;">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                                    <div>
+                                        <div id="carouselPanelPreview"
+                                            style="width: 100%; height: 300px; background: var(--bg-secondary); border-radius: 12px; overflow: hidden;">
+                                            <img id="carouselSelectedImage" src="" alt="Selected Panel"
+                                                style="width: 100%; height: 100%; object-fit: cover;">
                                         </div>
-                                        <div class="score-row">
-                                            <span>Layout:</span>
-                                            <span class="score-value">92%</span>
+                                        <div style="margin-top: 16px;">
+                                            <button class="btn btn-secondary" onclick="regenerateCarouselPanel()">Re-generate
+                                                This Panel</button>
                                         </div>
-                                        <div class="score-row">
-                                            <span>Legibility:</span>
-                                            <span class="score-value">96%</span>
+                                    </div>
+                                    <div>
+                                        <div class="form-group">
+                                            <label>Prompt Used</label>
+                                            <p id="carouselSelectedPrompt"
+                                                style="color: var(--text-secondary); font-size: 13px; line-height: 1.5; padding: 12px; background: var(--bg-secondary); border-radius: 8px;">
+                                                —
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="content-card mt-4">
-                            <h3>🎯 Consistency Score</h3>
-                            <div
-                                style="font-size: 48px; font-weight: 700; color: var(--success); text-align: center; margin: 24px 0;">
-                                94
-                            </div>
-                            <p style="text-align: center; color: var(--text-secondary);">
-                                Excellent consistency across all panels. Ready to approve!
-                            </p>
                         </div>
                     </div>
 
@@ -3201,8 +3102,62 @@
                     loadingOverlay.classList.add('hidden');
                 }
 
+            } else if (selectedType === 'carousel') {
+                // --- CAROUSEL GENERATION FLOW ---
+                if (uploadedFiles.length === 0) {
+                    showToast('No file uploaded!');
+                    return;
+                }
+
+                const file = uploadedFiles[0];
+                const instruction = briefData.transformation_instructions || 'Create a high converting carousel';
+
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                loadingOverlay.classList.remove('hidden');
+                const loadingText = loadingOverlay.querySelector('p');
+                const progressBar = loadingOverlay.querySelector('.progress-fill');
+                loadingText.textContent = 'Generating carousel panels...';
+                progressBar.style.width = '30%';
+
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('instructions', instruction);
+                formData.append('creative_type', selectedType);
+                formData.append('panel_count', 3);
+
+                try {
+                    const response = await fetch('/api/generate-carousel', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    progressBar.style.width = '80%';
+
+                    if (!response.ok) {
+                        const err = await response.json();
+                        throw new Error(err.detail || 'Carousel generation failed');
+                    }
+
+                    const result = await response.json();
+                    progressBar.style.width = '100%';
+
+                    if (result.success && result.image_urls) {
+                        showCarouselResult(result.image_urls, result.prompts);
+                        showToast('Carousel generated successfully!');
+                    } else {
+                        throw new Error(result.detail || 'Unknown error');
+                    }
+
+                    loadingOverlay.classList.add('hidden');
+
+                } catch (error) {
+                    console.error('Carousel generation error:', error);
+                    alert('Error generating carousel: ' + error.message);
+                    loadingOverlay.classList.add('hidden');
+                }
+
             } else {
-                // --- CAROUSEL / OTHER: save brief and navigate ---
+                // --- OTHER TYPES: save brief and navigate ---
                 showToast('Brief saved! Navigate to review.');
                 goToStep(4);
             }
@@ -3345,11 +3300,46 @@
         }
 
         function selectMatrixPanel(num) {
+            // Update visual selection
             document.querySelectorAll('.matrix-panel').forEach(panel => {
                 panel.classList.remove('selected');
             });
-            event.currentTarget.classList.add('selected');
-            showToast(`Editing Panel ${num}`);
+            // Find the clicked panel by index (num is 1-based)
+            const panels = document.querySelectorAll('.matrix-panel');
+            if (panels[num - 1]) {
+                panels[num - 1].classList.add('selected');
+            }
+
+            // Update panel detail view
+            const detailSection = document.getElementById('carouselPanelDetail');
+            const currentPanelText = document.getElementById('carouselCurrentPanel');
+            const selectedImage = document.getElementById('carouselSelectedImage');
+            const selectedPrompt = document.getElementById('carouselSelectedPrompt');
+
+            if (window.carouselImages && window.carouselImages[num - 1]) {
+                // Show the detail section
+                if (detailSection) detailSection.style.display = 'block';
+                if (currentPanelText) currentPanelText.textContent = `Currently viewing: Panel ${num}`;
+
+                // Load the selected image
+                if (selectedImage) {
+                    selectedImage.src = window.carouselImages[num - 1];
+                }
+
+                // Show the prompt
+                if (selectedPrompt && window.carouselPrompts && window.carouselPrompts[num - 1]) {
+                    selectedPrompt.textContent = window.carouselPrompts[num - 1];
+                } else if (selectedPrompt) {
+                    selectedPrompt.textContent = `Panel ${num} - No prompt available`;
+                }
+
+                showToast(`Viewing Panel ${num}`);
+            }
+        }
+
+        function regenerateCarouselPanel() {
+            showToast('Re-generating selected panel...');
+            // TODO: Implement panel re-generation
         }
 
         function selectVariant(variant) {
@@ -3441,6 +3431,52 @@
             if (el) el.innerText = text || 'N/A';
         }
 
+        function showCarouselResult(imageUrls, prompts) {
+            console.log("Showing carousel result:", imageUrls);
+            console.log("Prompts:", prompts);
+
+            // Store for potential re-generation
+            window.carouselImages = imageUrls;
+            window.carouselPrompts = prompts;
+
+            const container = document.getElementById('carouselPanelsContainer');
+            if (!container) {
+                console.error('carouselPanelsContainer not found!');
+                return;
+            }
+
+            // Clear existing content
+            container.innerHTML = '';
+
+            // Create panel cards for each generated image
+            imageUrls.forEach((url, index) => {
+                const panelDiv = document.createElement('div');
+                panelDiv.className = 'matrix-panel';
+                panelDiv.onclick = () => selectMatrixPanel(index + 1);
+
+                const prompt = prompts && prompts[index] ? prompts[index] : `Panel ${index + 1}`;
+                const promptPreview = prompt.length > 50 ? prompt.substring(0, 50) + '...' : prompt;
+
+                panelDiv.innerHTML = `
+                    <div class="matrix-preview" style="padding: 0; overflow: hidden;">
+                        <img src="${url}" alt="Panel ${index + 1}"
+                             style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="matrix-info">
+                        <div class="panel-num">Panel ${index + 1}</div>
+                        <div style="margin-top: 8px; font-size: 11px; color: var(--text-secondary);">
+                            ${promptPreview}
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(panelDiv);
+            });
+
+            // Navigate to Step 4 to show the results
+            nextStep(3, true);
+        }
+
         function showVideoResult(url) {
             console.log("Showing video result:", url);
             const videoContainer = document.getElementById('videoResultContainer');
@@ -3468,7 +3504,11 @@
 
             // If we are on Step 3 (Brief) and clicking Next, we go to Step 4 (Result)
             // This is where we trigger generation for Image/Video/GIF
-            if (!force && current === 3 && (selectedType === 'image' || selectedType === 'reel' || selectedType === 'gif')) {
+            // If we are on Step 3 (Brief) and clicking Next, we go to Step 4 (Result)
+            // This is where we trigger generation for Image/Video/GIF
+            // If we are on Step 3 (Brief) and clicking Next, we go to Step 4 (Result)
+            // This is where we trigger generation for Image/Video/GIF
+            if (!force && current === 3 && (selectedType === 'image' || selectedType === 'reel' || selectedType === 'gif' || selectedType === 'carousel')) {
                 await generateCreative();
                 return;
             }

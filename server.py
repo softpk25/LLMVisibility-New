@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import shutil
 from pathlib import Path
 from dotenv import load_dotenv
+from typing import Optional, List
 
 # Import the ImageRater from the inspire me/newimg.py
 # We need to add the directory to sys.path to import it
@@ -454,6 +455,84 @@ async def generate_video_endpoint(
         if temp_path.exists():
             os.remove(temp_path)
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/generate-carousel")
+async def generate_carousel_endpoint(
+    file: Optional[UploadFile] = File(None),
+    instructions: str = Form(...),
+    panel_count: int = Form(3)
+):
+    """
+    Endpoint to generate a carousel (sequence of images)
+    """
+    if not rater:
+          raise HTTPException(status_code=500, detail="Server not configured")
+    
+    # Save uploaded file temporarily (optional)
+    temp_path = None
+    if file:
+        temp_dir = Path("temp_uploads")
+        temp_dir.mkdir(exist_ok=True)
+        temp_path = temp_dir / file.filename
+        try:
+            with open(temp_path, "wb") as buffer:
+                shutil.copyfileobj(file.file, buffer)
+        except Exception as e:
+            print(f"Error saving temp file: {e}")
+            temp_path = None
+            
+    try:
+        # 1. Generate prompts
+        # Run in threadpool
+        prompts = await run_in_threadpool(
+            rater.generate_carousel_prompts,
+            base_image_path=str(temp_path) if temp_path else None,
+            instructions=instructions,
+            count=panel_count
+        )
+        
+        if not prompts:
+             raise HTTPException(status_code=500, detail="Failed to generate storyboard prompts")
+             
+        # 2. Generate images for each prompt
+        image_urls = []
+        generated_dir = Path("generated")
+        generated_dir.mkdir(exist_ok=True)
+        
+        for i, prompt in enumerate(prompts):
+            output_filename = f"carousel_{int(time.time())}_{i+1}.png"
+            output_path = generated_dir / output_filename
+            
+            # Call DALL-E (in threadpool for concurrency if possible, but serial here is safer for rate limits)
+            # Actually, DALL-E 3 has simple rate limits, serial is fine
+            result = await run_in_threadpool(
+                rater.generate_image_dalle,
+                prompt=prompt,
+                output_path=str(output_path)
+            )
+            
+            if result.get("success"):
+                image_urls.append(f"/generated/{output_filename}")
+            else:
+                print(f"Failed to generate panel {i+1}: {result.get('error')}")
+                # We optionally continue or fail? Let's continue and return what we have
+                
+        if not image_urls:
+            raise HTTPException(status_code=500, detail="Failed to generate any images")
+            
+        return {
+            "success": True,
+            "image_urls": image_urls,
+            "prompts": prompts
+        }
+        
+    finally:
+        if temp_path and temp_path.exists():
+            try:
+                os.remove(temp_path)
+            except:
+                pass
 
 
 if __name__ == "__main__":

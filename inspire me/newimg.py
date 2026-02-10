@@ -675,6 +675,71 @@ Visual DNA to preserve from base:
             transformation_instructions=transformation_instructions
         )
 
+    def generate_carousel_prompts(self, base_image_path: Optional[Union[str, Path]], instructions: str, count: int = 3) -> List[str]:
+        """
+        Generate a sequence of prompts for a carousel/story based on an image and instructions.
+        """
+        base64_image = None
+        if base_image_path:
+            base64_image = self.resize_image_if_needed(base_image_path)
+            
+        prompt = f"""
+        Create a {count}-panel social media carousel story based on the provided instructions and image (if any).
+
+        Instructions: {instructions}
+
+        Return a JSON object with a list of {count} image generation prompts.
+        Each prompt should describe a distinct panel in the sequential story.
+        Ensure consistency in style and character across panels.
+
+        JSON Format:
+        {{
+            "prompts": [
+                "Panel 1: ... detailed prompt ...",
+                "Panel 2: ... detailed prompt ...",
+                "Panel 3: ... detailed prompt ..."
+            ]
+        }}
+        """
+        
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.api_key}"
+        }
+        
+        content_payload = [{"type": "text", "text": prompt}]
+        if base64_image:
+             content_payload.append({
+                "type": "image_url",
+                "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}
+             })
+        
+        payload = {
+            "model": self.model,
+            "messages": [{"role": "user", "content": content_payload}],
+            "max_tokens": 1000
+        }
+        
+        try:
+            response = requests.post(self.base_url, headers=headers, json=payload)
+            response.raise_for_status()
+            result = response.json()
+            content = result['choices'][0]['message']['content']
+            
+            # Parse JSON
+            try:
+                cleaned_content = content.replace("```json", "").replace("```", "").strip()
+                parsed = json.loads(cleaned_content)
+                return parsed.get("prompts", [])
+            except Exception as parse_error:
+                print(f"Failed to parse prompts: {content}")
+                print(f"Parse error: {parse_error}")
+                return []
+
+        except Exception as e:
+            print(f"Error generating carousel prompts: {e}")
+            return []
+
 
 # Example usage
 if __name__ == "__main__":

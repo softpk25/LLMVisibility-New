@@ -1,0 +1,71 @@
+{
+  "creative_type": "carousel",
+  "timestamp": 1770707702486,
+  "source_analysis": {
+    "visual_dna": {
+      "composition": "Silhouette foreground against expansive sky",
+      "palette": "Rich magenta (#D16BA5) 60%, Deep purple (#2D142C) 40%",
+      "lighting": "Low light, backlit silhouette",
+      "style": "Contemplative, natural, serene"
+    },
+    "strategic_analysis": {
+      "tone": "Introspective, peaceful, reflective",
+      "cta_style": "Subtle invitation to explore",
+      "emotional_angle": "Tranquility & solitude",
+      "audience": "Nature enthusiasts, 18-35, seekers of calm"
+    },
+    "image_composition_analysis": {
+      "focal_points": "Silhouette as the primary focus with ~50% saliency; sky and clouds create visual depth",
+      "typography_style": "None present, focus remains undistracted"
+    },
+    "prompt_reconstruction": "Silhouette of a person at sunset, dramatic clouds, gradient sky from magenta to deep purple, backlight silhouette, peaceful atmosphere, landscape photography style --ar 1:1 --style raw",
+    "stored_image_path": "analyzed_images\\Screenshot 2025-07-22 030155_1770707692.png",
+    "stored_image_url": "/analyzed_images/Screenshot 2025-07-22 030155_1770707692.png"
+  },
+  "transformation_instructions": "make ad",
+  "common": {
+    "objective": "Product Launch",
+    "product": "UltraRun Pro Shoes",
+    "platform": "Instagram",
+    "aspect_ratio": "1:1 (Square)"
+  },
+  "carousel_settings": {
+    "panels": [
+      {
+        "panel_number": 1,
+        "role": "Hook",
+        "visual_intent": "On-dark hero",
+        "headline": "",
+        "body_copy": ""
+      },
+      {
+        "panel_number": 2,
+        "role": "Feature",
+        "visual_intent": "Macro detail",
+        "headline": "",
+        "body_copy": ""
+      },
+      {
+        "panel_number": 3,
+        "role": "Feature",
+        "visual_intent": "Lifestyle cut",
+        "headline": "",
+        "body_copy": ""
+      },
+      {
+        "panel_number": 4,
+        "role": "Proof",
+        "visual_intent": "Lifestyle cut",
+        "headline": "",
+        "body_copy": ""
+      },
+      {
+        "panel_number": 5,
+        "role": "CTA",
+        "visual_intent": "On-dark hero",
+        "headline": "",
+        "body_copy": ""
+      }
+    ]
+  }
+}
