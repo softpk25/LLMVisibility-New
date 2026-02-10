@@ -2004,79 +2004,24 @@
 
                     <!-- IMAGE REVIEW -->
                     <div class="type-specific" data-show-for="image">
-                        <h3>🖼️ Image Variants</h3>
+                        <h3>Generated Image</h3>
                         <div class="variant-gallery">
-                            <div class="variant-card selected"
-                                onclick="event.currentTarget.classList.toggle('selected')">
-                                <div class="variant-preview">Variant A</div>
-                                <div class="variant-scores">
-                                    <div class="score-row">
-                                        <span>Brand Fit:</span>
-                                        <span class="score-value">96%</span>
-                                    </div>
-                                    <div class="score-row">
-                                        <span>Style Match:</span>
-                                        <span class="score-value">94%</span>
-                                    </div>
-                                    <div class="score-row">
-                                        <span>Legibility:</span>
-                                        <span class="score-value">98%</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="variant-card" onclick="event.currentTarget.classList.toggle('selected')">
-                                <div class="variant-preview"
-                                    style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Variant B
-                                </div>
-                                <div class="variant-scores">
-                                    <div class="score-row">
-                                        <span>Brand Fit:</span>
-                                        <span class="score-value">93%</span>
-                                    </div>
-                                    <div class="score-row">
-                                        <span>Style Match:</span>
-                                        <span class="score-value">91%</span>
-                                    </div>
-                                    <div class="score-row">
-                                        <span>Legibility:</span>
-                                        <span class="score-value">95%</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="variant-card" onclick="event.currentTarget.classList.toggle('selected')">
-                                <div class="variant-preview"
-                                    style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Variant C
-                                </div>
-                                <div class="variant-scores">
-                                    <div class="score-row">
-                                        <span>Brand Fit:</span>
-                                        <span class="score-value">95%</span>
-                                    </div>
-                                    <div class="score-row">
-                                        <span>Style Match:</span>
-                                        <span class="score-value">97%</span>
-                                    </div>
-                                    <div class="score-row">
-                                        <span>Legibility:</span>
-                                        <span class="score-value">96%</span>
-                                    </div>
+                            <div id="generatedImageContainer" class="variant-card selected">
+                                <div class="variant-preview" style="padding: 0; overflow: hidden;">
+                                    <img id="generatedImage" src="" alt="Generated Image"
+                                        style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                                    <span id="generatedImagePlaceholder">Image will appear here after generation</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="content-card mt-4">
-                            <h4>Edit Selected Variant</h4>
-                            <div class="form-grid">
-                                <div class="form-group full-width">
-                                    <label>Headline</label>
-                                    <input type="text" value="Speed, Unleashed." onchange="showToast('Image updated!')">
-                                </div>
-                                <div class="form-group full-width">
-                                    <label>Subheadline</label>
-                                    <input type="text" value="Carbon plate technology for elite performance">
-                                </div>
-                                <button class="btn btn-secondary">Re-generate Variant</button>
+                            <h4>Generation Details</h4>
+                            <div class="form-group full-width" style="margin-bottom: 12px;">
+                                <label>Prompt Used</label>
+                                <p id="generatedImagePrompt" style="color: var(--text-secondary); font-size: 13px; line-height: 1.5;">—</p>
                             </div>
+                            <button class="btn btn-secondary" onclick="generateCreative()">Re-generate Image</button>
                         </div>
                     </div>
 
@@ -2797,6 +2742,7 @@
 
                     const data = await response.json();
                     window.currentAnalysis = data; // Store globally
+                    window.imageAnalysis = data; // Also store for populateStep2DNA()
 
                     // Update UI with analysis data
                     updateAnalysisUI(data);
@@ -3124,53 +3070,142 @@
 
         // Generate creative handler (called when Generate Variants button is clicked)
         async function generateCreative() {
-            console.log(">>> generateCreative() CALLED <<<");
-            alert("generateCreative called!"); // Temporary alert for debugging
+            console.log(">>> generateCreative() CALLED, type:", selectedType);
 
             // Collect brief data from form
             const briefData = collectBriefData();
-            console.log("Collected Brief Data:", briefData);
-
-            // Store in window for later use
             window.creativeBrief = briefData;
 
             // Save brief to backend
-            showToast('💾 Saving your creative brief...');
+            showToast('Saving your creative brief...');
             const saveResult = await saveBrief(briefData);
-
             if (saveResult && saveResult.success) {
-                showToast('✅ Brief saved! Proceeding to generate...');
                 window.briefFilename = saveResult.filename;
-            } else {
-                showToast('⚠️ Brief save failed, but continuing...');
             }
 
-            // Check if we have both a base image and reference image for transformation
-            console.log("=== Transform Debug ===");
-            console.log("window.imageAnalysis:", window.imageAnalysis);
-            console.log("window.imageAnalysis?.stored_image_url:", window.imageAnalysis?.stored_image_url);
-            console.log("window.briefImage:", window.briefImage);
-            console.log("Has both images:", !!(window.imageAnalysis && window.briefImage));
+            if (selectedType === 'image') {
+                // --- IMAGE GENERATION FLOW via DALL-E ---
+                const analysis = window.imageAnalysis;
+                const promptReconstruction = analysis ? analysis.prompt_reconstruction : '';
+                const userInstructions = briefData.transformation_instructions || '';
 
-            if (window.imageAnalysis && window.briefImage) {
-                showToast('🎨 Generating transformed image with reference...');
+                // Build final prompt
+                let finalPrompt;
+                if (userInstructions && promptReconstruction) {
+                    finalPrompt = userInstructions + '. Style and visual reference: ' + promptReconstruction;
+                } else if (promptReconstruction) {
+                    finalPrompt = promptReconstruction;
+                } else if (userInstructions) {
+                    finalPrompt = userInstructions;
+                } else {
+                    showToast('No prompt available. Please analyze an image first.');
+                    return;
+                }
+
+                // Show loading overlay
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                const loadingText = loadingOverlay.querySelector('p');
+                const progressBar = loadingOverlay.querySelector('.progress-fill');
+                loadingOverlay.classList.remove('hidden');
+                loadingText.textContent = 'Generating image with DALL-E...';
+                progressBar.style.width = '30%';
 
                 try {
-                    const transformResult = await transformImageWithReference(briefData);
-                    if (transformResult && transformResult.success) {
-                        showToast('✅ Image transformation complete!');
-                        window.transformedImageUrl = transformResult.image_url;
-                    } else {
-                        showToast('⚠️ Transformation failed: ' + (transformResult?.error || 'Unknown error'));
-                    }
-                } catch (e) {
-                    console.error('Transformation error:', e);
-                    showToast('⚠️ Transformation failed');
-                }
-            }
+                    const response = await fetch('/api/generate-creative', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ prompt: finalPrompt, type: 'image' })
+                    });
 
-            // Navigate to Step 4
-            nextStep(3);
+                    progressBar.style.width = '80%';
+
+                    if (!response.ok) {
+                        const errData = await response.json();
+                        throw new Error(errData.detail || 'Image generation failed');
+                    }
+
+                    const result = await response.json();
+                    progressBar.style.width = '100%';
+
+                    if (result.success) {
+                        // Store the generated image URL
+                        window.generatedImageUrl = result.image_url || result.local_path;
+                        window.generatedImagePrompt = finalPrompt;
+
+                        // Update Step 4 variant card with the generated image
+                        const genImg = document.getElementById('generatedImage');
+                        if (genImg) {
+                            genImg.src = window.generatedImageUrl;
+                            genImg.style.display = 'block';
+                        }
+                        const placeholder = document.getElementById('generatedImagePlaceholder');
+                        if (placeholder) placeholder.style.display = 'none';
+                        const promptEl = document.getElementById('generatedImagePrompt');
+                        if (promptEl) {
+                            promptEl.textContent = finalPrompt;
+                        }
+
+                        showToast('Image generated successfully!');
+                    } else {
+                        throw new Error(result.error || 'Unknown error');
+                    }
+
+                    setTimeout(() => {
+                        loadingOverlay.classList.add('hidden');
+                        goToStep(4);
+                    }, 500);
+
+                } catch (error) {
+                    console.error('Image generation error:', error);
+                    alert('Error generating image: ' + error.message);
+                    loadingOverlay.classList.add('hidden');
+                }
+
+            } else if (selectedType === 'reel' || selectedType === 'gif') {
+                // --- VIDEO/GIF GENERATION FLOW ---
+                if (uploadedFiles.length === 0) {
+                    showToast('No file uploaded!');
+                    return;
+                }
+
+                const file = uploadedFiles[0];
+                const instruction = briefData.transformation_instructions || 'Create a high converting social media video';
+
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                loadingOverlay.classList.remove('hidden');
+                const loadingText = loadingOverlay.querySelector('p');
+                loadingText.textContent = 'Generating your ' + selectedType + '... This may take a minute.';
+
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('instructions', instruction);
+                formData.append('creative_type', selectedType);
+
+                try {
+                    const response = await fetch('/api/generate-video', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        showVideoResult(result.video_url, result.analysis, result.prompt);
+                    } else {
+                        alert('Generation failed: ' + (result.detail || 'Unknown error'));
+                    }
+                } catch (error) {
+                    console.error('Error generating video:', error);
+                    alert('Error generating video. Check console.');
+                } finally {
+                    loadingOverlay.classList.add('hidden');
+                }
+
+            } else {
+                // --- CAROUSEL / OTHER: save brief and navigate ---
+                showToast('Brief saved! Navigate to review.');
+                goToStep(4);
+            }
         }
 
         // Transform image with reference using gpt-image-1
@@ -3227,53 +3262,6 @@
                 return;
             }
 
-            // IMAGE GENERATION DEFERRED - Will be done in a later step
-            // For now, clicking "Analyze Creative DNA" just navigates to Step 2
-            // The user's optional feedback is stored in the textarea and image analysis
-            // is already saved in window.imageDescription from the upload
-
-            /* DALL-E generation code - to be re-enabled later:
-            if (current === 1 && selectedType === 'image') {
-                const textarea = document.querySelector('textarea[placeholder*="E.g., The bold colors"]');
-                let promptToUse = window.imageDescription || "";
-
-                if (textarea && textarea.value.trim() !== "") {
-                    promptToUse = textarea.value.trim();
-                }
-
-                if (promptToUse) {
-                    showToast('🎨 Generating DALL-E image from your brief...');
-
-                    try {
-                        const response = await fetch('/api/generate-creative', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ prompt: promptToUse, type: 'image' })
-                        });
-
-                        if (response.ok) {
-                            const data = await response.json();
-                            if (data.success) {
-                                showToast('✨ Image Generated Successfully!');
-                                console.log("Generated Image:", data.local_path);
-                            } else {
-                                showToast('Generation failed: ' + (data.error || 'Unknown error'));
-                            }
-                        } else {
-                            showToast('Generation request failed');
-                        }
-                    } catch (e) {
-                        console.error("Generation error:", e);
-                        showToast('Error generating image');
-                    }
-                } else {
-                    console.log("No prompt available for generation");
-                }
-            }
-            */
-
             currentStep = current + 1;
             updateStepperUI();
             updateStepContent();
@@ -3311,6 +3299,14 @@
             currentStep = current - 1;
             updateStepperUI();
             updateStepContent();
+            window.scrollTo(0, 0);
+        }
+
+        function goToStep(step) {
+            currentStep = step;
+            updateStepperUI();
+            updateStepContent();
+            updateJourneyForType(selectedType);
             window.scrollTo(0, 0);
         }
 
@@ -3395,8 +3391,6 @@
             showToast(scheduleMessages[selectedType]);
         }
 
-        // Note: generateCreative() is defined earlier in the file with full transformation logic
-
         // Store analysis string for regeneration
         let lastAnalysis = "";
         let lastPrompt = "";
@@ -3408,86 +3402,43 @@
             const loadingOverlay = document.getElementById('loadingOverlay');
             if (loadingOverlay) loadingOverlay.classList.add('hidden');
 
+            // Support both nested (video: data.analysis.visual_dna) and flat (image: data.visual_dna) formats
+            const analysis = data.analysis || data;
+
             // Map Visual DNA
-            if (data.analysis && data.analysis.visual_dna) {
-                setText('dna-composition', data.analysis.visual_dna.composition);
-                setText('dna-palette', data.analysis.visual_dna.palette);
-                setText('dna-lighting', data.analysis.visual_dna.lighting);
-                setText('dna-style', data.analysis.visual_dna.style);
+            if (analysis.visual_dna) {
+                setText('dna-composition', analysis.visual_dna.composition);
+                setText('dna-palette', analysis.visual_dna.palette);
+                setText('dna-lighting', analysis.visual_dna.lighting);
+                setText('dna-style', analysis.visual_dna.style);
             }
 
             // Map Strategic Analysis
-            if (data.analysis && data.analysis.strategic_analysis) {
-                setText('strategy-tone', data.analysis.strategic_analysis.tone);
-                setText('strategy-cta', data.analysis.strategic_analysis.cta_style);
-                setText('strategy-emotion', data.analysis.strategic_analysis.emotional_angle);
-                setText('strategy-audience', data.analysis.strategic_analysis.audience);
+            if (analysis.strategic_analysis) {
+                setText('strategy-tone', analysis.strategic_analysis.tone);
+                setText('strategy-cta', analysis.strategic_analysis.cta_style);
+                setText('strategy-emotion', analysis.strategic_analysis.emotional_angle);
+                setText('strategy-audience', analysis.strategic_analysis.audience);
             }
 
             // Map Image Specific
-            if (data.analysis && data.analysis.image_composition_analysis) {
-                setText('image-focal-points', data.analysis.image_composition_analysis.focal_points);
-                setText('image-typography', data.analysis.image_composition_analysis.typography_style);
+            if (analysis.image_composition_analysis) {
+                setText('image-focal-points', analysis.image_composition_analysis.focal_points);
+                setText('image-typography', analysis.image_composition_analysis.typography_style);
             }
 
-            if (data.analysis && data.analysis.prompt_reconstruction) {
-                setText('image-prompt-reconstruction', data.analysis.prompt_reconstruction);
-                lastPrompt = data.analysis.prompt_reconstruction;
+            if (analysis.prompt_reconstruction) {
+                setText('image-prompt-reconstruction', analysis.prompt_reconstruction);
+                lastPrompt = analysis.prompt_reconstruction;
             }
 
             // Store full analysis just in case
-            lastAnalysis = JSON.stringify(data.analysis);
-
-            // Move to Step 2
-            nextStep(1);
+            lastAnalysis = JSON.stringify(analysis);
         }
 
         function setText(id, text) {
             const el = document.getElementById(id);
             if (el) el.innerText = text || 'N/A';
-        }
-
-        async function generateCreative() {
-            if (uploadedFiles.length === 0) {
-                showToast("No file uploaded!");
-                return;
-            }
-
-            const file = uploadedFiles[0];
-            const instruction = document.getElementById('transformation-instructions').value;
-
-            // Show loading
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            if (loadingOverlay) {
-                loadingOverlay.classList.remove('hidden');
-                const p = loadingOverlay.querySelector('p');
-                if (p) p.innerText = "Generating your " + selectedType + "... This may take a minute.";
-            }
-
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('instructions', instruction || "Create a high converting social media video");
-            formData.append('creative_type', selectedType);
-
-            try {
-                const response = await fetch('/api/generate-video', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    showVideoResult(result.video_url);
-                } else {
-                    alert("Generation failed: " + (result.detail || "Unknown error"));
-                }
-            } catch (error) {
-                console.error("Error generating video:", error);
-                alert("Error generating video. Check console.");
-            } finally {
-                if (loadingOverlay) loadingOverlay.classList.add('hidden');
-            }
         }
 
         function showVideoResult(url) {
@@ -3516,38 +3467,13 @@
             console.log("Custom nextStep called for step:", current, "Type:", selectedType, "Force:", force);
 
             // If we are on Step 3 (Brief) and clicking Next, we go to Step 4 (Result)
-            // This is where we trigger generation for Video/GIF
-            if (!force && current === 3 && (selectedType === 'reel' || selectedType === 'gif')) {
-                // Trigger generation
+            // This is where we trigger generation for Image/Video/GIF
+            if (!force && current === 3 && (selectedType === 'image' || selectedType === 'reel' || selectedType === 'gif')) {
                 await generateCreative();
                 return;
             }
 
-            // Call original logic for other steps
-            if (current === 1 && uploadedFiles.length === 0) {
-                showToast('Please upload at least one file');
-                return;
-            }
-
-            // Standard Navigation
-            // Note: We need to use original logic, but originalNextStep might just be the function reference
-            // We can just execute the logic directly or call the captured function
-            // originalNextStep(current) would work if it's the function defined above.
-
-            // To be safe and avoid recursion if originalNextStep calls window.nextStep (it shouldn't),
-            // let's just duplicate the simple navigation logic or call the original function.
-            // Since originalNextStep is the function defined at line 3214, it is safe.
-
-            // However, originalNextStep might depend on 'this' context? No, it's a standalone function.
-
-            // ACTUALLY: The original nextStep function logic is repeated below in the else block in the original code?
-            // No, the original code had:
-            // if (current === 1 && uploadedFiles.length === 0) ...
-            // currentStep = current + 1; ...
-
-            // My previous view shows that I replaced the whole block?
-            // Let's use the code I see in lines 3530+ as the "original logic"
-
+            // Standard navigation for other steps
             if (current === 1 && uploadedFiles.length === 0) {
                 showToast('Please upload at least one file');
                 return;

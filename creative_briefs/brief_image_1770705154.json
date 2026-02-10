@@ -1,0 +1,39 @@
+{
+  "creative_type": "image",
+  "timestamp": 1770705154359,
+  "source_analysis": {
+    "visual_dna": {
+      "composition": "Silhouette-centered with expansive sky backdrop",
+      "palette": "Deep purple (#4A148C) and soft pink (#FF8A80) 60%, dark neutrals",
+      "lighting": "Low light with dramatic contrast against the sunset",
+      "style": "Contemplative, serene, natural"
+    },
+    "strategic_analysis": {
+      "tone": "Reflective, calm, introspective",
+      "cta_style": "Implied action, subtle engagement",
+      "emotional_angle": "Solitude & reflection",
+      "audience": "Nature lovers, 18-35, seeking inner peace"
+    },
+    "image_composition_analysis": {
+      "focal_points": "Silhouette as primary focus with ~70% saliency; vibrant sky enhances mood",
+      "typography_style": "N/A, visual storytelling with no text"
+    },
+    "prompt_reconstruction": "Silhouette of a person sitting against a vivid sunset, expansive sky with deep purple and soft pink hues, dramatic low lighting, contemplative mood, serene natural scenery --ar 1:1 --style raw",
+    "stored_image_path": "analyzed_images\\Screenshot 2025-07-22 030155_1770705025.png",
+    "stored_image_url": "/analyzed_images/Screenshot 2025-07-22 030155_1770705025.png"
+  },
+  "transformation_instructions": "make a travel add with image like this for the company \"eyas ventures\"",
+  "common": {
+    "objective": "Product Launch",
+    "product": "UltraRun Pro Shoes",
+    "platform": "Instagram",
+    "aspect_ratio": "1:1 (Square)"
+  },
+  "image_settings": {
+    "style_emphasis": "Product-focused",
+    "background_mood": "Studio/Clean",
+    "headline": "",
+    "subheadline": "",
+    "cta_text": ""
+  }
+}
