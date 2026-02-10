@@ -1,6 +1,7 @@
 import os
 import json
 import uvicorn
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
@@ -8,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import shutil
 from pathlib import Path
 from dotenv import load_dotenv
+from app.database import init_db
 
 # Import the ImageRater from the inspire me/newimg.py
 # We need to add the directory to sys.path to import it
@@ -19,10 +21,30 @@ from newimg import ImageRater
 sys.path.append(os.path.join(os.path.dirname(__file__), 'brand registration'))
 from brand_registration_api import router as brand_router
 
+# Import brand blueprint router
+from app.main import blueprint_router
+
 # Load environment variables
 load_dotenv(os.path.join(os.path.dirname(__file__), 'inspire me', '.env'))
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    print("Initializing brand blueprint database...")
+    init_db()
+    print("Brand blueprint database initialized successfully.")
+    
+    # Ensure uploads directory exists
+    uploads_dir = Path("uploads/guidelines")
+    uploads_dir.mkdir(parents=True, exist_ok=True)
+    print(f"Ensured uploads directory exists: {uploads_dir}")
+    
+    yield
+    
+    # Shutdown (if needed in future)
+    print("Shutting down...")
+
+app = FastAPI(lifespan=lifespan)
 
 # Add CORS middleware
 app.add_middleware(
@@ -35,6 +57,9 @@ app.add_middleware(
 
 # Include brand registration router
 app.include_router(brand_router)
+
+# Include brand blueprint router
+app.include_router(blueprint_router)
 
 # Initialize ImageRater
 api_key = os.getenv('OPENAI_API_KEY')
@@ -51,6 +76,9 @@ if api_key:
 # We can mount the current directory to serve everything relative.
 app.mount("/templates", StaticFiles(directory="templates"), name="templates")
 app.mount("/inspire me", StaticFiles(directory="inspire me"), name="inspire_me")
+
+# Mount app/static for brand blueprint assets
+app.mount("/brand-static", StaticFiles(directory="app/static"), name="brand_static")
 
 @app.get("/")
 async def root():
