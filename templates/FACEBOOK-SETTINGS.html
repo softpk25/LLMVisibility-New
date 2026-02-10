@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Content Management - Prometrix</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.2/cdn.min.js" defer></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --primary: #5046e5;
+            --primary-dark: #4039c0;
+            --secondary: #00c4cc;
+            --text-dark: #1a202c;
+            --text-light: #718096;
+            --bg-light: #f7fafc;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: var(--primary);
+            border: 1px solid #e2e8f0;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(80, 70, 229, 0.05);
+            border-color: var(--primary);
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            border-right: 1px solid #e2e8f0;
+            padding: 1.5rem 0;
+            transition: all 0.3s ease;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .prometrix-wordmark {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #5046e5 0%, #00c4cc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .primary-text { color: #5046e5; }
+        .dark-text { color: #1a202c; }
+        
+        .analytics-bars {
+            display: flex;
+            align-items: end;
+            gap: 2px;
+            margin-left: 8px;
+            margin-right: 4px;
+        }
+        
+        .bar {
+            border-radius: 2px;
+            background: linear-gradient(135deg, #00c4cc 0%, #5046e5 100%);
+            width: 3px;
+        }
+        
+        .bar1 { height: 10px; opacity: 0.7; }
+        .bar2 { height: 14px; opacity: 0.8; }
+        .bar3 { height: 18px; opacity: 0.9; }
+        .bar4 { height: 22px; }
+        
+        .tagline-small {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #718096;
+        }
+        
+        .menu {
+            margin-top: 1.5rem;
+            list-style: none;
+        }
+        
+        .menu-item {
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #718096;
+            font-weight: 500;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+        
+        .menu-item:hover {
+            background-color: rgba(80, 70, 229, 0.05);
+            color: var(--primary);
+        }
+        
+        .menu-item.active {
+            color: var(--primary);
+            background-color: rgba(80, 70, 229, 0.1);
+            border-left-color: var(--primary);
+        }
+        
+        .submenu {
+            list-style: none;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .submenu.open {
+            max-height: 400px;
+        }
+        
+        .submenu-item {
+            padding: 0.5rem 1.5rem 0.5rem 3.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .submenu-item:hover {
+            background-color: rgba(80, 70, 229, 0.05);
+            color: var(--primary);
+        }
+        
+        .submenu-item.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .chevron {
+            margin-left: auto;
+            transition: transform 0.3s ease;
+            font-size: 0.75rem;
+        }
+        
+        .chevron.open {
+            transform: rotate(180deg);
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+            max-width: calc(100vw - 280px);
+            transition: all 0.3s ease;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .title-section h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+        
+        .subtitle {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+        
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8fafc;
+        }
+        
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(80, 70, 229, 0.1);
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+        
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            background-color: #f1f5f9;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .chip-remove {
+            cursor: pointer;
+            color: #6b7280;
+            font-weight: bold;
+        }
+        
+        .chip-remove:hover {
+            color: #ef4444;
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-connected {
+            background-color: #dcfce7;
+            color: #059669;
+        }
+        
+        .status-disconnected {
+            background-color: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .integration-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .integration-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .range-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+        }
+        
+        .upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary);
+            background-color: rgba(80, 70, 229, 0.02);
+        }
+        
+        .model-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .model-table th {
+            text-align: left;
+            padding: 0.75rem;
+            background-color: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .model-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+    </style>
+</head>
+<body x-data="brandContentSystem()" x-init="init()">
+    <!-- Sidebar -->    <aside class="sidebar">
+        <div style="padding: 0 1.5rem 1.5rem; border-bottom: 1px solid #e2e8f0;">
+            <div style="text-align: left;">
+                <div class="prometrix-wordmark">
+                    <span class="dark-text">Pro</span>
+                    <span class="primary-text">me</span>
+                    <span class="gradient-text">t</span>
+                    <div class="analytics-bars">
+                        <div class="bar bar1"></div>
+                        <div class="bar bar2"></div>
+                        <div class="bar bar3"></div>
+                        <div class="bar bar4"></div>
+                    </div>
+                    <span class="gradient-text">rix</span>
+                </div>
+                <div class="tagline-small">AI-POWERED MARKETING</div>
+            </div>
+        </div>
+        <nav style="margin-top: 1.5rem; overflow-y: auto; max-height: calc(100vh - 100px);">
+            <ul style="list-style: none;">
+                <!-- Create Campaign -->
+                <li>
+                    <a class="menu-item" href="FACEBOOK-CREATE-CAMPAIGN.html" style="text-decoration: none;">
+                        <span>🚀</span>
+                        <span>Create Campaign</span>
+                    </a>
+                </li>
+                
+                <!-- Brand Registration -->
+                <li>
+                    <a class="menu-item" href="FACEBOOK-BRAND-REGISTRATION.html" style="text-decoration: none;">
+                        <span>🏢</span>
+                        <span>Brand Registration</span>
+                    </a>
+                </li>
+                
+                <!-- Inspire Me -->
+                <li>
+                    <a class="menu-item" href="FACEBOOK-INSPIRE-ME.html" style="text-decoration: none;">
+                        <span>💡</span>
+                        <span>Inspire Me</span>
+                    </a>
+                </li>
+                
+                <!-- Engage Boost with Submenu -->
+                <li x-data="{ engageOpen: false }">
+                    <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html" style="text-decoration: none; justify-content: space-between;">
+                        <span style="display: flex; align-items: center; gap: 0.75rem;">
+                            <span>💬</span>
+                            <span>Engage Boost</span>
+                        </span>
+                        <span x-text="engageOpen ? '▼' : '▶'" style="font-size: 0.7rem;"></span>
+                    </a>
+                    <ul x-show="engageOpen" x-transition style="list-style: none; background: #f8fafc; margin: 0; padding: 0;">
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#pending" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>⏳</span>
+                                <span>Pending Reviews</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#all" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>💭</span>
+                                <span>All Comments</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#approved" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>✅</span>
+                                <span>Approved</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#rejected" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>❌</span>
+                                <span>Rejected</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#knowledge" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>📚</span>
+                                <span>Knowledge Base</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#analytics" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>📊</span>
+                                <span>Analytics</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#settings" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>⚙️</span>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <!-- Insights -->
+                <li>
+                    <a class="menu-item" href="#" style="text-decoration: none;">
+                        <span>📈</span>
+                        <span>Insights</span>
+                    </a>
+                </li>
+                
+                <!-- Settings with Submenu -->
+                <li x-data="{ settingsOpen: true }">
+                    <a class="menu-item active" @click="settingsOpen = !settingsOpen" style="text-decoration: none; justify-content: space-between;">
+                        <span style="display: flex; align-items: center; gap: 0.75rem;">
+                            <span>⚙️</span>
+                            <span>Settings</span>
+                        </span>
+                        <span x-text="settingsOpen ? '▼' : '▶'" style="font-size: 0.7rem;"></span>
+                    </a>
+                    <ul x-show="settingsOpen" x-transition style="list-style: none; background: #f8fafc; margin: 0; padding: 0;">
+                        <li>
+                            <a class="menu-item" :class="{ 'active': activeTab === 'settings-language' }" @click="activeTab = 'settings-language'" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>🌐</span>
+                                <span>Language</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" :class="{ 'active': activeTab === 'settings-llm' }" @click="activeTab = 'settings-llm'" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>🤖</span>
+                                <span>LLM Settings</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" :class="{ 'active': activeTab === 'settings-guardrails' }" @click="activeTab = 'settings-guardrails'" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>🛡️</span>
+                                <span>Guardrails</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" :class="{ 'active': activeTab === 'settings-integrations' }" @click="activeTab = 'settings-integrations'" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>🔗</span>
+                                <span>Integrations</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" :class="{ 'active': activeTab === 'settings-products' }" @click="activeTab = 'settings-products'" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>📦</span>
+                                <span>Products</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dynamic Header based on active tab -->
+        <div class="header">
+            <div class="title-section">
+                <h1 x-show="activeTab === 'settings-language'">🌐 Language</h1>
+                <h1 x-show="activeTab === 'settings-llm'">🤖 LLM Settings</h1>
+                <h1 x-show="activeTab === 'settings-guardrails'">🛡️ Guardrails</h1>
+                <h1 x-show="activeTab === 'settings-integrations'">🔗 Integrations</h1>
+                <h1 x-show="activeTab === 'settings-products'">📦 Products</h1>
+                <p class="subtitle" x-show="activeTab === 'settings-language'">Configure language preferences and localization settings</p>
+                <p class="subtitle" x-show="activeTab === 'settings-llm'">Manage AI models and usage limits</p>
+                <p class="subtitle" x-show="activeTab === 'settings-guardrails'">Set content policies and brand safety rules</p>
+                <p class="subtitle" x-show="activeTab === 'settings-integrations'">Connect external platforms and services</p>
+                <p class="subtitle" x-show="activeTab === 'settings-products'">Manage your product catalog</p>
+            </div>
+        </div>
+
+        <!-- Language Settings -->
+        <div x-show="activeTab === 'settings-language'">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="form-label">Default Language</label>
+                        <select x-model="settings.defaultLanguage" class="form-control">
+                            <option value="en">English</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="de">German</option>
+                            <option value="hi">Hindi</option>
+                            <option value="ar">Arabic</option>
+                            <option value="zh">Chinese</option>
+                            <option value="ja">Japanese</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Allowed Locales</label>
+                        <div style="margin-bottom: 0.5rem;">
+                            <template x-for="(locale, index) in settings.allowedLocales" :key="index">
+                                <span class="chip">
+                                    <span x-text="locale"></span>
+                                    <span class="chip-remove" @click="removeLocale(index)">×</span>
+                                </span>
+                            </template>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <select x-model="settings.newLocale" class="form-control" style="flex: 1;">
+                                <option value="">Select a locale</option>
+                                <option value="English">English</option>
+                                <option value="Spanish">Spanish</option>
+                                <option value="French">French</option>
+                                <option value="German">German</option>
+                                <option value="Hindi">Hindi</option>
+                            </select>
+                            <button @click="addLocale()" class="btn-secondary">Add</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <label class="toggle-switch">
+                                <input type="checkbox" x-model="settings.enableRTL">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <label style="margin: 0; cursor: pointer;" @click="settings.enableRTL = !settings.enableRTL">Enable RTL Support</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <label class="toggle-switch">
+                                <input type="checkbox" x-model="settings.autoTranslate">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <label style="margin: 0; cursor: pointer;" @click="settings.autoTranslate = !settings.autoTranslate">Auto-translate Drafts</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <label class="toggle-switch">
+                                <input type="checkbox" x-model="settings.languageGuardrails">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <label style="margin: 0; cursor: pointer;" @click="settings.languageGuardrails = !settings.languageGuardrails">Language-Specific Guardrails</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn-success" @click="saveAllSettings()" style="padding: 1rem 3rem;">
+                    Save Settings
+                </button>
+            </div>
+        </div>
+
+        <!-- LLM Settings -->
+        <div x-show="activeTab === 'settings-llm'">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="form-label">Default Model</label>
+                        <select x-model="settings.defaultLLM" class="form-control">
+                            <option value="gpt-4.1">GPT-4.1 (Recommended)</option>
+                            <option value="claude-3.5">Claude 3.5 Sonnet</option>
+                            <option value="gemini-pro">Gemini Pro</option>
+                            <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Monthly Budget Guard ($)</label>
+                        <input x-model="settings.monthlyBudget" type="number" class="form-control" placeholder="100">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Registered Models</label>
+                        <div style="overflow-x: auto;">
+                            <table class="model-table">
+                                <thead>
+                                    <tr>
+                                        <th>Model</th>
+                                        <th>Provider</th>
+                                        <th>Use Case</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template x-for="model in settings.registeredModels" :key="model.name">
+                                        <tr>
+                                            <td x-text="model.name"></td>
+                                            <td x-text="model.provider"></td>
+                                            <td x-text="model.useCase"></td>
+                                            <td>
+                                                <span class="status-badge" :class="model.status === 'active' ? 'status-connected' : 'status-disconnected'" x-text="model.status === 'active' ? 'Active' : 'Inactive'"></span>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <h3 style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem;">Per-Content-Type Model Selection</h3>
+                        
+                        <div style="margin-bottom: 0.75rem;">
+                            <label style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 0.25rem; display: block;">Text Generation</label>
+                            <select x-model="settings.modelsByType.text" class="form-control">
+                                <option value="gpt-4.1">GPT-4.1</option>
+                                <option value="claude-3.5">Claude 3.5 Sonnet</option>
+                                <option value="gemini-pro">Gemini Pro</option>
+                            </select>
+                        </div>
+                        
+                        <div style="margin-bottom: 0.75rem;">
+                            <label style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 0.25rem; display: block;">Image Generation</label>
+                            <select x-model="settings.modelsByType.image" class="form-control">
+                                <option value="dall-e-3">DALL-E 3</option>
+                                <option value="midjourney">Midjourney</option>
+                                <option value="stable-diffusion">Stable Diffusion</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 0.25rem; display: block;">Video Script</label>
+                            <select x-model="settings.modelsByType.video" class="form-control">
+                                <option value="gpt-4.1">GPT-4.1</option>
+                                <option value="claude-3.5">Claude 3.5 Sonnet</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn-success" @click="saveAllSettings()" style="padding: 1rem 3rem;">
+                    Save Settings
+                </button>
+            </div>
+        </div>
+
+        <!-- Guardrails Settings -->
+        <div x-show="activeTab === 'settings-guardrails'">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="form-label">Sector Preset</label>
+                        <select x-model="settings.guardrails.sector" class="form-control">
+                            <option value="general">General Business</option>
+                            <option value="health">Health & Wellness</option>
+                            <option value="finance">Finance & Investment</option>
+                            <option value="education">Education</option>
+                            <option value="technology">Technology</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Default Product Inclusion %</label>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <input type="range" x-model="settings.guardrails.productInclusionPct" min="0" max="100" class="range-slider" style="flex: 1;">
+                            <span x-text="settings.guardrails.productInclusionPct + '%'" style="font-weight: 600; color: var(--primary); min-width: 50px; text-align: right;"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Emoji Policy</label>
+                        <select x-model="settings.guardrails.emojiPolicy" class="form-control">
+                            <option value="none">None</option>
+                            <option value="light">Light (1-2 per post)</option>
+                            <option value="medium">Medium (3-5 per post)</option>
+                            <option value="rich">Rich (5+ per post)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <h3 style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem;">Content Safety Options</h3>
+                        
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                            <label class="toggle-switch">
+                                <input type="checkbox" x-model="settings.guardrails.flagSensitiveClaims">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <label style="margin: 0; cursor: pointer;" @click="settings.guardrails.flagSensitiveClaims = !settings.guardrails.flagSensitiveClaims">Flag Sensitive Claims</label>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                            <label class="toggle-switch">
+                                <input type="checkbox" x-model="settings.guardrails.enforceHashtagLimit">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <label style="margin: 0; cursor: pointer;" @click="settings.guardrails.enforceHashtagLimit = !settings.guardrails.enforceHashtagLimit">Enforce Hashtag Limit</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Disallow Forbidden Phrases</label>
+                        <div style="margin-bottom: 0.5rem;">
+                            <template x-for="(phrase, index) in settings.guardrails.forbiddenPhrases" :key="index">
+                                <span class="chip">
+                                    <span x-text="phrase"></span>
+                                    <span class="chip-remove" @click="removeForbiddenPhrase(index)">×</span>
+                                </span>
+                            </template>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input x-model="settings.newForbiddenPhrase" type="text" class="form-control" placeholder="Add phrase" style="flex: 1;" @keyup.enter="addForbiddenPhrase()">
+                            <button @click="addForbiddenPhrase()" class="btn-secondary">Add</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Custom Rules JSON (Advanced)</label>
+                        <textarea x-model="settings.guardrails.customRulesJSON" class="form-control" rows="4" placeholder='{"rule": "value"}'></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn-success" @click="saveAllSettings()" style="padding: 1rem 3rem;">
+                    Save Settings
+                </button>
+            </div>
+        </div>
+
+        <!-- Integrations Settings -->
+        <div x-show="activeTab === 'settings-integrations'">
+            <div class="card">
+                <div class="card-body">
+                    <!-- Facebook -->
+                    <div class="integration-card">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div class="integration-icon" style="background-color: #1877f2;">
+                                <span>f</span>
+                            </div>
+                            <div>
+                                <p style="font-weight: 600; margin: 0;">Facebook Pages</p>
+                                <p style="font-size: 0.875rem; color: var(--text-light); margin: 0;" x-text="settings.integrations.facebook.connected ? settings.integrations.facebook.pageName : 'Not connected'"></p>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="status-badge" :class="settings.integrations.facebook.connected ? 'status-connected' : 'status-disconnected'" x-text="settings.integrations.facebook.connected ? 'Connected' : 'Not Connected'"></span>
+                            <button class="btn-secondary" style="margin-left: 0.5rem;" @click="toggleFacebookConnection()" x-text="settings.integrations.facebook.connected ? 'Disconnect' : 'Connect'"></button>
+                        </div>
+                    </div>
+                    
+                    <!-- Instagram -->
+                    <div class="integration-card">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div class="integration-icon" style="background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);">
+                                <span>IG</span>
+                            </div>
+                            <div>
+                                <p style="font-weight: 600; margin: 0;">Instagram</p>
+                                <p style="font-size: 0.875rem; color: var(--text-light); margin: 0;">Coming soon</p>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="status-badge status-disconnected">Not Connected</span>
+                            <button class="btn-secondary" style="margin-left: 0.5rem;" disabled>Connect</button>
+                        </div>
+                    </div>
+                    
+                    <!-- LinkedIn -->
+                    <div class="integration-card">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div class="integration-icon" style="background-color: #0077b5;">
+                                <span>in</span>
+                            </div>
+                            <div>
+                                <p style="font-weight: 600; margin: 0;">LinkedIn</p>
+                                <p style="font-size: 0.875rem; color: var(--text-light); margin: 0;">Coming soon</p>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="status-badge status-disconnected">Not Connected</span>
+                            <button class="btn-secondary" style="margin-left: 0.5rem;" disabled>Connect</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Analytics -->
+                    <div class="integration-card">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div class="integration-icon" style="background-color: #6b7280;">
+                                <span>📊</span>
+                            </div>
+                            <div>
+                                <p style="font-weight: 600; margin: 0;">Analytics & Insights</p>
+                                <p style="font-size: 0.875rem; color: var(--text-light); margin: 0;" x-text="settings.integrations.analytics.connected ? 'Connected' : 'Performance tracking'"></p>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="status-badge" :class="settings.integrations.analytics.connected ? 'status-connected' : 'status-disconnected'" x-text="settings.integrations.analytics.connected ? 'Connected' : 'Not Connected'"></span>
+                            <button class="btn-secondary" style="margin-left: 0.5rem;" @click="settings.integrations.analytics.connected = !settings.integrations.analytics.connected" x-text="settings.integrations.analytics.connected ? 'Disconnect' : 'Connect'"></button>
+                        </div>
+                    </div>
+                    
+                    <!-- Google Analytics -->
+                    <div class="integration-card">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div class="integration-icon" style="background-color: #e37400;">
+                                <span>GA</span>
+                            </div>
+                            <div>
+                                <p style="font-weight: 600; margin: 0;">Google Analytics</p>
+                                <p style="font-size: 0.875rem; color: var(--text-light); margin: 0;">Coming soon</p>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="status-badge status-disconnected">Not Connected</span>
+                            <button class="btn-secondary" style="margin-left: 0.5rem;" disabled>Connect</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn-success" @click="saveAllSettings()" style="padding: 1rem 3rem;">
+                    Save Settings
+                </button>
+            </div>
+        </div>
+
+        <!-- Products Settings -->
+        <div x-show="activeTab === 'settings-products'">
+            <div class="card">
+                <div class="card-body">
+                    <!-- Add Product Button -->
+                    <div style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem;">
+                        <button class="btn-primary" @click="showProductForm = true; editingProduct = null; resetProductForm()">
+                            + Add Product
+                        </button>
+                    </div>
+                    <!-- Product List -->
+                    <div x-show="!showProductForm">
+                        <template x-if="products.length === 0">
+                            <div style="text-align: center; padding: 3rem; color: var(--text-light);">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">📦</div>
+                                <p style="font-size: 1.125rem; margin-bottom: 0.5rem;">No products added yet</p>
+                                <p>Add your first product to start including them in your content</p>
+                            </div>
+                        </template>
+                        
+                        <template x-if="products.length > 0">
+                            <div style="display: grid; gap: 1rem;">
+                                <template x-for="(product, index) in products" :key="product.id">
+                                    <div style="border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 1rem; display: flex; gap: 1rem; transition: all 0.2s;">
+                                        <!-- Product Image -->
+                                        <div style="width: 80px; height: 80px; border-radius: 0.5rem; background-color: #f1f5f9; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                                            <template x-if="product.imageUrl">
+                                                <img :src="product.imageUrl" :alt="product.name" style="width: 100%; height: 100%; object-fit: cover;">
+                                            </template>
+                                            <template x-if="!product.imageUrl">
+                                                <span style="font-size: 2rem;">📦</span>
+                                            </template>
+                                        </div>
+                                        
+                                        <!-- Product Details -->
+                                        <div style="flex: 1;">
+                                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                                <div>
+                                                    <h3 style="font-weight: 600; font-size: 1.125rem; margin-bottom: 0.25rem;" x-text="product.name"></h3>
+                                                    <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+                                                        <span class="chip" style="margin: 0;" x-text="product.category"></span>
+                                                        <span style="font-weight: 600; color: var(--primary);" x-text="'$' + product.price"></span>
+                                                    </div>
+                                                </div>
+                                                <div style="display: flex; gap: 0.5rem;">
+                                                    <button @click="editProduct(index)" class="btn-secondary" style="padding: 0.5rem 1rem;">
+                                                        Edit
+                                                    </button>
+                                                    <button @click="deleteProduct(index)" style="padding: 0.5rem 1rem; background-color: var(--danger); color: white; border: none; border-radius: 0.5rem; cursor: pointer;">
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <p style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 0.5rem;" x-text="product.description"></p>
+                                            <div style="display: flex; gap: 1rem; font-size: 0.875rem; color: var(--text-light);">
+                                                <span>SKU: <strong x-text="product.sku"></strong></span>
+                                                <span x-show="product.stock">Stock: <strong x-text="product.stock"></strong></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                    
+                    <!-- Product Form -->
+                    <div x-show="showProductForm">
+                        <div style="margin-bottom: 1.5rem;">
+                            <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;" x-text="editingProduct !== null ? 'Edit Product' : 'Add New Product'"></h3>
+                            <p style="color: var(--text-light); font-size: 0.875rem;">Products will be associated with <strong x-text="brand.name"></strong></p>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                            <!-- Left Column -->
+                            <div>
+                                <div class="form-group">
+                                    <label class="form-label">Product Name *</label>
+                                    <input x-model="productForm.name" type="text" class="form-control" placeholder="e.g., Premium Widget">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Category *</label>
+                                    <select x-model="productForm.category" class="form-control">
+                                        <option value="">Select a category</option>
+                                        <option value="Electronics">Electronics</option>
+                                        <option value="Clothing">Clothing</option>
+                                        <option value="Food & Beverage">Food & Beverage</option>
+                                        <option value="Home & Garden">Home & Garden</option>
+                                        <option value="Health & Beauty">Health & Beauty</option>
+                                        <option value="Sports & Outdoors">Sports & Outdoors</option>
+                                        <option value="Books & Media">Books & Media</option>
+                                        <option value="Software">Software</option>
+                                        <option value="Services">Services</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Price ($) *</label>
+                                    <input x-model="productForm.price" type="number" step="0.01" class="form-control" placeholder="0.00">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">SKU</label>
+                                    <input x-model="productForm.sku" type="text" class="form-control" placeholder="e.g., PROD-001">
+                                </div>
+                            </div>
+                            
+                            <!-- Right Column -->
+                            <div>
+                                <div class="form-group">
+                                    <label class="form-label">Description</label>
+                                    <textarea x-model="productForm.description" class="form-control" rows="4" placeholder="Describe your product..."></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Image URL</label>
+                                    <input x-model="productForm.imageUrl" type="url" class="form-control" placeholder="https://example.com/image.jpg">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Stock Quantity</label>
+                                    <input x-model="productForm.stock" type="number" class="form-control" placeholder="0">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Tags (comma-separated)</label>
+                                    <input x-model="productForm.tags" type="text" class="form-control" placeholder="e.g., new, featured, sale">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Form Actions -->
+                        <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;">
+                            <button @click="cancelProductForm()" class="btn-secondary">
+                                Cancel
+                            </button>
+                            <button @click="saveProduct()" class="btn-success" :disabled="!productForm.name || !productForm.category || !productForm.price">
+                                <span x-text="editingProduct !== null ? 'Update Product' : 'Add Product'"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Other tabs -->
+        <div x-show="!activeTab.startsWith('settings') && activeTab !== 'onboarding' && activeTab !== 'blueprint' && activeTab !== 'planner' && activeTab !== 'creator' && activeTab !== 'calendar' && activeTab !== 'insights'" style="padding: 3rem; text-align: center; color: var(--text-light);">
+            <p style="font-size: 1.25rem;">Other tabs (Onboarding, Blueprint, Planner, etc.) remain unchanged</p>
+            <p style="margin-top: 1rem;">Click Settings in the sidebar to view the updated settings with sub-menu navigation</p>
+        </div>
+    </main>
+
+    <script>
+        function brandContentSystem() {
+            return {
+                activeTab: 'settings-language',
+                settingsMenuOpen: true,
+                
+                // Products
+                products: [
+                    {
+                        id: 'prod-001',
+                        name: 'Smart Widget Pro',
+                        description: 'Advanced smart widget with AI capabilities',
+                        category: 'Electronics',
+                        price: 299.99,
+                        sku: 'SWP-001',
+                        imageUrl: '',
+                        stock: 150,
+                        tags: 'featured, new, bestseller'
+                    }
+                ],
+                showProductForm: false,
+                editingProduct: null,
+                productForm: {
+                    name: '',
+                    description: '',
+                    category: '',
+                    price: '',
+                    sku: '',
+                    imageUrl: '',
+                    stock: '',
+                    tags: ''
+                },
+                
+                brand: {
+                    id: 'brand-001',
+                    name: 'TechBrand'
+                },
+                
+                settings: {
+                    // Brand Registration
+                    brandWebsite: '',
+                    uploadedGuideline: '',
+                    manualInputs: {
+                        fonts: '',
+                        primaryColor: '#5046e5',
+                        secondaryColor: '#00c4cc',
+                        dosAndDonts: '',
+                        policies: ''
+                    },
+                    
+                    // Language Settings
+                    defaultLanguage: 'en',
+                    allowedLocales: ['English', 'Spanish'],
+                    newLocale: '',
+                    enableRTL: false,
+                    autoTranslate: false,
+                    languageGuardrails: true,
+                    
+                    // LLM Settings
+                    defaultLLM: 'gpt-4.1',
+                    monthlyBudget: 100,
+                    registeredModels: [
+                        { name: 'GPT-4.1', provider: 'OpenAI', useCase: 'Text Generation', status: 'active' },
+                        { name: 'Claude 3.5', provider: 'Anthropic', useCase: 'Text Generation', status: 'active' },
+                        { name: 'Gemini Pro', provider: 'Google', useCase: 'Text/Summarization', status: 'active' },
+                        { name: 'DALL-E 3', provider: 'OpenAI', useCase: 'Image Generation', status: 'active' }
+                    ],
+                    modelsByType: {
+                        text: 'gpt-4.1',
+                        image: 'dall-e-3',
+                        video: 'gpt-4.1'
+                    },
+                    
+                    // Guardrails
+                    guardrails: {
+                        sector: 'general',
+                        productInclusionPct: 30,
+                        emojiPolicy: 'medium',
+                        flagSensitiveClaims: true,
+                        enforceHashtagLimit: true,
+                        forbiddenPhrases: ['buy now', 'limited time', 'act fast'],
+                        customRulesJSON: ''
+                    },
+                    newForbiddenPhrase: '',
+                    
+                    // Integrations
+                    integrations: {
+                        facebook: {
+                            connected: true,
+                            pageName: 'TechBrand Page'
+                        },
+                        analytics: {
+                            connected: false
+                        }
+                    }
+                },
+                
+                init() {
+                    console.log('Brand Content System initialized');
+                },
+                
+                toggleSettingsMenu() {
+                    this.settingsMenuOpen = !this.settingsMenuOpen;
+                    if (this.settingsMenuOpen && !this.activeTab.startsWith('settings')) {
+                        this.activeTab = 'settings-brand';
+                    }
+                },
+                
+                handleBrandGuidelineUpload(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        this.settings.uploadedGuideline = file.name;
+                    }
+                },
+                
+                generateBrandBlueprint() {
+                    alert('Generating Brand Blueprint from uploaded guidelines and manual inputs...');
+                },
+                
+                addLocale() {
+                    if (this.settings.newLocale && !this.settings.allowedLocales.includes(this.settings.newLocale)) {
+                        this.settings.allowedLocales.push(this.settings.newLocale);
+                        this.settings.newLocale = '';
+                    }
+                },
+                
+                removeLocale(index) {
+                    this.settings.allowedLocales.splice(index, 1);
+                },
+                
+                addForbiddenPhrase() {
+                    if (this.settings.newForbiddenPhrase.trim()) {
+                        this.settings.guardrails.forbiddenPhrases.push(this.settings.newForbiddenPhrase.trim());
+                        this.settings.newForbiddenPhrase = '';
+                    }
+                },
+                
+                removeForbiddenPhrase(index) {
+                    this.settings.guardrails.forbiddenPhrases.splice(index, 1);
+                },
+                
+                toggleFacebookConnection() {
+                    this.settings.integrations.facebook.connected = !this.settings.integrations.facebook.connected;
+                    if (!this.settings.integrations.facebook.connected) {
+                        this.settings.integrations.facebook.pageName = '';
+                    } else {
+                        this.settings.integrations.facebook.pageName = 'TechBrand Page';
+                    }
+                },
+                
+                saveAllSettings() {
+                    console.log('Saving all settings:', this.settings);
+                    alert('All settings saved successfully!');
+                },
+                
+                // Product Management Functions
+                resetProductForm() {
+                    this.productForm = {
+                        name: '',
+                        description: '',
+                        category: '',
+                        price: '',
+                        sku: '',
+                        imageUrl: '',
+                        stock: '',
+                        tags: ''
+                    };
+                },
+                
+                editProduct(index) {
+                    this.editingProduct = index;
+                    const product = this.products[index];
+                    this.productForm = {
+                        name: product.name,
+                        description: product.description,
+                        category: product.category,
+                        price: product.price,
+                        sku: product.sku,
+                        imageUrl: product.imageUrl,
+                        stock: product.stock,
+                        tags: product.tags
+                    };
+                    this.showProductForm = true;
+                },
+                
+                saveProduct() {
+                    if (this.editingProduct !== null) {
+                        this.products[this.editingProduct] = {
+                            ...this.products[this.editingProduct],
+                            ...this.productForm
+                        };
+                    } else {
+                        this.products.push({
+                            id: 'prod-' + Date.now(),
+                            ...this.productForm
+                        });
+                    }
+                    this.cancelProductForm();
+                    alert('Product saved successfully!');
+                },
+                
+                deleteProduct(index) {
+                    if (confirm('Are you sure you want to delete this product?')) {
+                        this.products.splice(index, 1);
+                    }
+                },
+                
+                cancelProductForm() {
+                    this.showProductForm = false;
+                    this.editingProduct = null;
+                    this.resetProductForm();
+                }
+            }
+        }
+    </script>
+</body>
+</html>

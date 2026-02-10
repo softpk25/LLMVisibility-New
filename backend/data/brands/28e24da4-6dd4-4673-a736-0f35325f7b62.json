@@ -1,0 +1,37 @@
+{
+  "brand_name": "Test Brand",
+  "industry": "technology",
+  "description": "A test brand for backend testing",
+  "website_url": null,
+  "voice_profile": {
+    "formality": "casual",
+    "humor": "subtle",
+    "tone": "friendly",
+    "personality_traits": [],
+    "do_phrases": [],
+    "dont_phrases": []
+  },
+  "content_pillars": [
+    {
+      "id": "pillar-1",
+      "name": "Innovation",
+      "type": "educational",
+      "description": "Innovation content",
+      "keywords": [],
+      "percentage": 50
+    },
+    {
+      "id": "pillar-2",
+      "name": "Community",
+      "type": "community",
+      "description": "Community content",
+      "keywords": [],
+      "percentage": 50
+    }
+  ],
+  "target_demographics": {},
+  "brand_values": [],
+  "id": "28e24da4-6dd4-4673-a736-0f35325f7b62",
+  "created_at": "2026-02-05T07:20:34.973957",
+  "updated_at": "2026-02-05T07:20:34.973957"
+}
