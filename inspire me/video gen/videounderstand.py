@@ -39,20 +39,64 @@ def analyze_video(video_path):
         print("Processing...")
         time.sleep(5)
 
-    # Generate content
-    print("Generating analysis...")
-    # Using gemini-2.0-flash as confirmed working in previous tests
+    # Generate content with structured JSON output
+    print("Generating structured analysis...")
+
+    prompt = """Analyze this video and return a JSON object with a structured video generation prompt.
+
+Use this exact JSON schema:
+
+{
+  "scene": "description of the setting/environment",
+  "subjects": [
+    {
+      "type": "main subject type (e.g., person, product, animal)",
+      "description": "detailed description of the subject",
+      "position": "position in frame (e.g., center, left, right)"
+    }
+  ],
+  "style": "overall visual style (e.g., cinematic, documentary, commercial)",
+  "color_palette": ["color1", "color2", "color3"],
+  "lighting": "lighting description (e.g., soft natural light, dramatic studio lighting)",
+  "mood": "emotional tone (e.g., energetic, calm, professional)",
+  "camera": "camera movement and angles (e.g., slow pan, static wide shot)",
+  "movement": "subject/scene movement description",
+  "duration_suggestion": "recommended duration in seconds"
+}
+
+Instructions:
+- Analyze the video carefully
+- Extract ALL key visual elements
+- Be specific with colors, movements, and composition
+- Make the description detailed enough to recreate a similar video
+- Return ONLY valid JSON (no markdown code blocks or extra text)
+"""
+
     response = client.models.generate_content(
-        model="gemini-2.0-flash", 
-        contents=[
-            myfile, 
-            "Summarize this video in great detail and give me a very descriptive prompt that i can use to make a video very similar to the one i provided. Focus on visual style, composition, lighting, and movement."
-        ]
+        model="gemini-2.0-flash",
+        contents=[myfile, prompt]
     )
 
-    print("\n--- Analysis Result ---\n")
+    print("\n--- Structured Analysis Result ---\n")
     print(response.text)
-    return response.text
+
+    # Try to parse and return as dict, fallback to string
+    try:
+        import json
+        cleaned_content = response.text.strip()
+        if cleaned_content.startswith('```json'):
+            cleaned_content = cleaned_content[7:]
+        if cleaned_content.startswith('```'):
+            cleaned_content = cleaned_content[3:]
+        if cleaned_content.endswith('```'):
+            cleaned_content = cleaned_content[:-3]
+        cleaned_content = cleaned_content.strip()
+
+        return json.loads(cleaned_content)
+    except:
+        # Fallback: return as-is if JSON parsing fails
+        print("Warning: Could not parse JSON, returning raw text")
+        return {"raw_analysis": response.text}
 
 if __name__ == "__main__":
     # Test run

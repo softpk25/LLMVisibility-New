@@ -324,11 +324,11 @@ class ImageRater:
         prompt = """
         You are an expert creative strategist and visual analyst for performance
         marketing. Analyze this image and return a JSON object that captures its
-        \"visual DNA\", strategic role, and a reconstruction prompt.
-        
+        \"visual DNA\", strategic role, reconstruction prompt, and video generation prompt.
+
         Use this exact JSON schema (keys must match exactly; values are examples,
         not templates to reuse):
-        
+
         {
             "visual_dna": {
                 "composition": "Hero-centered with dynamic diagonal lines",
@@ -346,14 +346,32 @@ class ImageRater:
                 "focal_points": "Primary focus on product with ~60% saliency; secondary background elements create depth",
                 "typography_style": "Bold sans-serif headlines, minimal copy, high contrast for legibility"
             },
-            "prompt_reconstruction": "Professional product photography, athletic shoe on gradient background, dramatic studio lighting, high contrast, bold orange and navy color scheme, modern minimalist composition, commercial advertising style --ar 1:1 --style raw"
+            "prompt_reconstruction": "Professional product photography, athletic shoe on gradient background, dramatic studio lighting, high contrast, bold orange and navy color scheme, modern minimalist composition, commercial advertising style --ar 1:1 --style raw",
+            "video_prompt_json": {
+                "scene": "modern minimalist studio setup",
+                "subjects": [
+                    {
+                        "type": "athletic shoe",
+                        "description": "premium running shoe with visible carbon plate technology",
+                        "position": "center"
+                    }
+                ],
+                "style": "commercial advertising, cinematic product reveal",
+                "color_palette": ["bold orange #FF6B35", "navy #004E89", "neutral gray"],
+                "lighting": "dramatic studio lighting with high contrast",
+                "mood": "aspirational, energetic, premium",
+                "camera": "slow rotating dolly shot around product",
+                "movement": "subtle rotation of product, dynamic light shifts",
+                "duration_suggestion": "5-8 seconds"
+            }
         }
-        
+
         Instructions:
         - Keep the same structure and keys.
         - Replace all example values with descriptions that accurately reflect THIS image.
         - Use concise but information-dense language.
         - Make "prompt_reconstruction" directly usable as an image generation prompt.
+        - Make "video_prompt_json" structured for video generation from this static image.
         - Respond with VALID JSON only (no markdown code fences or extra text).
         """
         

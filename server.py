@@ -446,7 +446,9 @@ async def generate_video_endpoint(
                 "success": True,
                 "video_url": f"/generated/{output_filename}",
                 "analysis": result.get("analysis_text"),
-                "prompt": result.get("final_prompt")
+                "prompt": result.get("final_prompt"),
+                "prompt_json": result.get("prompt_json"),
+                "analysis_data": result.get("analysis_data")
             }
         else:
             raise HTTPException(status_code=500, detail=result.get("error"))
