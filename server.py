@@ -415,7 +415,7 @@ async def generate_video_endpoint(
     creative_type: str = Form("reel") # 'reel' or 'gif'
 ):
     """
-    Endpoint to generate video from uploaded image or video.
+    Endpoint to generate video from uploaded image or video. yay
     """
     # Create temp directory for uploads
     temp_dir = Path("temp_uploads")
