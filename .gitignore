@@ -17,11 +17,13 @@ __pycache__/
 generated/
 temp_uploads/
 image_analysis/
-
+test images/
 # Brand registration data
 brand_registrations.json
 brand registration/uploads/
-
+#brand registration upload folder
+brand registration/uploads/
+app/uploads/guidelines/
 # IDE
 .vscode/
 .idea/
