@@ -541,7 +541,7 @@
     </style>
 </head>
 <body x-data="brandContentSystem()" x-init="init()">
-    <!-- Sidebar -->
+    <!-- Sidebar: Global Navigation (shared with Inspire Me) -->
     <aside class="sidebar">
         <div class="sidebar-header">
             <div style="text-align: left;">
@@ -560,7 +560,161 @@
                 <div class="tagline-small">AI-POWERED MARKETING</div>
             </div>
         </div>
-        <nav>
+        <nav style="margin-top: 1.5rem; overflow-y: auto; max-height: calc(100vh - 100px);">
+            <ul style="list-style: none;">
+                <!-- Create Campaign -->
+                <li>
+                    <a class="menu-item" href="FACEBOOK-CREATE-CAMPAIGN.html" style="text-decoration: none;">
+                        <span>🚀</span>
+                        <span>Create Campaign</span>
+                    </a>
+                </li>
+
+                <!-- Brand Registration (active for Brand Blueprint) -->
+                <li>
+                    <a class="menu-item active" href="FACEBOOK-BRAND-REGISTRATION.html" style="text-decoration: none;">
+                        <span>🏢</span>
+                        <span>Brand Registration</span>
+                    </a>
+                </li>
+
+                <!-- Inspire Me -->
+                <li>
+                    <a class="menu-item" href="FACEBOOK-INSPIRE-ME.html" style="text-decoration: none;">
+                        <span>💡</span>
+                        <span>Inspire Me</span>
+                    </a>
+                </li>
+
+                <!-- Engage Boost with Submenu -->
+                <li x-data="{ engageOpen: false }">
+                    <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html"
+                        style="text-decoration: none; justify-content: space-between;">
+                        <span style="display: flex; align-items: center; gap: 0.75rem;">
+                            <span>💬</span>
+                            <span>Engage Boost</span>
+                        </span>
+                        <span x-text="engageOpen ? '▼' : '▶'" style="font-size: 0.7rem;"></span>
+                    </a>
+                    <ul x-show="engageOpen" x-transition
+                        style="list-style: none; background: #f8fafc; margin: 0; padding: 0;">
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#pending"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>⏳</span>
+                                <span>Pending Reviews</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#all"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>💭</span>
+                                <span>All Comments</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#approved"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>✅</span>
+                                <span>Approved</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#rejected"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>❌</span>
+                                <span>Rejected</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#knowledge"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>📚</span>
+                                <span>Knowledge Base</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#analytics"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>📊</span>
+                                <span>Analytics</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#settings"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>⚙️</span>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- Insights -->
+                <li>
+                    <a class="menu-item" href="#" style="text-decoration: none;">
+                        <span>📈</span>
+                        <span>Insights</span>
+                    </a>
+                </li>
+
+                <!-- Settings with Submenu -->
+                <li x-data="{ settingsOpen: false }">
+                    <a class="menu-item" href="FACEBOOK-SETTINGS.html"
+                        style="text-decoration: none; justify-content: space-between;">
+                        <span style="display: flex; align-items: center; gap: 0.75rem;">
+                            <span>⚙️</span>
+                            <span>Settings</span>
+                        </span>
+                        <span x-text="settingsOpen ? '▼' : '▶'" style="font-size: 0.7rem;"></span>
+                    </a>
+                    <ul x-show="settingsOpen" x-transition
+                        style="list-style: none; background: #f8fafc; margin: 0; padding: 0;">
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-SETTINGS.html#language"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>🌐</span>
+                                <span>Language</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-SETTINGS.html#llm"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>🤖</span>
+                                <span>LLM Settings</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-SETTINGS.html#guardrails"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>🛡️</span>
+                                <span>Guardrails</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-SETTINGS.html#integrations"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>🔗</span>
+                                <span>Integrations</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-SETTINGS.html#products"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>📦</span>
+                                <span>Products</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Internal Brand Blueprint Navigation -->
+        <nav style="margin-bottom: 1.5rem;">
             <ul class="menu">
                 <li>
                     <div class="menu-item" 
@@ -620,10 +774,9 @@
                 </li>
             </ul>
         </nav>
-    </aside>
-    
-    <!-- Main Content -->
-    <main class="main-content">
+        
+        <!-- Header -->
+        <div class="header">
         <!-- Header -->
         <div class="header">
             <div class="title-section">
