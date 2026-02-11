@@ -3,7 +3,7 @@
 *.env
 inspire me/.env
 !.env.example
-
+test images/
 # Python
 venv/
 __pycache__/
