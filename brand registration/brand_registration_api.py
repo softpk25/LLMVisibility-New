@@ -27,6 +27,15 @@ try:
 except ImportError:  # pragma: no cover - optional dependency
     docx = None  # type: ignore
 
+try:
+    # OCR support for scanned PDFs
+    import pytesseract  # type: ignore
+    from pdf2image import convert_from_path  # type: ignore
+    OCR_AVAILABLE = True
+except ImportError:  # pragma: no cover - optional dependency
+    OCR_AVAILABLE = False
+    pytesseract = None  # type: ignore
+
 # Create router for brand registration endpoints
 router = APIRouter(prefix="/api/brand-registration", tags=["brand-registration"])
 
@@ -178,71 +187,157 @@ brand_service = BrandRegistrationService()
 
 def _extract_text_from_guideline(path: Path) -> str:
     """
-    Best-effort text extraction from an uploaded guideline document.
-    - PDF: uses PyPDF2 if available
-    - DOCX: uses python-docx if available
-    If the required parser is not installed, returns an empty string so that
-    upload still succeeds and the UI can function normally.
+    Enhanced text extraction from uploaded guideline documents.
+    - PDF: Uses PyPDF2 first, falls back to OCR for scanned PDFs
+    - DOCX: Uses python-docx
+    - Handles scanned documents with OCR (if pytesseract available)
     """
     suffix = path.suffix.lower()
+    text_parts = []
 
     try:
         if suffix == ".pdf" and PdfReader is not None:
-            text_parts = []
+            # Try standard PDF text extraction first
             with open(path, "rb") as f:
                 reader = PdfReader(f)
                 for page in reader.pages:
                     page_text = page.extract_text() or ""
                     text_parts.append(page_text)
-            return "\n".join(text_parts)
+            
+            extracted_text = "\n".join(text_parts)
+            
+            # If we got very little text (likely scanned PDF), try OCR
+            if len(extracted_text.strip()) < 100 and OCR_AVAILABLE:
+                try:
+                    # Convert PDF pages to images
+                    images = convert_from_path(str(path), dpi=300)
+                    ocr_texts = []
+                    for img in images:
+                        ocr_text = pytesseract.image_to_string(img)
+                        ocr_texts.append(ocr_text)
+                    extracted_text = "\n".join(ocr_texts)
+                except Exception:
+                    # OCR failed, use what we have
+                    pass
+            
+            return extracted_text
 
         if suffix in {".docx", ".doc"} and docx is not None:
-            # python-docx cannot read legacy .doc files, but this at least
-            # works for modern .docx guidelines.
             document = docx.Document(str(path))
-            return "\n".join(p.text for p in document.paragraphs if p.text.strip())
-    except Exception:
-        # Parsing issues should never break the upload flow
+            # Extract text from paragraphs
+            paragraphs = [p.text for p in document.paragraphs if p.text.strip()]
+            # Also try to extract from tables
+            for table in document.tables:
+                for row in table.rows:
+                    row_text = " | ".join(cell.text.strip() for cell in row.cells if cell.text.strip())
+                    if row_text:
+                        paragraphs.append(row_text)
+            return "\n".join(paragraphs)
+    except Exception as e:
+        # Log error but don't break upload flow
+        print(f"Text extraction error: {e}")
         return ""
 
     return ""
 
 
 def _infer_voice_profile(text: str) -> VoiceProfile:
-    """Derive a rough voice profile from free-form guideline text."""
+    """Enhanced voice profile extraction with nuanced detection."""
     lowered = text.lower()
+    full_text = text
 
     # Defaults
     formality = 50
     humor = 40
     warmth = 60
 
-    # Formality
-    if re.search(r"\bformal\b|\bprofessional\b", lowered):
-        formality = 80
-    elif re.search(r"\bcasual\b|\bconversational\b|\brelaxed\b", lowered):
-        formality = 30
+    # Formality detection - more comprehensive
+    formality_keywords = {
+        "high": ["formal", "professional", "corporate", "executive", "official", "academic", "scholarly"],
+        "low": ["casual", "conversational", "relaxed", "informal", "friendly", "laid-back", "chatty"]
+    }
+    
+    formality_score = 0
+    for keyword in formality_keywords["high"]:
+        if re.search(rf"\b{keyword}\b", lowered):
+            formality_score += 1
+    for keyword in formality_keywords["low"]:
+        if re.search(rf"\b{keyword}\b", lowered):
+            formality_score -= 1
+    
+    if formality_score > 0:
+        formality = min(90, 50 + (formality_score * 10))
+    elif formality_score < 0:
+        formality = max(10, 50 + (formality_score * 10))
+    
+    # Look for explicit formality percentages
+    formality_match = re.search(r"formality[:\s]+(\d{1,2})", lowered)
+    if formality_match:
+        formality = int(formality_match.group(1))
 
-    # Humor
-    if re.search(r"\bserious\b|\bno jokes\b|\bno humor\b", lowered):
-        humor = 20
-    elif re.search(r"\bplayful\b|\bfun\b|\bhumorous\b|\bquirky\b", lowered):
-        humor = 70
+    # Humor detection - more nuanced
+    humor_keywords = {
+        "low": ["serious", "no jokes", "no humor", "professional tone", "straightforward", "no-nonsense"],
+        "high": ["playful", "fun", "humorous", "quirky", "witty", "lighthearted", "entertaining"]
+    }
+    
+    humor_score = 0
+    for keyword in humor_keywords["low"]:
+        if re.search(rf"\b{keyword}\b", lowered):
+            humor_score -= 1
+    for keyword in humor_keywords["high"]:
+        if re.search(rf"\b{keyword}\b", lowered):
+            humor_score += 1
+    
+    if humor_score > 0:
+        humor = min(90, 40 + (humor_score * 15))
+    elif humor_score < 0:
+        humor = max(10, 40 + (humor_score * 15))
+    
+    # Look for explicit humor percentages
+    humor_match = re.search(r"humor[:\s]+(\d{1,2})", lowered)
+    if humor_match:
+        humor = int(humor_match.group(1))
 
-    # Warmth
-    if re.search(r"\bwarm\b|\bfriendly\b|\bapproachable\b|\bempathetic\b", lowered):
-        warmth = 80
-    elif re.search(r"\bclinical\b|\bimpersonal\b|\bcorporate\b", lowered):
-        warmth = 40
+    # Warmth detection - enhanced
+    warmth_keywords = {
+        "high": ["warm", "friendly", "approachable", "empathetic", "compassionate", "caring", "personal"],
+        "low": ["clinical", "impersonal", "corporate", "distant", "detached", "professional"]
+    }
+    
+    warmth_score = 0
+    for keyword in warmth_keywords["high"]:
+        if re.search(rf"\b{keyword}\b", lowered):
+            warmth_score += 1
+    for keyword in warmth_keywords["low"]:
+        if re.search(rf"\b{keyword}\b", lowered):
+            warmth_score -= 1
+    
+    if warmth_score > 0:
+        warmth = min(95, 60 + (warmth_score * 10))
+    elif warmth_score < 0:
+        warmth = max(20, 60 + (warmth_score * 10))
+    
+    # Look for explicit warmth percentages
+    warmth_match = re.search(r"warmth[:\s]+(\d{1,2})", lowered)
+    if warmth_match:
+        warmth = int(warmth_match.group(1))
 
-    # Emoji policy
+    # Emoji policy - more comprehensive detection
     emoji_policy = "medium"
-    if re.search(r"\bno emojis\b|\bavoid emojis\b|\bwithout emojis\b", lowered):
-        emoji_policy = "none"
-    elif re.search(r"\bsparingly\b.*emoji|\blight use of emojis\b", lowered):
-        emoji_policy = "light"
-    elif re.search(r"\bemoji[- ]rich\b|\bheavy use of emojis\b", lowered):
-        emoji_policy = "rich"
+    emoji_patterns = {
+        "none": [r"no emojis", r"avoid emojis", r"without emojis", r"do not use emojis", r"never.*emoji"],
+        "light": [r"sparingly.*emoji", r"light use of emojis", r"minimal.*emoji", r"occasional.*emoji"],
+        "rich": [r"emoji[- ]rich", r"heavy use of emojis", r"use emojis", r"emoji.*encouraged"]
+    }
+    
+    for policy_level, patterns in emoji_patterns.items():
+        for pattern in patterns:
+            if re.search(pattern, lowered, re.IGNORECASE):
+                emoji_policy = policy_level
+                break
+        if emoji_policy != "medium":
+            break
 
     return VoiceProfile(
         formality=formality,
@@ -270,82 +365,212 @@ def _infer_product_share(text: str, default_pct: int = 30) -> int:
 
 def _infer_pillars(text: str) -> list[ContentPillar]:
     """
-    Build a set of content pillars from bullet-style lines in the guideline.
-    This is heuristic but gives the user a helpful starting point.
+    Enhanced pillar extraction from various document structures:
+    - Bullet points (-, •, *, ·)
+    - Numbered lists (1., 2., etc.)
+    - Section headings followed by descriptions
+    - Content pillars section explicitly labeled
     """
     lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
-    bullet_lines = [
-        ln for ln in lines if ln.startswith(("-", "•", "*", "·"))
-    ]
-
     pillars: list[ContentPillar] = []
-
-    for ln in bullet_lines:
-        # Strip the bullet character
-        clean = ln.lstrip("-•*·").strip()
-        if not clean:
-            continue
-
-        name = clean
-        description = ""
-
-        # Split "Name – Description" or "Name: Description"
-        for sep in (" - ", " – ", " — ", ": "):
-            if sep in clean:
-                name, description = [part.strip() for part in clean.split(sep, 1)]
-                break
-
-        # Avoid obviously non-pillar lines (too short)
-        if len(name) < 3:
-            continue
-
-        pillars.append(
-            ContentPillar(
-                name=name,
-                description=description,
-                weight=0,
-            )
-        )
-
-        if len(pillars) >= 8:
+    
+    # Look for explicit "Content Pillars" or "Pillars" section
+    pillar_section_start = None
+    for i, line in enumerate(lines):
+        if re.search(r"content\s+pillars?|pillars?", line, re.IGNORECASE):
+            pillar_section_start = i
             break
+    
+    # Extract from pillar section if found
+    if pillar_section_start is not None:
+        section_lines = lines[pillar_section_start:pillar_section_start + 20]
+        for line in section_lines:
+            # Skip section header
+            if re.search(r"content\s+pillars?|pillars?", line, re.IGNORECASE):
+                continue
+            
+            # Check for bullets or numbers
+            if re.match(r"^[-•*·]\s+", line) or re.match(r"^\d+[.)]\s+", line):
+                clean = re.sub(r"^[-•*·\d.)]\s+", "", line).strip()
+                if len(clean) > 3:
+                    name, description = _parse_pillar_line(clean)
+                    if name:
+                        pillars.append(ContentPillar(name=name, description=description, weight=0))
+    
+    # If no explicit section found, look for bullet points throughout
+    if not pillars:
+        bullet_lines = [
+            ln for ln in lines 
+            if re.match(r"^[-•*·]\s+", ln) or re.match(r"^\d+[.)]\s+", ln)
+        ]
+        
+        for ln in bullet_lines:
+            clean = re.sub(r"^[-•*·\d.)]\s+", "", ln).strip()
+            if len(clean) < 3:
+                continue
+            
+            name, description = _parse_pillar_line(clean)
+            if name and len(name) >= 3:
+                # Avoid duplicates
+                if not any(p.name.lower() == name.lower() for p in pillars):
+                    pillars.append(ContentPillar(name=name, description=description, weight=0))
+    
+    # Also look for section headings (all caps or title case) as potential pillars
+    if len(pillars) < 3:
+        for i, line in enumerate(lines):
+            # Check if line looks like a heading (short, title case or all caps)
+            if (len(line) < 50 and 
+                (line.isupper() or line.istitle()) and
+                len(line.split()) <= 5):
+                # Check if next line(s) contain description
+                description = ""
+                if i + 1 < len(lines):
+                    next_line = lines[i + 1]
+                    if len(next_line) > 20 and not next_line[0].isupper():
+                        description = next_line[:200]  # Limit description length
+                
+                name = line.strip()
+                if len(name) >= 3 and not any(p.name.lower() == name.lower() for p in pillars):
+                    pillars.append(ContentPillar(name=name, description=description, weight=0))
+    
+    # Calculate weights if we have pillars
+    if pillars:
+        equal_weight = 100 // len(pillars)
+        remainder = 100 % len(pillars)
+        for i, pillar in enumerate(pillars):
+            pillar.weight = equal_weight + (1 if i < remainder else 0)
+    
+    return pillars[:10]  # Limit to 10 pillars
 
-    # If we didn't find any, return an empty list and fall back to defaults
-    return pillars
+
+def _parse_pillar_line(line: str) -> tuple[str, str]:
+    """Parse a single line into pillar name and description."""
+    name = line
+    description = ""
+    
+    # Split on various separators
+    separators = [" - ", " – ", " — ", ": ", " | ", " — "]
+    for sep in separators:
+        if sep in line:
+            parts = line.split(sep, 1)
+            name = parts[0].strip()
+            description = parts[1].strip() if len(parts) > 1 else ""
+            break
+    
+    # If no separator, check if line is too long (might be description)
+    if not description and len(line) > 60:
+        # Try to split at first sentence
+        sentence_end = re.search(r"[.!?]\s+", line)
+        if sentence_end:
+            name = line[:sentence_end.end()].strip()
+            description = line[sentence_end.end():].strip()
+        else:
+            # Split at first comma if very long
+            if len(line) > 100 and "," in line:
+                parts = line.split(",", 1)
+                name = parts[0].strip()
+                description = parts[1].strip()
+    
+    return (name, description)
 
 
 def _infer_policies(text: str) -> BrandPolicies:
     """
-    Extract basic guardrails:
-    - forbidden phrases from quoted strings after 'avoid', 'do not', 'never say'
-    - brand hashtags from text like '#BrandName'
+    Enhanced policy extraction:
+    - Forbidden phrases from multiple patterns
+    - Brand hashtags extraction
+    - Max hashtags from document
     """
     lowered = text.lower()
-
-    # Forbidden phrases in quotes after common guardrail verbs
     forbidden: list[str] = []
-    guardrail_matches = re.finditer(
-        r"(avoid|do not|never say)[^\"'\n]*[\"']([^\"']+)[\"']",
-        lowered,
-        flags=re.IGNORECASE,
-    )
-    for m in guardrail_matches:
-        phrase = m.group(2).strip()
-        if phrase and phrase not in forbidden:
-            forbidden.append(phrase)
 
-    # Brand hashtags
-    hashtags = sorted(
-        {tag for tag in re.findall(r"#\w+", text) if len(tag) > 1}
-    )
+    # Pattern 1: Quoted phrases after guardrail verbs
+    guardrail_patterns = [
+        r"(avoid|do not|never say|don't use|prohibited|forbidden)[^\"'\n]*[\"']([^\"']+)[\"']",
+        r"[\"']([^\"']+)[\"'][^.\n]*(avoid|do not|never say|prohibited|forbidden)",
+    ]
+    
+    for pattern in guardrail_patterns:
+        matches = re.finditer(pattern, lowered, flags=re.IGNORECASE)
+        for m in matches:
+            phrase = m.group(2) if m.lastindex >= 2 else m.group(1)
+            if phrase:
+                phrase = phrase.strip()
+                if len(phrase) > 2 and phrase.lower() not in [f.lower() for f in forbidden]:
+                    forbidden.append(phrase)
 
-    # Reasonable default cap on hashtags
-    max_hashtags = 5
+    # Pattern 2: Bullet points under "Don't" or "Avoid" sections
+    lines = text.splitlines()
+    in_forbidden_section = False
+    for i, line in enumerate(lines):
+        if re.search(r"^(don'?t|avoid|never|prohibited|forbidden)", line, re.IGNORECASE):
+            in_forbidden_section = True
+            continue
+        
+        if in_forbidden_section:
+            # Check if line is a bullet point
+            if re.match(r"^[-•*·]\s+", line.strip()):
+                phrase = re.sub(r"^[-•*·]\s+", "", line.strip())
+                # Remove quotes if present
+                phrase = re.sub(r"^[\"']|[\"']$", "", phrase).strip()
+                if len(phrase) > 2 and phrase.lower() not in [f.lower() for f in forbidden]:
+                    forbidden.append(phrase)
+            elif not line.strip() or re.match(r"^[A-Z]", line.strip()):
+                # End of section
+                in_forbidden_section = False
+
+    # Pattern 3: Common marketing forbidden phrases if mentioned
+    common_forbidden = [
+        "buy now", "limited time", "act fast", "click here", 
+        "guaranteed", "100% free", "no risk", "urgent"
+    ]
+    for phrase in common_forbidden:
+        if phrase in lowered and phrase not in forbidden:
+            # Check if it's in a "don't use" context
+            context = lowered[max(0, lowered.find(phrase) - 50):lowered.find(phrase) + len(phrase) + 50]
+            if re.search(r"avoid|don'?t|never|prohibited", context, re.IGNORECASE):
+                forbidden.append(phrase)
+
+    # Brand hashtags - extract all hashtags
+    hashtags = []
+    hashtag_matches = re.findall(r"#\w+", text)
+    for tag in hashtag_matches:
+        if len(tag) > 1 and tag.lower() not in [h.lower() for h in hashtags]:
+            hashtags.append(tag)
+    
+    # Also look for hashtag sections
+    hashtag_section_pattern = r"(hashtags?|tags?)[:\s]+([#\w\s,]+)"
+    section_matches = re.finditer(hashtag_section_pattern, text, re.IGNORECASE)
+    for m in section_matches:
+        hashtag_text = m.group(2)
+        found_tags = re.findall(r"#\w+", hashtag_text)
+        for tag in found_tags:
+            if tag.lower() not in [h.lower() for h in hashtags]:
+                hashtags.append(tag)
+
+    # Max hashtags extraction
+    max_hashtags = 5  # Default
+    max_hashtag_patterns = [
+        r"max(?:imum)?\s*(?:of\s*)?(\d+)\s*hashtags?",
+        r"(\d+)\s*hashtags?\s*(?:max|maximum|limit)",
+        r"use\s*(?:up\s*to\s*)?(\d+)\s*hashtags?",
+    ]
+    
+    for pattern in max_hashtag_patterns:
+        match = re.search(pattern, lowered, re.IGNORECASE)
+        if match:
+            try:
+                value = int(match.group(1))
+                if 1 <= value <= 30:
+                    max_hashtags = value
+                    break
+            except ValueError:
+                pass
 
     return BrandPolicies(
-        forbiddenPhrases=forbidden,
+        forbiddenPhrases=forbidden[:50],  # Limit to 50 phrases
         maxHashtags=max_hashtags,
-        brandHashtags=hashtags[:30],
+        brandHashtags=sorted(hashtags)[:30],  # Limit to 30 hashtags
     )
 
 
@@ -565,6 +790,65 @@ async def export_brand_json(brand_id: str):
         
     except HTTPException:
         raise HTTPException(status_code=404, detail="Brand not found")
+
+@router.post("/regenerate-blueprint/{brand_id}")
+async def regenerate_blueprint_from_doc(brand_id: str):
+    """Re-generate blueprint from the uploaded guideline document"""
+    try:
+        brand_data = brand_service.get_brand(brand_id)
+    except HTTPException as e:
+        if e.status_code == 404:
+            raise HTTPException(status_code=404, detail="Brand not found")
+        raise e
+    
+    # Get the uploaded document path
+    guideline_doc = brand_data.get("guidelineDoc", {})
+    doc_path = guideline_doc.get("path")
+    
+    if not doc_path or not Path(doc_path).exists():
+        raise HTTPException(
+            status_code=400,
+            detail="No guideline document found. Please upload a document first."
+        )
+    
+    # Extract text from the document
+    extracted_text = _extract_text_from_guideline(Path(doc_path))
+    
+    if not extracted_text or len(extracted_text.strip()) < 50:
+        raise HTTPException(
+            status_code=400,
+            detail="Could not extract sufficient text from the document. The document may be scanned or corrupted."
+        )
+    
+    # Get existing blueprint to preserve some settings
+    existing_blueprint = brand_data.get("blueprint")
+    
+    # Generate new blueprint from document
+    generated_blueprint = parse_guidelines_to_blueprint(
+        extracted_text, existing_blueprint=existing_blueprint
+    )
+    
+    if generated_blueprint is None:
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to generate blueprint from document"
+        )
+    
+    # Update blueprint status
+    generated_blueprint.status = "regenerated-from-doc"
+    
+    # Update brand data
+    result = brand_service.update_brand(brand_id, {
+        "blueprint": generated_blueprint.dict(),
+        "updatedAt": datetime.now().isoformat()
+    })
+    
+    return {
+        "success": True,
+        "message": "Blueprint regenerated successfully from document",
+        "blueprint": generated_blueprint.dict()
+    }
+
 
 @router.delete("/brand/{brand_id}")
 async def delete_brand(brand_id: str):

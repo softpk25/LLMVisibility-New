@@ -905,7 +905,10 @@
                         <span class="version-badge" x-text="'v' + brand.blueprint.version + ' ' + brand.blueprint.status"></span>
                         <button class="btn-secondary" @click="downloadJSON()">Save JSON</button>
                         <button class="btn-success" :disabled="brand.blueprint.status === 'approved'">Approve Blueprint</button>
-                        <button class="btn-secondary">Re-generate from Doc</button>
+                        <button class="btn-secondary" @click="regenerateBlueprintFromDoc()" :disabled="!brand.guidelineDoc.path || isRegenerating">
+                            <span x-show="!isRegenerating">Re-generate from Doc</span>
+                            <span x-show="isRegenerating">🔄 Regenerating...</span>
+                        </button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -1567,6 +1570,7 @@
                 activeTab: 'onboarding',
                 isGeneratingPlan: false,
                 isGeneratingBlueprint: false,
+                isRegenerating: false,
                 
                 // Brand data
                 brand: {
@@ -1890,6 +1894,55 @@
                         this.isGeneratingBlueprint = false;
                         this.activeTab = 'blueprint';
                     }, 3000);
+                },
+                
+                async regenerateBlueprintFromDoc() {
+                    if (!this.brand.guidelineDoc || !this.brand.guidelineDoc.path) {
+                        alert('Please upload a guideline document first.');
+                        return;
+                    }
+                    
+                    this.isRegenerating = true;
+                    
+                    try {
+                        const response = await fetch(`/api/brand-registration/regenerate-blueprint/${this.brand.id}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        
+                        if (!response.ok) {
+                            const error = await response.json();
+                            throw new Error(error.detail || 'Failed to regenerate blueprint');
+                        }
+                        
+                        const result = await response.json();
+                        
+                        // Update blueprint with regenerated data
+                        if (result.blueprint) {
+                            this.brand.blueprint = {
+                                ...this.brand.blueprint,
+                                ...result.blueprint
+                            };
+                            
+                            // Update product percentage in settings if changed
+                            if (typeof result.blueprint.productDefaultPct === 'number') {
+                                this.settings.productDefaultPct = result.blueprint.productDefaultPct;
+                            }
+                            
+                            // Auto-save the regenerated blueprint
+                            await this.saveBlueprint();
+                            
+                            this.showSaveIndicator('Blueprint regenerated from document!');
+                        }
+                        
+                    } catch (error) {
+                        console.error('Regeneration error:', error);
+                        this.showErrorIndicator('Failed to regenerate blueprint: ' + error.message);
+                    } finally {
+                        this.isRegenerating = false;
+                    }
                 },
 
                 downloadJSON() {

@@ -1,0 +1,2065 @@
+<!DOCTYPE html>
+<html lang="en">
+	
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Workflow V3 - Prometrix</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.2/cdn.min.js" defer></script>
+	
+	
+	<style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --primary: #5046e5;
+            --primary-dark: #4039c0;
+            --secondary: #00c4cc;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7fafc;
+            min-height: 100vh;
+            display: flex;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            border-right: 1px solid #e2e8f0;
+            padding: 1.5rem 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .menu-item {
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #718096;
+            font-weight: 500;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+        
+        .menu-item:hover {
+            background-color: rgba(80, 70, 229, 0.05);
+            color: var(--primary);
+        }
+        
+        .menu-item.active {
+            color: var(--primary);
+            background-color: rgba(80, 70, 229, 0.1);
+            border-left-color: var(--primary);
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: var(--primary);
+            border: 1px solid #e2e8f0;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(80, 70, 229, 0.05);
+            border-color: var(--primary);
+        }
+        
+        .card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-family: inherit;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(80, 70, 229, 0.1);
+        }
+        
+        .post-type-card {
+            border: 2px solid #e5e7eb;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            transition: all 0.3s;
+            background: white;
+            cursor: pointer;
+        }
+        
+        .post-type-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .post-type-card.active {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(80, 70, 229, 0.2);
+        }
+        
+        .post-item {
+            background: #f0f4ff;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            transition: all 0.2s;
+        }
+        
+        .post-item:hover {
+            background: #e0e7ff;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .badge-primary {
+            background: #ede9fe;
+            color: #5b21b6;
+        }
+        
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .tab {
+            padding: 0.75rem 1rem;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-weight: 500;
+            color: #6b7280;
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .section-divider {
+            border-top: 2px solid #e5e7eb;
+            margin: 2rem 0;
+            padding-top: 2rem;
+        }
+    </style>
+	<style>
+	    body {
+	      font-family: 'Inter', sans-serif;
+	      background: #fff;
+	      color: #000;
+	      margin: 0;
+	      padding: 0;
+	      overflow-x: hidden;
+	    }
+	    header {
+	      display: flex;
+	      justify-content: space-between;
+	      align-items: center;
+	      padding: 1rem;
+	      background-color: rgba(59, 130, 246, 0.5);
+	      color: #000;
+	    }
+	    .calendar-container {
+	      padding: 1rem;
+	    }
+	    .calendar-nav button {
+	      background: #5046e5;
+	      color: white;
+	      border: none;
+	      border-radius: 6px;
+	      padding: 0.5rem 1rem;
+	      margin: 0 0.25rem;
+	      cursor: pointer;
+	    }
+	    .calendar-nav button:hover {
+	      opacity: 0.9;
+	    }
+	    .calendar {
+	      display: grid;
+	      grid-template-columns: repeat(7, 1fr);
+	      gap: 0.5rem;
+	      margin-top: 1rem;
+	    }
+	    .day {
+	      border: 1px solid #ddd;
+	      border-radius: 8px;
+	      padding: 0.5rem;
+	      min-height: 100px;
+	      background: rgba(59, 130, 246, 0.05);
+	      cursor: pointer;
+	      transition: background 0.2s;
+	    }
+	    .day:hover {
+	      background: rgba(59, 130, 246, 0.1);
+	    }
+	    .event {
+	      background: #5046e5;
+	      color: white;
+	      border-radius: 4px;
+	      padding: 0.25rem;
+	      margin-top: 0.25rem;
+	      font-size: 0.8rem;
+	      overflow: hidden;
+	      text-overflow: ellipsis;
+	      white-space: nowrap;
+	    }
+	    .modal {
+	      display: none;
+	      position: fixed;
+	      top: 0; left: 0;
+	      width: 100%; height: 100%;
+	      background: rgba(0, 0, 0, 0.5);
+	      justify-content: center;
+	      align-items: center;
+	      z-index: 1000;
+	    }
+	    .modal-content {
+	      background: #fff;
+	      padding: 1rem;
+	      border-radius: 8px;
+	      max-width: 400px;
+	      width: 90%;
+	    }
+	    .close-btn {
+	      background: #5046e5;
+	      color: white;
+	      border: none;
+	      padding: 0.5rem 1rem;
+	      border-radius: 6px;
+	      cursor: pointer;
+	    }
+	    .view-switcher {
+	      text-align: center;
+	      margin-top: 1rem;
+	    }
+	    .view-switcher button {
+	      background: none;
+	      border: 2px solid #5046e5;
+	      color: #5046e5;
+	      padding: 0.5rem 1rem;
+	      border-radius: 6px;
+	      cursor: pointer;
+	      margin: 0 0.25rem;
+	    }
+	    .view-switcher button.active {
+	      background: #5046e5;
+	      color: white;
+	    }
+	    @media (max-width: 768px) {
+	      .calendar {
+	        grid-template-columns: repeat(2, 1fr);
+	      }
+	    }
+	    @media (max-width: 480px) {
+	      .calendar {
+	        grid-template-columns: 1fr;
+	      }
+	      .calendar-nav button, .view-switcher button {
+	        width: 100%;
+	        margin: 0.25rem 0;
+	      }
+	    }
+		#month-container {
+	  text-align: center;
+	  margin-top: 1rem; /* optional spacing */
+	}
+	  </style>
+</head>
+<body x-data="workflowApp()">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div style="padding: 0 1.5rem 1.5rem; border-bottom: 1px solid #e2e8f0;">
+            <div style="font-size: 24px; font-weight: 800; color: var(--primary);">Prometrix</div>
+            <div style="font-size: 10px; color: #718096; letter-spacing: 1px;">AI-POWERED MARKETING</div>
+        </div>
+        <nav style="margin-top: 1.5rem;">
+            <ul style="list-style: none;">
+                <li>
+                    <a class="menu-item" :class="{ 'active': activeView === 'workflow' }" @click="activeView = 'workflow'">
+                        <span>🚀</span>
+                        <span>Campaign Workflow</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="menu-item" :class="{ 'active': activeView === 'calendar' }" @click="activeView = 'calendar'">
+                        <span>📅</span>
+                        <span>Calendar</span>
+                    </a>
+                </li>
+                <li>
+                    <!--<a class="menu-item" :class="{ 'active': activeView === 'settings' }" @click="activeView = 'settings'">
+                        <span>⚙️</span>
+                        <span>Settings</span>
+                    </a>-->
+					<a class="menu-item" href="/fb-smm-agent-setting">
+                        <span>⚙️</span>
+                        <span>Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Campaign Workflow -->
+        <div x-show="activeView === 'workflow'">
+            <h1 style="font-size: 1.875rem; font-weight: 700; margin-bottom: 0.5rem;">Campaign Workflow</h1>
+            <p style="color: #718096; margin-bottom: 2rem;">Create and manage your social media campaigns</p>
+            
+            <!-- Step 1: Campaign Setup (REORDERED) -->
+            <div x-show="workflow.currentStep === 1" class="card">
+                <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">Step 1: Campaign Setup</h2>
+                
+                <!-- 1. Campaign Basics (FIRST) -->
+                <div>
+                    <h3 style="font-weight: 600; font-size: 1.125rem; margin-bottom: 1rem; color: var(--primary);">Campaign Basics</h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+                        <div>
+                            <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Campaign Name</label>
+                            <input type="text" x-model="workflow.name" class="form-control" placeholder="e.g., Summer Product Launch">
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Campaign Objective</label>
+                            <select x-model="workflow.objective" class="form-control">
+                                <option>Brand Awareness</option>
+                                <option>Engagement</option>
+                                <option>Lead Generation</option>
+                                <option>Website Traffic</option>
+                                <option>Sales</option>
+                            </select>
+                        </div>
+                        
+                        <div style="grid-column: span 2;">
+                            <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Target Audience</label>
+                            <textarea x-model="workflow.audience" class="form-control" rows="3" placeholder="Describe your target audience..." onblur="selectPersona(this)"></textarea>
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Start Date</label>
+                            <input type="date" x-model="workflow.startDate" class="form-control">
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">End Date</label>
+                            <input type="date" x-model="workflow.endDate" class="form-control">
+                        </div>
+                        
+                        <div style="grid-column: span 2;">
+                            <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Frequency</label>
+                            <select x-model="workflow.frequency" class="form-control">
+                                <option>Daily</option>
+                                <option>Every 2 days</option>
+                                <option>3 times per week</option>
+                                <option>Weekly</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 2. Personas -->
+                <div class="section-divider">
+                    <h3 style="font-weight: 600; font-size: 1.125rem; margin-bottom: 1rem; color: var(--primary);">Personas</h3>
+                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Select Personas</label>
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        <template x-for="persona in personas" :key="persona.id">
+                            <label style="display: flex; align-items: center; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; cursor: pointer; transition: all 0.2s;" :style="workflow.selectedPersonaIds.includes(persona.id) ? 'background: rgba(80, 70, 229, 0.05); border-color: var(--primary);' : ''" @click="togglePersona(persona.id)">
+                                <input type="checkbox" :checked="workflow.selectedPersonaIds.includes(persona.id)" style="margin-right: 0.75rem; cursor: pointer;">
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; font-size: 0.9rem;" x-text="persona.name"></div>
+                                    <div style="font-size: 0.75rem; color: #718096; margin-top: 0.125rem;" x-text="persona.summary"></div>
+                                </div>
+                                <span class="badge" :class="persona.type === 'AI' ? 'badge-primary' : 'badge-success'" x-text="persona.type"></span>
+                            </label>
+                        </template>
+                    </div>
+                    <p style="font-size: 0.75rem; color: #718096; margin-top: 0.5rem;">
+                        Manage personas in Settings → Personas
+                    </p>
+                </div>
+                
+                <!-- 3. Brand -->
+                <div class="section-divider">
+                    <h3 style="font-weight: 600; font-size: 1.125rem; margin-bottom: 1rem; color: var(--primary);">Brand</h3>
+                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Select Brand</label>
+                    <select x-model="workflow.selectedBrandId" class="form-control" @change="loadBrandDefaults()">
+                        <option value="">Select a brand...</option>
+                        <template x-for="brand in brands" :key="brand.id">
+                            <option :value="brand.id" x-text="brand.brandName"></option>
+                        </template>
+                    </select>
+                    <p style="font-size: 0.75rem; color: #718096; margin-top: 0.25rem;">
+                        Manage brands in Settings → Brands
+                    </p>
+                </div>
+                
+                <!-- 4. Products -->
+                <div class="section-divider">
+                    <h3 style="font-weight: 600; font-size: 1.125rem; margin-bottom: 1rem; color: var(--primary);">Products</h3>
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" x-model="workflow.useProducts" style="margin-right: 0.5rem;">
+                        <span style="font-weight: 500;">Use products in this campaign</span>
+                    </label>
+                    
+                    <div x-show="workflow.useProducts" style="margin-top: 1rem;">
+                        <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Select Products</label>
+                        <select multiple x-model="workflow.selectedProductIds" class="form-control" style="height: 80px;">
+                            <template x-for="product in products" :key="product.id">
+                                <option :value="product.id" x-text="`${product.name} - ${product.sku} (${product.category})`"></option>
+                            </template>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- 5. Languages -->
+                <div class="section-divider">
+                    <h3 style="font-weight: 600; font-size: 1.125rem; margin-bottom: 1rem; color: var(--primary);">Languages</h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+                        <div>
+                            <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Primary Language</label>
+                            <select x-model="workflow.primaryLanguage" class="form-control">
+                                <option value="en">🇺🇸 English</option>
+                                <option value="es">🇪🇸 Spanish</option>
+                                <option value="fr">🇫🇷 French</option>
+                                <option value="de">🇩🇪 German</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; align-items: end;">
+                            <label style="display: flex; align-items: center; cursor: pointer;">
+                                <input type="checkbox" x-model="workflow.isMultilingual" style="margin-right: 0.5rem;">
+                                <span style="font-weight: 500;">Enable Multilingual Posts</span>
+                            </label>
+                        </div>
+                    </div>
+					 <div class="section-divider">
+					       <div class="form-group">
+                                <label class="form-label">Tone</label>
+                                <select x-model="workflow.tone" class="form-control" onchange="selectTone(this)">
+                                    <option value="friendly">Friendly</option>
+                                    <option value="professional">Professional</option>
+                                    <option value="bold">Bold</option>
+                                    <option value="playful">Playful</option>
+                                    <option value="inspiring">Inspiring</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label  class="form-label">LLM Option</label>
+                                <select id="llm-option" x-model="workflow.cta" class="form-control" onchange="selectLLM(this)">
+                                    <option value="openai">OpenAI</option>
+                                    <option value="gemini">Gemini</option>
+                                    <option value="midjourney">MidJourney</option>
+                                    
+                                </select>
+                            </div>
+                    </div>
+                    
+                    <div x-show="workflow.isMultilingual" style="margin-top: 1rem;">
+                        <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Additional Languages</label>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            <label style="cursor: pointer; padding: 0.5rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem;" :style="workflow.additionalLanguages.includes('es') ? 'background: var(--primary); color: white;' : ''">
+                                <input type="checkbox" value="es" x-model="workflow.additionalLanguages" style="display: none;">
+                                🇪🇸 Spanish
+                            </label>
+                            <label style="cursor: pointer; padding: 0.5rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem;" :style="workflow.additionalLanguages.includes('fr') ? 'background: var(--primary); color: white;' : ''">
+                                <input type="checkbox" value="fr" x-model="workflow.additionalLanguages" style="display: none;">
+                                🇫🇷 French
+                            </label>
+                            <label style="cursor: pointer; padding: 0.5rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem;" :style="workflow.additionalLanguages.includes('de') ? 'background: var(--primary); color: white;' : ''">
+                                <input type="checkbox" value="de" x-model="workflow.additionalLanguages" style="display: none;">
+                                🇩🇪 German
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 6. Primary Actions -->
+                <div class="section-divider">
+                    <h3 style="font-weight: 600; font-size: 1.125rem; margin-bottom: 1rem; color: var(--primary);">Primary Actions</h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                        <button @click="createCampaignBlueprint()" class="btn-primary" :disabled="!canProceed()">
+                            <div>✨ Create Campaign Blueprint</div>
+                            <div style="font-size: 0.75rem; opacity: 0.9; margin-top: 0.25rem;">Auto-generate strategy & content</div>
+                        </button>
+                        <button @click="goToMixThemes()" class="btn-secondary" :disabled="!canProceed()">
+                            <div>🎨 Choose Post Mix & Themes</div>
+                            <div style="font-size: 0.75rem; opacity: 0.7; margin-top: 0.25rem;">Manual configuration</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 2: Post Type Mix & Content Types (NEW CARD UI) -->
+            <div x-show="workflow.currentStep === 2" class="card">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.5rem; font-weight: 700;">Step 2: Post Mix & Themes</h2>
+                    <button @click="goBack()" class="btn-secondary">← Back</button>
+                </div>
+                
+                <p style="color: #718096; font-size: 0.875rem; margin-bottom: 2rem;">Select post types and distribute content themes. Each type must have themes that sum to its total count.</p>
+                
+                <!-- Post Type Cards Grid -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                    <!-- Image Posts -->
+                    <div class="post-type-card" :class="{ 'active': workflow.types.image.count > 0 }" onclick="selectFormat(this, 'Image Posts')">
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 120px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white;">
+                            📷
+                        </div>
+                        <div style="padding: 1.5rem;">
+                            <div style="font-weight: 600; font-size: 1.125rem; margin-bottom: 0.5rem;">Image Posts</div>
+                            <div style="color: #718096; font-size: 0.875rem; margin-bottom: 1rem;">Single photo with caption</div>
+                            
+                            <label style="display: block; font-weight: 500; font-size: 0.875rem; margin-bottom: 0.5rem;">How many Image Posts?</label>
+                            <input type="number" x-model.number="workflow.types.image.count" class="form-control" min="0" @input="resetSplitIfZero('image')">
+                            
+                            <div x-show="workflow.types.image.count > 0" style="margin-top: 1rem;">
+                                <div style="font-size: 0.875rem; font-weight: 500; margin-bottom: 0.75rem; color: #374151;">Distribute content types <span style="font-size: 0.75rem; color: #6b7280;">(must total <span x-text="workflow.types.image.count"></span>)</span></div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                                    <input type="number" x-model.number="workflow.types.image.split.educational" class="form-control" placeholder="📚 Educational" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.image.split.entertaining" class="form-control" placeholder="🎉 Entertaining" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.image.split.promotional" class="form-control" placeholder="🎯 Promotional" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.image.split.ugc" class="form-control" placeholder="👥 UGC" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.image.split.seasonal" class="form-control" placeholder="🌟 Seasonal" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.image.split.reactive" class="form-control" placeholder="⚡ Reactive" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                </div>
+                                <div style="margin-top: 0.75rem; text-align: center;">
+                                    <span class="badge" :class="isTypeBalanced('image') ? 'badge-success' : 'badge-warning'">
+                                        <template x-if="isTypeBalanced('image')">
+                                            <span>✅ Balanced</span>
+                                        </template>
+                                        <template x-if="!isTypeBalanced('image')">
+                                            <span x-text="deltaForType('image') > 0 ? `Needs ${deltaForType('image')} more` : `Over by ${Math.abs(deltaForType('image'))}`"></span>
+                                        </template>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Carousel Posts -->
+                    <div class="post-type-card" :class="{ 'active': workflow.types.carousel.count > 0 }" onclick="selectFormat(this, 'Carousels')">
+                        <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); height: 120px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white;">
+                            🎠
+                        </div>
+                        <div style="padding: 1.5rem;">
+                            <div style="font-weight: 600; font-size: 1.125rem; margin-bottom: 0.5rem;">Carousels</div>
+                            <div style="color: #718096; font-size: 0.875rem; margin-bottom: 1rem;">Multiple swipeable images</div>
+                            
+                            <label style="display: block; font-weight: 500; font-size: 0.875rem; margin-bottom: 0.5rem;">How many Carousels?</label>
+                            <input type="number" x-model.number="workflow.types.carousel.count" class="form-control" min="0" @input="resetSplitIfZero('carousel')">
+                            
+                            <div x-show="workflow.types.carousel.count > 0" style="margin-top: 1rem;">
+                                <div style="font-size: 0.875rem; font-weight: 500; margin-bottom: 0.75rem; color: #374151;">Distribute content types <span style="font-size: 0.75rem; color: #6b7280;">(must total <span x-text="workflow.types.carousel.count"></span>)</span></div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                                    <input type="number" x-model.number="workflow.types.carousel.split.educational" class="form-control" placeholder="📚 Educational" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.carousel.split.entertaining" class="form-control" placeholder="🎉 Entertaining" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.carousel.split.promotional" class="form-control" placeholder="🎯 Promotional" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.carousel.split.ugc" class="form-control" placeholder="👥 UGC" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.carousel.split.seasonal" class="form-control" placeholder="🌟 Seasonal" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.carousel.split.reactive" class="form-control" placeholder="⚡ Reactive" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                </div>
+                                <div style="margin-top: 0.75rem; text-align: center;">
+                                    <span class="badge" :class="isTypeBalanced('carousel') ? 'badge-success' : 'badge-warning'">
+                                        <template x-if="isTypeBalanced('carousel')">
+                                            <span>✅ Balanced</span>
+                                        </template>
+                                        <template x-if="!isTypeBalanced('carousel')">
+                                            <span x-text="deltaForType('carousel') > 0 ? `Needs ${deltaForType('carousel')} more` : `Over by ${Math.abs(deltaForType('carousel'))}`"></span>
+                                        </template>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Video Posts -->
+                    <div class="post-type-card" :class="{ 'active': workflow.types.video.count > 0 }" onclick="selectFormat(this, 'Videos')">
+                        <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); height: 120px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white;">
+                            🎬
+                        </div>
+                        <div style="padding: 1.5rem;">
+                            <div style="font-weight: 600; font-size: 1.125rem; margin-bottom: 0.5rem;">Videos</div>
+                            <div style="color: #718096; font-size: 0.875rem; margin-bottom: 1rem;">Video content posts</div>
+                            
+                            <label style="display: block; font-weight: 500; font-size: 0.875rem; margin-bottom: 0.5rem;">How many Videos?</label>
+                            <input type="number" x-model.number="workflow.types.video.count" class="form-control" min="0" @input="resetSplitIfZero('video')">
+                            
+                            <div x-show="workflow.types.video.count > 0" style="margin-top: 1rem;">
+                                <div style="font-size: 0.875rem; font-weight: 500; margin-bottom: 0.75rem; color: #374151;">Distribute content types <span style="font-size: 0.75rem; color: #6b7280;">(must total <span x-text="workflow.types.video.count"></span>)</span></div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                                    <input type="number" x-model.number="workflow.types.video.split.educational" class="form-control" placeholder="📚 Educational" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.video.split.entertaining" class="form-control" placeholder="🎉 Entertaining" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.video.split.promotional" class="form-control" placeholder="🎯 Promotional" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.video.split.ugc" class="form-control" placeholder="👥 UGC" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.video.split.seasonal" class="form-control" placeholder="🌟 Seasonal" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.video.split.reactive" class="form-control" placeholder="⚡ Reactive" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                </div>
+                                <div style="margin-top: 0.75rem; text-align: center;">
+                                    <span class="badge" :class="isTypeBalanced('video') ? 'badge-success' : 'badge-warning'">
+                                        <template x-if="isTypeBalanced('video')">
+                                            <span>✅ Balanced</span>
+                                        </template>
+                                        <template x-if="!isTypeBalanced('video')">
+                                            <span x-text="deltaForType('video') > 0 ? `Needs ${deltaForType('video')} more` : `Over by ${Math.abs(deltaForType('video'))}`"></span>
+                                        </template>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Poll Posts -->
+                    <div class="post-type-card" :class="{ 'active': workflow.types.poll.count > 0 }" onclick="selectFormat(this, 'Polls')">
+                        <div style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); height: 120px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white;">
+                            📊
+                        </div>
+                        <div style="padding: 1.5rem;">
+                            <div style="font-weight: 600; font-size: 1.125rem; margin-bottom: 0.5rem;">Polls</div>
+                            <div style="color: #718096; font-size: 0.875rem; margin-bottom: 1rem;">Interactive polls</div>
+                            
+                            <label style="display: block; font-weight: 500; font-size: 0.875rem; margin-bottom: 0.5rem;">How many Polls?</label>
+                            <input type="number" x-model.number="workflow.types.poll.count" class="form-control" min="0" @input="resetSplitIfZero('poll')">
+                            
+                            <div x-show="workflow.types.poll.count > 0" style="margin-top: 1rem;">
+                                <div style="font-size: 0.875rem; font-weight: 500; margin-bottom: 0.75rem; color: #374151;">Distribute content types <span style="font-size: 0.75rem; color: #6b7280;">(must total <span x-text="workflow.types.poll.count"></span>)</span></div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                                    <input type="number" x-model.number="workflow.types.poll.split.educational" class="form-control" placeholder="📚 Educational" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.poll.split.entertaining" class="form-control" placeholder="🎉 Entertaining" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.poll.split.promotional" class="form-control" placeholder="🎯 Promotional" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.poll.split.ugc" class="form-control" placeholder="👥 UGC" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.poll.split.seasonal" class="form-control" placeholder="🌟 Seasonal" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.poll.split.reactive" class="form-control" placeholder="⚡ Reactive" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                </div>
+                                <div style="margin-top: 0.75rem; text-align: center;">
+                                    <span class="badge" :class="isTypeBalanced('poll') ? 'badge-success' : 'badge-warning'">
+                                        <template x-if="isTypeBalanced('poll')">
+                                            <span>✅ Balanced</span>
+                                        </template>
+                                        <template x-if="!isTypeBalanced('poll')">
+                                            <span x-text="deltaForType('poll') > 0 ? `Needs ${deltaForType('poll')} more` : `Over by ${Math.abs(deltaForType('poll'))}`"></span>
+                                        </template>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Story Posts -->
+                    <div class="post-type-card" :class="{ 'active': workflow.types.story.count > 0 }" onclick="selectFormat(this, 'Stories')">
+                        <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); height: 120px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white;">
+                            📱
+                        </div>
+                        <div style="padding: 1.5rem;">
+                            <div style="font-weight: 600; font-size: 1.125rem; margin-bottom: 0.5rem;">Stories</div>
+                            <div style="color: #718096; font-size: 0.875rem; margin-bottom: 1rem;">24-hour ephemeral content</div>
+                            
+                            <label style="display: block; font-weight: 500; font-size: 0.875rem; margin-bottom: 0.5rem;">How many Stories?</label>
+                            <input type="number" x-model.number="workflow.types.story.count" class="form-control" min="0" @input="resetSplitIfZero('story')">
+                            
+                            <div x-show="workflow.types.story.count > 0" style="margin-top: 1rem;">
+                                <div style="font-size: 0.875rem; font-weight: 500; margin-bottom: 0.75rem; color: #374151;">Distribute content types <span style="font-size: 0.75rem; color: #6b7280;">(must total <span x-text="workflow.types.story.count"></span>)</span></div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                                    <input type="number" x-model.number="workflow.types.story.split.educational" class="form-control" placeholder="📚 Educational" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.story.split.entertaining" class="form-control" placeholder="🎉 Entertaining" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.story.split.promotional" class="form-control" placeholder="🎯 Promotional" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.story.split.ugc" class="form-control" placeholder="👥 UGC" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.story.split.seasonal" class="form-control" placeholder="🌟 Seasonal" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.story.split.reactive" class="form-control" placeholder="⚡ Reactive" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                </div>
+                                <div style="margin-top: 0.75rem; text-align: center;">
+                                    <span class="badge" :class="isTypeBalanced('story') ? 'badge-success' : 'badge-warning'">
+                                        <template x-if="isTypeBalanced('story')">
+                                            <span>✅ Balanced</span>
+                                        </template>
+                                        <template x-if="!isTypeBalanced('story')">
+                                            <span x-text="deltaForType('story') > 0 ? `Needs ${deltaForType('story')} more` : `Over by ${Math.abs(deltaForType('story'))}`"></span>
+                                        </template>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Link Posts -->
+                    <div class="post-type-card" :class="{ 'active': workflow.types.link.count > 0 }" onclick="selectFormat(this, 'Link Posts')">
+                        <div style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); height: 120px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white;">
+                            🔗
+                        </div>
+                        <div style="padding: 1.5rem;">
+                            <div style="font-weight: 600; font-size: 1.125rem; margin-bottom: 0.5rem;">Link Posts</div>
+                            <div style="color: #718096; font-size: 0.875rem; margin-bottom: 1rem;">Share external links</div>
+                            
+                            <label style="display: block; font-weight: 500; font-size: 0.875rem; margin-bottom: 0.5rem;">How many Link Posts?</label>
+                            <input type="number" x-model.number="workflow.types.link.count" class="form-control" min="0" @input="resetSplitIfZero('link')">
+                            
+                            <div x-show="workflow.types.link.count > 0" style="margin-top: 1rem;">
+                                <div style="font-size: 0.875rem; font-weight: 500; margin-bottom: 0.75rem; color: #374151;">Distribute content types <span style="font-size: 0.75rem; color: #6b7280;">(must total <span x-text="workflow.types.link.count"></span>)</span></div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                                    <input type="number" x-model.number="workflow.types.link.split.educational" class="form-control" placeholder="📚 Educational" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.link.split.entertaining" class="form-control" placeholder="🎉 Entertaining" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.link.split.promotional" class="form-control" placeholder="🎯 Promotional" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.link.split.ugc" class="form-control" placeholder="👥 UGC" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.link.split.seasonal" class="form-control" placeholder="🌟 Seasonal" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                    <input type="number" x-model.number="workflow.types.link.split.reactive" class="form-control" placeholder="⚡ Reactive" min="0" style="padding: 0.5rem; font-size: 0.875rem;">
+                                </div>
+                                <div style="margin-top: 0.75rem; text-align: center;">
+                                    <span class="badge" :class="isTypeBalanced('link') ? 'badge-success' : 'badge-warning'">
+                                        <template x-if="isTypeBalanced('link')">
+                                            <span>✅ Balanced</span>
+                                        </template>
+                                        <template x-if="!isTypeBalanced('link')">
+                                            <span x-text="deltaForType('link') > 0 ? `Needs ${deltaForType('link')} more` : `Over by ${Math.abs(deltaForType('link'))}`"></span>
+                                        </template>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Overall Status -->
+                <div style="background: linear-gradient(135deg, rgba(80, 70, 229, 0.1), rgba(0, 196, 204, 0.1)); padding: 1.5rem; border-radius: 0.75rem; margin-bottom: 2rem; text-align: center;">
+                    <div style="font-size: 0.875rem; color: #718096; margin-bottom: 0.5rem;">Total Posts Planned</div>
+                    <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary);" x-text="totalPlannedCount()"></div>
+                    
+                    <div x-show="totalPlannedCount() > 0 && !allActiveTypesBalanced()" style="margin-top: 1rem;">
+                        <span class="badge badge-warning">⚠️ Some types need balancing</span>
+                    </div>
+                    <div x-show="totalPlannedCount() > 0 && allActiveTypesBalanced()" style="margin-top: 1rem;">
+                        <span class="badge badge-success">✅ All types balanced and ready!</span>
+                    </div>
+                </div>
+                
+                <!-- Actions -->
+                <div style="display: flex; justify-content: space-between;">
+                    <button @click="goBack()" class="btn-secondary">← Back</button>
+                    <button @click="generatePlanFromMix()" class="btn-primary" :disabled="totalPlannedCount() === 0 || !allActiveTypesBalanced()">
+                        Generate Plan & Content →
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Calendar -->
+        <div x-show="activeView === 'calendar'" x-init="loadApprovedCampaigns()">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+                <div>
+                    <h1 style="font-size: 1.875rem; font-weight: 700; margin-bottom: 0.5rem;">Calendar</h1>
+                    <p style="color: #718096;">Manage your content schedule</p>
+                </div>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <button @click="exportCampaign()" class="btn-secondary" :disabled="!calendar.selectedCampaignId">📥 Export</button>
+                    <button @click="calendar.view = 'list'" class="btn-secondary" :style="calendar.view === 'list' ? 'background: var(--primary); color: white;' : ''">List</button>
+                    <button @click="calendar.view = 'month'" class="btn-secondary" :style="calendar.view === 'month' ? 'background: var(--primary); color: white;' : ''">Month</button>
+                </div>
+            </div>
+            
+            <!-- Campaign Selection -->
+            <div class="card" style="margin-bottom: 1rem;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <label style="font-weight: 600; color: #374151;">Select Campaign:</label>
+                    <select x-model="calendar.selectedCampaignId" @change="onCampaignChange()" class="form-control" style="max-width: 300px;">
+                        <option value="">Choose a campaign...</option>
+                        <template x-for="campaign in calendar.campaigns" :key="campaign.campaignId">
+                            <option :value="campaign.campaignId" x-text="`${campaign.objective} (${campaign.duration} days)`"></option>
+                        </template>
+                    </select>
+                    <template x-if="calendar.loading">
+                        <span style="color: #718096; font-size: 0.875rem;">Loading...</span>
+                    </template>
+                    <template x-if="calendar.error">
+                        <span style="color: #dc2626; font-size: 0.875rem;" x-text="calendar.error"></span>
+                    </template>
+                </div>
+            </div>
+            
+            <button @click="backToWorkflow()" class="btn-secondary" style="margin-bottom: 1rem;">← Back to Workflow</button>
+            
+            <!-- List View -->
+            <div x-show="calendar.view === 'list'" class="card">
+                <template x-if="calendar.posts.length === 0 && !calendar.selectedCampaignId">
+                    <div style="text-align: center; padding: 3rem; color: #718096;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">📅</div>
+                        <p>Select a campaign above to view scheduled content</p>
+                    </div>
+                </template>
+                
+                <template x-if="calendar.posts.length === 0 && calendar.selectedCampaignId && !calendar.loading">
+                    <div style="text-align: center; padding: 3rem; color: #718096;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">📝</div>
+                        <p>No posts found for this campaign</p>
+                    </div>
+                </template>
+                
+                <template x-if="calendar.posts.length > 0">
+                    <div style="overflow-x: auto;">
+						
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 2px solid #e2e8f0;">
+                                    <th style="text-align: left; padding: 0.75rem;">Date/Time</th>
+                                    <th style="text-align: left; padding: 0.75rem;">Type</th>
+                                    <th style="text-align: left; padding: 0.75rem;">Theme</th>
+                                    <th style="text-align: left; padding: 0.75rem;">Topic</th>
+                                    <th style="text-align: left; padding: 0.75rem;">Status</th>
+                                    <th style="text-align: left; padding: 0.75rem;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template x-for="item in calendar.posts" :key="item.id">
+                                    <tr style="border-bottom: 1px solid #e2e8f0;" class="post-item-row">
+                                        <td style="padding: 0.75rem;" x-text="item.date + ' ' + item.time"></td>
+                                        <td style="padding: 0.75rem;" x-text="item.type"></td>
+                                        <td style="padding: 0.75rem;" x-text="item.theme"></td>
+                                        <td style="padding: 0.75rem;" x-text="item.topic"></td>
+                                        <td style="padding: 0.75rem;">
+                                            <span class="badge" :class="item.status === 'scheduled' ? 'badge-success' : item.status === 'published' ? 'badge-primary' : 'badge-warning'" x-text="item.status"></span>
+                                        </td>
+                                        <td style="padding: 0.75rem;">
+                                            <div style="display: flex; gap: 0.5rem;">
+                                                <button @click="openPostEditor(item.id)" class="btn-secondary" style="padding: 0.25rem 0.75rem; font-size: 0.875rem;">Edit</button>
+                                                <button @click="movePost(item.id)" class="btn-secondary" style="padding: 0.25rem 0.75rem; font-size: 0.875rem;">📅 Move</button>
+                                                <button @click="deletePostFromCalendar(item.id)" class="btn-secondary" style="padding: 0.25rem 0.75rem; font-size: 0.875rem; color: #dc2626; border-color: #fecaca;">🗑️</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </template>
+            </div>
+            
+            <!-- Month View -->
+            <div x-show="calendar.view === 'month'" class="card">
+				<div id="month-container"><span id="month-name"></span></div>
+				  <div class="calendar-container">
+				    <div class="view-switcher">
+				      <button id="monthViewBtn" class="active">Month View</button>
+					  
+				      <button id="weekViewBtn">Week View</button>
+				    </div>
+					<div class="calendar-nav" id="month-container">
+				      <button id="prev">Prev</button>
+				      <button id="today">Today</button>
+				      <button id="next">Next</button>
+				    </div>
+				    <div id="calendar" class="calendar"></div>
+				  </div>
+
+				  <div id="modal" class="modal">
+				    <div class="modal-content">
+				      <h2 id="modalTitle"></h2>
+				      <p id="modalDate"></p>
+				      <p id="modalDescription"></p>
+				      <button class="close-btn" id="closeModal">Close</button>
+				    </div>
+				  </div>
+                <!--<div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <div style="font-weight: 600; text-align: center; padding: 0.5rem;">Sun</div>
+                    <div style="font-weight: 600; text-align: center; padding: 0.5rem;">Mon</div>
+                    <div style="font-weight: 600; text-align: center; padding: 0.5rem;">Tue</div>
+                    <div style="font-weight: 600; text-align: center; padding: 0.5rem;">Wed</div>
+                    <div style="font-weight: 600; text-align: center; padding: 0.5rem;">Thu</div>
+                    <div style="font-weight: 600; text-align: center; padding: 0.5rem;">Fri</div>
+                    <div style="font-weight: 600; text-align: center; padding: 0.5rem;">Sat</div>
+                </div>-->
+               <!-- <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: #e2e8f0; border: 1px solid #e2e8f0;">
+                    <template x-for="day in 35" :key="day">
+                        <div style="background: white; min-height: 100px; padding: 0.5rem;">
+                            <div style="font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;" x-text="day"></div>
+                            <template x-for="item in getItemsForDay(day)" :key="item.id">
+                                <div class="post-item" title="Click to view & edit">
+                                    <div @click="openPostEditor(item.id)" x-text="item.type" style="cursor: pointer;"></div>
+                                    <div @click="openPostEditor(item.id)" style="font-size: 0.625rem; cursor: pointer;" x-text="item.time"></div>
+                                    <div style="display: flex; gap: 0.25rem; margin-top: 0.25rem;">
+                                        <button @click.stop="movePost(item.id)" style="font-size: 0.625rem; padding: 0.125rem 0.25rem; background: white; border: 1px solid #e2e8f0; border-radius: 0.25rem; cursor: pointer;" title="Move">📅</button>
+                                        <button @click.stop="deletePostFromCalendar(item.id)" style="font-size: 0.625rem; padding: 0.125rem 0.25rem; background: white; border: 1px solid #fecaca; color: #dc2626; border-radius: 0.25rem; cursor: pointer;" title="Delete">🗑️</button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                </div>-->
+            </div>
+        </div>
+        
+        <!-- Single Post Editor -->
+        <div x-show="activeView === 'postEditor'" x-data="{ currentLang: 'en' }">
+            <div style="margin-bottom: 1.5rem;">
+                <button @click="closePostEditor()" class="btn-secondary">← Back to Calendar</button>
+            </div>
+            
+            <div class="card">
+				<form id="instaform" action="/api/ai/generate-post" method="post" enctype="multipart/form-data"
+																																				style="max-width: 955px; margin: 0 auto"  onsubmit="return false;">
+                <template x-if="getSelectedPost()">
+                    <div>
+                        <!-- Header -->
+                        <div style="display: flex; align-items: start; justify-content: space-between; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid #e5e7eb;">
+                            <div>
+                                <h2 style="font-size: 1.875rem; font-weight: 700; margin-bottom: 0.75rem; color: #1a202c;">Edit Post</h2>
+                                <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                                    <div style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.375rem 0.75rem; background: rgba(80, 70, 229, 0.1); border-radius: 0.5rem;">
+                                        <span style="font-size: 1.125rem;">📝</span>
+                                        <span style="font-weight: 600; color: var(--primary); font-size: 0.875rem;" x-text="getSelectedPost().type"></span>
+                                    </div>
+                                    <div style="color: #718096; font-size: 0.875rem; display: flex; align-items: center; gap: 0.375rem;">
+                                        <span>📅</span>
+                                        <span x-text="getSelectedPost().date + ' at ' + getSelectedPost().time"></span>
+                                    </div>
+                                    <span class="badge" :class="getSelectedPost().status === 'scheduled' ? 'badge-success' : getSelectedPost().status === 'published' ? 'badge-primary' : 'badge-warning'" x-text="getSelectedPost().status"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Language Toggle (if multilingual) -->
+                        <div x-show="workflow.isMultilingual && workflow.additionalLanguages.length > 0" style="margin-bottom: 2rem;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 0.75rem; color: #1a202c; font-size: 0.875rem;">Select Language to Edit</label>
+                            <div style="position: relative; display: inline-block;">
+                                <select x-model="currentLang" class="form-control" style="padding: 0.75rem 2.5rem 0.75rem 1rem; font-weight: 500; appearance: none; background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg width=\'12\' height=\'8\' viewBox=\'0 0 12 8\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3cpath d=\'M1 1.5L6 6.5L11 1.5\' stroke=\'%23718096\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'/%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 0.75rem center; min-width: 200px;">
+                                    <option :value="workflow.primaryLanguage" x-text="workflow.primaryLanguage === 'en' ? '🇺🇸 English (Primary)' : workflow.primaryLanguage === 'es' ? '🇪🇸 Spanish (Primary)' : workflow.primaryLanguage === 'fr' ? '🇫🇷 French (Primary)' : '🇩🇪 German (Primary)'"></option>
+                                    <template x-for="lang in workflow.additionalLanguages" :key="lang">
+                                        <option :value="lang" x-text="lang === 'en' ? '🇺🇸 English' : lang === 'es' ? '🇪🇸 Spanish' : lang === 'fr' ? '🇫🇷 French' : '🇩🇪 German'"></option>
+                                    </template>
+                                </select>
+                            </div>
+                            <p style="font-size: 0.75rem; color: #718096; margin-top: 0.5rem;">
+                                Switch between languages to edit content for each version
+                            </p>
+                        </div>
+                        
+                        <!-- Main Grid: Editor + Preview -->
+						
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                            <!-- Left Column: Content Editor -->
+                            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                                <!-- Caption -->
+                                <div>
+                                    <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #1a202c; font-size: 0.875rem;">
+                                        Generated Caption
+                                        <span x-show="workflow.isMultilingual && workflow.additionalLanguages.length > 0" 
+                                              style="font-weight: 400; color: #718096; font-size: 0.75rem;"
+											  
+                                              x-text="`(${currentLang === 'en' ? 'English' : currentLang === 'es' ? 'Spanish' : currentLang === 'fr' ? 'French' : 'German'})`" >
+                                        </span>
+                                    </label>
+                                    <textarea x-model="getSelectedPost().caption" id="description" name="description" class="form-control" rows="8" placeholder="Write your post caption..." style="font-size: 0.875rem; line-height: 1.6;"></textarea>
+                                    <div style="display: flex; gap: 1rem; margin-top: 0.75rem; flex-wrap: wrap;">
+                                        <button @click="generateContent($event)" style="font-size: 0.875rem; color: var(--primary); display: inline-flex; align-items: center; gap: 0.375rem; background: none; border: none; cursor: pointer; padding: 0; font-weight: 500;">
+                                            <span>🔄</span>
+                                            <span>Regenerate</span>
+                                        </button>
+                                        <button @click="enhancePost()" style="font-size: 0.875rem; color: var(--primary); display: inline-flex; align-items: center; gap: 0.375rem; background: none; border: none; cursor: pointer; padding: 0; font-weight: 500;">
+                                            <span>✨</span>
+                                            <span>Enhance</span>
+                                        </button>
+                                        <button x-show="workflow.isMultilingual && workflow.additionalLanguages.length > 0" @click="translateToAll()" style="font-size: 0.875rem; color: var(--primary); display: inline-flex; align-items: center; gap: 0.375rem; background: none; border: none; cursor: pointer; padding: 0; font-weight: 500;">
+                                            <span>🌐</span>
+                                            <span>Translate to All</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Hashtags -->
+                                <div>
+                                    <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #1a202c; font-size: 0.875rem;">
+                                        Hashtags
+                                        <span x-show="workflow.isMultilingual && workflow.additionalLanguages.length > 0" 
+                                              style="font-weight: 400; color: #718096; font-size: 0.75rem;"
+                                              x-text="`(${currentLang === 'en' ? 'English' : currentLang === 'es' ? 'Spanish' : currentLang === 'fr' ? 'French' : 'German'})`">
+                                        </span>
+                                    </label>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.75rem; background: #f9fafb; border-radius: 0.5rem; border: 1px solid #e5e7eb; min-height: 3rem;">
+                                        <span style="background: #dbeafe; color: #1e40af; padding: 0.375rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500;" id="hashtags">#Innovation</span>
+                                        <span style="background: #dbeafe; color: #1e40af; padding: 0.375rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500;">#Marketing</span>
+                                        <span style="background: #dbeafe; color: #1e40af; padding: 0.375rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500;">#Business</span>
+                                        <span style="background: #dbeafe; color: #1e40af; padding: 0.375rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500;">#Tech</span>
+                                        <span style="background: #dbeafe; color: #1e40af; padding: 0.375rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500;">#Growth</span>
+                                    </div>
+                                    <button style="font-size: 0.875rem; color: var(--primary); margin-top: 0.5rem; background: none; border: none; cursor: pointer; padding: 0; font-weight: 500;">🔄 Generate new hashtags</button>
+                                </div>
+                                
+                                <!-- Schedule -->
+                                <div>
+                                    <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #1a202c; font-size: 0.875rem;">Schedule</label>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                                        <input type="date" x-model="getSelectedPost().date" class="form-control" style="font-size: 0.875rem;" id="datepicker-inline">
+                                        <input type="time" x-model="getSelectedPost().time" class="form-control" style="font-size: 0.875rem;" id="time">
+                                    </div>
+                                </div>
+                                
+                                <!-- AI Recommendation Box -->
+                                <div style="background: linear-gradient(135deg, rgba(80, 70, 229, 0.05), rgba(0, 196, 204, 0.05)); border-left: 3px solid var(--primary); padding: 1rem; border-radius: 0.5rem;">
+                                    <h4 style="font-weight: 600; color: var(--primary); margin-bottom: 0.5rem; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem;">
+                                        <span>🤖</span>
+                                        <span>AI Recommendation</span>
+                                    </h4>
+                                    <p style="font-size: 0.875rem; color: #374151; margin: 0;">Based on your audience analysis, the optimal posting time is Tuesday at 2:00 PM for maximum engagement.</p>
+                                </div>
+                                
+                                <!-- Media Upload -->
+                                <div>
+                                    <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #1a202c; font-size: 0.875rem;">Media</label>
+                                    <div style="border: 2px dashed #e5e7eb; border-radius: 0.75rem; padding: 2rem; text-align: center; color: #9ca3af; background: #fafafa; transition: all 0.2s; cursor: pointer;" onmouseover="this.style.borderColor='var(--primary)'; this.style.background='rgba(80, 70, 229, 0.02)'" onmouseout="this.style.borderColor='#e5e7eb'; this.style.background='#fafafa'">
+                                        <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">📸</div>
+                                        <div style="font-size: 0.875rem; font-weight: 500; color: #374151;">Click to upload or drag and drop</div>
+                                        <div style="font-size: 0.75rem; margin-top: 0.375rem;">PNG, JPG, MP4 up to 10MB</div>
+                                    </div>
+                                    <div style="display: flex; gap: 1rem; margin-top: 0.75rem; justify-content: center;">
+                                        <button @click="regenerateImage()" style="font-size: 0.875rem; color: var(--primary); display: inline-flex; align-items: center; gap: 0.375rem; background: none; border: none; cursor: pointer; padding: 0; font-weight: 500;">
+                                            <span>🎨</span>
+                                            <span>Regenerate Image with AI</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Right Column: Live Preview + Info -->
+                            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                                <div>
+                                    <h3 style="font-weight: 600; margin-bottom: 1rem; font-size: 1rem; color: #1a202c; display: flex; align-items: center; gap: 0.5rem;">
+                                        <span>📱</span>
+                                        <span>Live Preview</span>
+                                    </h3>
+                                    
+                                    <!-- Facebook Preview Card -->
+                                    <div style="border: 1px solid #e2e8f0; border-radius: 0.75rem; background: white; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);" id="post-preview">
+										<iframe id="myiframe" srcdoc="" width="500" height="500"></iframe>
+										 <!-- Post Header -->
+                                        <div style="display:none;padding: 1rem; border-bottom: 1px solid #e5e7eb;" id="post-preview-hidden" >
+                                            <div style="display: none; align-items: center;">
+                                                <div style="width: 2.5rem; height: 2.5rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1rem;">
+                                                    B
+                                                </div>
+                                                <div style="margin-left: 0.75rem; flex: 1;">
+                                                    <div style="font-weight: 600; font-size: 0.875rem; color: #1a202c;">Your Brand</div>
+                                                    <div style="font-size: 0.75rem; color: #65676b; display: flex; align-items: center; gap: 0.25rem;">
+                                                        <span>2 min</span>
+                                                        <span>•</span>
+                                                        <span>🌐</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Post Content -->
+                                        <!--<div style="padding: 1rem; display:none;"  >
+                                            <p style="font-size: 0.875rem; line-height: 1.6; color: #1a202c; white-space: pre-wrap; margin: 0;" x-text="getSelectedPost().caption"></p>
+                                            <div style="margin-top: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.375rem;">
+                                                <span style="color: #385898; font-size: 0.875rem; font-weight: 500;">#Innovation</span>
+                                                <span style="color: #385898; font-size: 0.875rem; font-weight: 500;">#Marketing</span>
+                                                <span style="color: #385898; font-size: 0.875rem; font-weight: 500;">#Business</span>
+                                                <span style="color: #385898; font-size: 0.875rem; font-weight: 500;">#Tech</span>
+                                            </div>
+                                        </div>-->
+                                        
+                                        <!-- Image Placeholder -->
+                                        <!--<div   x-show="getSelectedPost().type !== 'Text Post'" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 16rem; display: none; align-items: center; justify-content: center; position: relative;">
+                                            <div style="text-align: center; color: white;">
+                                                <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎨</div>
+                                                <div style="font-size: 0.875rem; font-weight: 500;">Generated Image Preview</div>
+                                            </div>
+                                        </div>-->
+                                        
+                                        <!-- Engagement Actions -->
+                                        <!--<div style="padding: 0.75rem 1rem; border-top: 1px solid #e5e7eb; display: none; justify-content: space-around;">
+                                            <div style="display: flex; align-items: center; gap: 0.375rem; color: #65676b; font-size: 0.875rem; font-weight: 500;">
+                                                <span>👍</span>
+                                                <span>Like</span>
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 0.375rem; color: #65676b; font-size: 0.875rem; font-weight: 500;">
+                                                <span>💬</span>
+                                                <span>Comment</span>
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 0.375rem; color: #65676b; font-size: 0.875rem; font-weight: 500;">
+                                                <span>↗️</span>
+                                                <span>Share</span>
+                                            </div>
+                                        </div>
+                                    </div>-->
+                                    
+                                    <!-- Language Summary -->
+                                    <div x-show="workflow.isMultilingual && workflow.additionalLanguages.length > 0" style="margin-top: 1rem; padding: 0.875rem; background: #ecfdf5; border: 1px solid #86efac; border-radius: 0.5rem;">
+                                        <h4 style="font-weight: 600; color: #047857; font-size: 0.875rem; margin-bottom: 0.375rem; display: flex; align-items: center; gap: 0.5rem;">
+                                            <span>🌐</span>
+                                            <span>Multilingual Content</span>
+                                        </h4>
+                                        <p style="font-size: 0.75rem; color: #065f46; margin: 0;">
+                                            Content available in <span x-text="1 + workflow.additionalLanguages.length"></span> languages
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Post Details Card -->
+                                <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.75rem; padding: 1.25rem;">
+                                    <h4 style="font-weight: 600; margin-bottom: 1rem; color: #1a202c; font-size: 0.875rem;">Post Details</h4>
+                                    <div style="display: grid; gap: 0.75rem; font-size: 0.875rem;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <span style="color: #6b7280;">Type:</span>
+                                            <span style="font-weight: 600; color: #1a202c;" x-text="getSelectedPost().type"></span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <span style="color: #6b7280;">Theme:</span>
+                                            <span style="font-weight: 600; color: #1a202c;" x-text="getSelectedPost().theme"></span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <span style="color: #6b7280;">Language:</span>
+                                            <span style="font-weight: 600; color: #1a202c;" x-text="getSelectedPost().lang"></span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <span style="color: #6b7280;">Created:</span>
+                                            <span style="font-weight: 600; color: #1a202c;">Just now</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div style="display: flex; gap: 0.75rem; justify-content: space-between; padding-top: 2rem; border-top: 2px solid #e5e7eb;">
+                            <button @click="deletePost()" class="btn-secondary" style="color: #dc2626; border-color: #fecaca;">
+                                <span>🗑️</span>
+                                <span>Delete</span>
+                            </button>
+                            <div style="display: flex; gap: 0.75rem;">
+                                <button @click="savePost()" class="btn-secondary">
+                                    <span>💾</span>
+                                    <span>Save as Draft</span>
+                                </button>
+                                <button @click="schedulePost()" class="btn-primary">
+                                    <span>📅</span>
+                                    <span>Schedule Post</span>
+                                </button>
+                            </div>
+                        </div>
+						
+                    </div>
+					
+                </template>
+				<input type="hidden" id="formid" name="id" />
+				<input type="hidden" id="formplatform" name="platform" value="Facebook"/>
+				<input type="hidden" id="formformat" name="format" value="" />
+				<input type="hidden" id="formtone" name="tone" value="witty" />
+				<input type="hidden" id="selectedllm" name="selectedllm" value="gemini" />
+				<input type="hidden" id="formpersona" name="persona" />
+				</form>
+            </div>
+        </div>
+		
+        <!-- Settings -->
+        <div x-show="activeView === 'settings'">
+            <h1 style="font-size: 1.875rem; font-weight: 700; margin-bottom: 1.5rem;">Settings</h1>
+            
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 2px solid #e2e8f0;">
+                <div class="tab" :class="{'active': settingsTab === 'personas'}" @click="settingsTab = 'personas'">Personas</div>
+                <div class="tab" :class="{'active': settingsTab === 'brands'}" @click="settingsTab = 'brands'">Brands</div>
+            </div>
+            
+            <!-- Personas Tab -->
+            <div x-show="settingsTab === 'personas'" class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.25rem; font-weight: 700;">Manage Personas</h2>
+                    <button @click="addPersona()" class="btn-primary">+ Add Persona</button>
+                </div>
+                
+                <div style="display: grid; gap: 1rem;">
+                    <template x-for="persona in personas" :key="persona.id">
+                        <div style="border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 1rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: start;">
+                                <div>
+                                    <div style="font-weight: 600; font-size: 1.125rem;" x-text="persona.name"></div>
+                                    <div style="font-size: 0.875rem; color: #718096; margin-top: 0.25rem;" x-text="persona.summary"></div>
+                                    <div style="margin-top: 0.5rem;">
+                                        <span class="badge" :class="persona.type === 'AI' ? 'badge-primary' : 'badge-success'" x-text="persona.type"></span>
+                                    </div>
+                                </div>
+                                <button class="btn-secondary" style="padding: 0.5rem 1rem;">Edit</button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            
+            <!-- Brands Tab -->
+            <div x-show="settingsTab === 'brands'" class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.25rem; font-weight: 700;">Manage Brands</h2>
+                    <button @click="addBrand()" class="btn-primary">+ Add Brand</button>
+                </div>
+                
+                <div style="display: grid; gap: 1rem;">
+                    <template x-for="brand in brands" :key="brand.id">
+                        <div style="border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 1rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: start;">
+                                <div>
+                                    <div style="font-weight: 600; font-size: 1.125rem;" x-text="brand.name"></div>
+                                    <div style="font-size: 0.875rem; color: #718096; margin-top: 0.25rem;" x-text="brand.description"></div>
+                                    <div style="margin-top: 0.5rem;">
+                                        <span style="font-size: 0.75rem; color: #718096;">Voice: <span x-text="brand.voice"></span></span>
+                                    </div>
+                                </div>
+                                <button class="btn-secondary" style="padding: 0.5rem 1rem;">Edit</button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function workflowApp() {
+            return {
+                activeView: 'workflow',
+                settingsTab: 'personas',
+                
+                personas: [
+                    { id: 1, name: 'Tech Enthusiasts', type: 'AI', summary: 'Age 28-38, High engagement with innovation content' },
+                    { id: 2, name: 'Budget Millennials', type: 'AI', summary: 'Age 25-35, Value-driven purchasing' },
+                    { id: 3, name: 'Gen Z Adopters', type: 'Custom', summary: 'Age 18-25, Mobile-first, sustainability-focused' }
+                ],
+                
+                brands: [
+                    { id: 1, name: 'Acme Corp', description: 'Leading innovation company', voice: 'Professional' },
+                    { id: 2, name: 'Tech Solutions', description: 'Your technology partner', voice: 'Casual & Friendly' }
+                ],
+                
+                products: [
+                    { id: 1, name: 'Product A', sku: 'SKU-001', category: 'Electronics' },
+                    { id: 2, name: 'Product B', sku: 'SKU-002', category: 'Accessories' },
+                    { id: 3, name: 'Product C', sku: 'SKU-003', category: 'Software' }
+                ],
+                
+                workflow: {
+                    currentStep: 1,
+                    selectedPersonaIds: [],
+                    selectedBrandId: '',
+                    name: '',
+                    objective: 'Brand Awareness',
+                    audience: '',
+                    startDate: '',
+                    endDate: '',
+                    frequency: 'Daily',
+                    brandVoice: 'Professional',
+                    primaryLanguage: 'en',
+                    isMultilingual: false,
+                    additionalLanguages: [],
+                    useProducts: false,
+                    selectedProductIds: [],
+                    types: {
+                        image: { count: 0, split: { educational: 0, entertaining: 0, promotional: 0, ugc: 0, seasonal: 0, reactive: 0 } },
+                        carousel: { count: 0, split: { educational: 0, entertaining: 0, promotional: 0, ugc: 0, seasonal: 0, reactive: 0 } },
+                        video: { count: 0, split: { educational: 0, entertaining: 0, promotional: 0, ugc: 0, seasonal: 0, reactive: 0 } },
+                        poll: { count: 0, split: { educational: 0, entertaining: 0, promotional: 0, ugc: 0, seasonal: 0, reactive: 0 } },
+                        story: { count: 0, split: { educational: 0, entertaining: 0, promotional: 0, ugc: 0, seasonal: 0, reactive: 0 } },
+                        link: { count: 0, split: { educational: 0, entertaining: 0, promotional: 0, ugc: 0, seasonal: 0, reactive: 0 } }
+                    },
+                    generatedItems: []
+                },
+                
+                calendar: {
+                    view: 'list',
+                    posts: [],
+                    selectedCampaignId: '',
+                    campaigns: [],
+                    loading: false,
+                    error: null
+                },
+                
+                postEditor: {
+                    currentId: null
+                },
+				async fetchBrands() {
+		            try {
+		                const response = await fetch('/api/brands');
+		                if (!response.ok) throw new Error('Failed to fetch brands');
+		                this.brands = await response.json();
+		                console.log('✅ Brands loaded:', this.brands);
+		            } catch (error) {
+		                console.error('❌ Error fetching brands:', error);
+		                alert('Failed to load brands from server.');
+		            }
+		        },
+                async init() {
+                    console.log('Brand product System initialized');
+					await this.fetchBrands();
+                    console.log('Brands:', this.brands);
+                    //console.log('Products:', this.products);
+                },
+                canProceed() {
+                    return this.workflow.selectedBrandId && 
+                           this.workflow.selectedPersonaIds.length > 0 && 
+                           this.workflow.name && 
+                           this.workflow.objective;
+                },
+                
+                togglePersona(personaId) {
+                    const index = this.workflow.selectedPersonaIds.indexOf(personaId);
+                    if (index === -1) {
+                        this.workflow.selectedPersonaIds.push(personaId);
+                    } else {
+                        this.workflow.selectedPersonaIds.splice(index, 1);
+                    }
+                },
+				// ✅ Fetch products for the selected brand
+		        async fetchProductsForBrand() {
+		            if (!this.workflow.selectedBrandId) {
+		                this.products = [];
+		                return;
+		            }
+
+		            try {
+		                const response = await fetch(`/api/products/brand/${this.workflow.selectedBrandId}`);
+		                if (!response.ok) throw new Error('Failed to fetch products');
+		                this.products = await response.json();
+						
+		                console.log('✅ Products loaded for brand', this.workflow.selectedBrandId, this.products);
+		            } catch (error) {
+		                console.error('❌ Error fetching products:', error);
+		                alert('Failed to load products for the selected brand.');
+		            }
+		        },
+                async loadBrandDefaults() {
+					
+															
+                    const brand = this.brands.find(b => b.id == this.workflow.selectedBrandId);
+                    /*if (brand) {
+                        this.workflow.brandVoice = brand.voice;
+                    }*/
+					console.log('Selected brand:', this.workflow.selectedBrandId);
+					await this.fetchProductsForBrand();
+                },
+                
+                createCampaignBlueprint() {
+                    if (!this.canProceed()) return;
+                    
+                    const types = ['Image Post', 'Carousel', 'Video', 'Poll'];
+                    const themes = ['Educational', 'Entertaining', 'Promotional', 'UGC'];
+                    
+                    this.workflow.generatedItems = [];
+                    for (let i = 0; i < 15; i++) {
+                        const date = new Date();
+                        date.setDate(date.getDate() + i);
+                        
+                        this.workflow.generatedItems.push({
+                            id: 1 + i,
+                            date: date.toISOString().split('T')[0],
+                            time: '14:00',
+                            type: types[Math.floor(Math.random() * types.length)],
+                            theme: themes[Math.floor(Math.random() * themes.length)],
+                            lang: this.workflow.primaryLanguage,
+                            caption: `Generated content for ${this.workflow.name} - Day ${i + 1}. This is a sample caption that demonstrates the AI-powered content generation capabilities of Prometrix.`,
+                            status: 'draft'
+                        });
+                    }
+                    
+                    this.activeView = 'calendar';
+                    // Refresh approved campaigns list
+                    this.loadApprovedCampaigns();
+                },
+                
+                goToMixThemes() {
+                    if (!this.canProceed()) return;
+                    this.workflow.currentStep = 2;
+                },
+                
+                goBack() {
+                    if (this.workflow.currentStep > 1) {
+                        this.workflow.currentStep--;
+                    }
+                },
+                
+                totalPlannedCount() {
+                    return Object.values(this.workflow.types).reduce((sum, type) => sum + type.count, 0);
+                },
+                
+                sumSplit(typeKey) {
+                    const s = this.workflow.types[typeKey].split;
+                    return s.educational + s.entertaining + s.promotional + s.ugc + s.seasonal + s.reactive;
+                },
+                
+                isTypeBalanced(typeKey) {
+                    const t = this.workflow.types[typeKey];
+                    if (t.count === 0) return true;
+                    return this.sumSplit(typeKey) === t.count;
+                },
+                
+                allActiveTypesBalanced() {
+                    return Object.keys(this.workflow.types).every(k => this.isTypeBalanced(k));
+                },
+                
+                deltaForType(typeKey) {
+                    const t = this.workflow.types[typeKey];
+                    return t.count - this.sumSplit(typeKey);
+                },
+                
+                resetSplitIfZero(typeKey) {
+                    if (this.workflow.types[typeKey].count === 0) {
+                        this.workflow.types[typeKey].split = {
+                            educational: 0, entertaining: 0, promotional: 0,
+                            ugc: 0, seasonal: 0, reactive: 0
+                        };
+                    }
+                },
+                
+                generatePlanFromMix() {
+                    if (!this.allActiveTypesBalanced() || this.totalPlannedCount() === 0) return;
+                    
+                    this.workflow.generatedItems = [];
+                    let itemId = 1;//Date.now();
+                    let dayOffset = 0;
+                    
+                    const typeLabels = {
+                        image: 'Image Post',
+                        carousel: 'Carousel',
+                        video: 'Video',
+                        poll: 'Poll',
+                        story: 'Story',
+                        link: 'Link Post'
+                    };
+                    
+                    Object.keys(this.workflow.types).forEach(typeKey => {
+                        const type = this.workflow.types[typeKey];
+                        if (type.count > 0) {
+                            Object.keys(type.split).forEach(themeKey => {
+                                const themeCount = type.split[themeKey];
+                                const themeLabel = themeKey.charAt(0).toUpperCase() + themeKey.slice(1);
+                                
+                                for (let i = 0; i < themeCount; i++) {
+                                    const date = new Date();
+                                    date.setDate(date.getDate() + dayOffset);
+                                    
+                                    this.workflow.generatedItems.push({
+                                        id: itemId++,
+                                        date: date.toISOString().split('T')[0],
+                                        time: '14:00',
+                                        type: typeLabels[typeKey],
+                                        theme: themeLabel,
+                                        lang: this.workflow.primaryLanguage,
+                                        caption: `${themeLabel} ${typeLabels[typeKey]} for ${this.workflow.name}. This is AI-generated content optimized for engagement.`,
+                                        status: 'draft'
+                                    });
+                                    
+                                    dayOffset++;
+                                }
+                            });
+                        }
+                    });
+                    
+                    this.activeView = 'calendar';
+                    // Refresh approved campaigns list
+                    this.loadApprovedCampaigns();
+                },
+                
+                backToWorkflow() {
+                    this.activeView = 'workflow';
+                },
+                
+                getItemsForDay(day) {
+                    return this.workflow.generatedItems.filter(item => {
+                        const itemDay = new Date(item.date).getDate();
+                        return itemDay === day;
+                    });
+                },
+                
+                openPostEditor(itemId) {
+					//alert("itemId=="+itemId);
+					
+                    this.postEditor.currentId = itemId;
+                    this.activeView = 'postEditor';
+					
+                },
+                
+                closePostEditor() {
+                    this.activeView = 'calendar';
+                },
+                
+                getSelectedPost() {
+                    return this.workflow.generatedItems.find(item => item.id === this.postEditor.currentId);
+                },
+                
+                savePost() {
+                    alert('Post saved successfully!');
+                },
+                
+                schedulePost() {
+					const iframe = document.getElementById("myiframe");
+
+					  // Access the iframe’s document
+					  const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+					  
+					url = "/api/scheduler/add"; // the script where you handle the form input.	 
+					  		    $.ajax({
+					  		           type: "POST",
+					  		           url: url,
+					  				   headers: {
+					  				       "Content-Type": "application/json"
+					  				    },
+					  				data: JSON.stringify({
+					  					    "postDate": document.getElementById('datepicker-inline').value,
+					  					    "postTime": document.getElementById('time').value,
+					  					    "content": innerDoc.getElementById('ai-generated-text').innerHTML,
+					  					    "imageUrls": innerDoc.getElementById('ai-generated-image').src,
+					  					    "hashtags": document.getElementById('hashtags').innerHTML,
+					  					    "platform": "facebook"
+					  					  }), // serializes the form's elements.
+					  		           success: function(data)
+					  		           {
+					  		               alert("Scheduled"); // show response from the api.
+					  					    
+					  		           }
+					  		         });
+					const post = this.getSelectedPost();
+					
+                    if (post) {
+                        post.status = 'scheduled';
+                        alert('Post scheduled successfully!');
+                    }
+                },
+                
+                // Calendar Functions
+                async loadApprovedCampaigns() {
+                    try {
+                        this.calendar.loading = true;
+                        this.calendar.error = null;
+                        
+                        const response = await fetch('/api/campaigns/approved');
+                        const data = await response.json();
+                        
+                        if (response.ok) {
+                            this.calendar.campaigns = data.campaigns || [];
+                        } else {
+                            throw new Error(data.detail || 'Failed to load campaigns');
+                        }
+                    } catch (error) {
+                        console.error('Error loading campaigns:', error);
+                        this.calendar.error = 'Failed to load campaigns';
+                    } finally {
+                        this.calendar.loading = false;
+                    }
+                },
+                
+                async loadCalendarData(campaignId) {
+                    if (!campaignId) {
+                        this.calendar.posts = [];
+                        return;
+                    }
+                    
+                    try {
+                        this.calendar.loading = true;
+                        this.calendar.error = null;
+                        
+                        const response = await fetch(`/api/campaign/${campaignId}/posts`);
+                        const data = await response.json();
+                        
+                        if (response.ok) {
+                            this.calendar.posts = this.transformPostsForCalendar(data.posts || []);
+                        } else {
+                            throw new Error(data.detail || 'Failed to load posts');
+                        }
+                    } catch (error) {
+                        console.error('Error loading calendar data:', error);
+                        this.calendar.error = 'Failed to load posts';
+                        this.calendar.posts = [];
+                    } finally {
+                        this.calendar.loading = false;
+                    }
+                },
+                
+                transformPostsForCalendar(posts) {
+                    return posts.map(post => ({
+                        id: post.id,
+                        postId: post.postId,
+                        date: post.scheduledDate || new Date().toISOString().split('T')[0],
+                        time: post.scheduledTime || '14:00',
+                        type: post.format,
+                        theme: post.pillar,
+                        lang: 'en', // Default language
+                        caption: post.content.caption || '',
+                        hashtags: post.content.hashtags || '',
+                        status: post.status,
+                        dayIndex: post.dayIndex,
+                        slotIndex: post.slotIndex,
+                        topic: post.topic,
+                        productIncluded: post.productIncluded
+                    }));
+                },
+                
+                async onCampaignChange() {
+                    if (this.calendar.selectedCampaignId) {
+                        await this.loadCalendarData(this.calendar.selectedCampaignId);
+                        // Refresh the month view calendar
+                        setTimeout(() => {
+                            if (typeof renderCalendar === 'function') {
+                                renderCalendar();
+                            }
+                        }, 100);
+                    } else {
+                        this.calendar.posts = [];
+                        // Refresh the month view calendar
+                        setTimeout(() => {
+                            if (typeof renderCalendar === 'function') {
+                                renderCalendar();
+                            }
+                        }, 100);
+                    }
+                },
+                
+                getItemsForDay(day) {
+                    return this.calendar.posts.filter(item => {
+                        const itemDay = new Date(item.date).getDate();
+                        return itemDay === day;
+                    });
+                },
+                
+                async deletePostFromCalendar(itemId) {
+                    if (!confirm('Are you sure you want to delete this post?')) {
+                        return;
+                    }
+                    
+                    try {
+                        const post = this.calendar.posts.find(p => p.id === itemId);
+                        if (!post) {
+                            alert('Post not found');
+                            return;
+                        }
+                        
+                        const response = await fetch(`/api/campaign/posts/${post.postId}`, {
+                            method: 'DELETE'
+                        });
+                        
+                        if (response.ok) {
+                            // Remove from local array
+                            this.calendar.posts = this.calendar.posts.filter(p => p.id !== itemId);
+                            alert('Post deleted successfully!');
+                        } else {
+                            const error = await response.json();
+                            throw new Error(error.detail || 'Failed to delete post');
+                        }
+                    } catch (error) {
+                        console.error('Error deleting post:', error);
+                        alert('Failed to delete post: ' + error.message);
+                    }
+                },
+                
+                async movePost(itemId) {
+                    const post = this.calendar.posts.find(item => item.id === itemId);
+                    if (!post) return;
+                    
+                    const newDate = prompt('Enter new date (YYYY-MM-DD):', post.date);
+                    if (newDate && /^\d{4}-\d{2}-\d{2}$/.test(newDate)) {
+                        const newTime = prompt('Enter new time (HH:MM):', post.time);
+                        if (newTime && /^\d{2}:\d{2}$/.test(newTime)) {
+                            try {
+                                const response = await fetch(`/api/campaign/posts/${post.postId}/schedule?scheduled_date=${newDate}&scheduled_time=${newTime}`, {
+                                    method: 'PUT'
+                                });
+                                
+                                if (response.ok) {
+                                    // Update local data
+                                    post.date = newDate;
+                                    post.time = newTime;
+                                    post.status = 'scheduled';
+                                    alert('Post moved successfully!');
+                                } else {
+                                    const error = await response.json();
+                                    throw new Error(error.detail || 'Failed to move post');
+                                }
+                            } catch (error) {
+                                console.error('Error moving post:', error);
+                                alert('Failed to move post: ' + error.message);
+                            }
+                        } else if (newTime !== null) {
+                            alert('Invalid time format. Please use HH:MM format.');
+                        }
+                    } else if (newDate !== null) {
+                        alert('Invalid date format. Please use YYYY-MM-DD format.');
+                    }
+                },
+                
+                openPostEditor(itemId) {
+                    const post = this.calendar.posts.find(p => p.id === itemId);
+                    if (post) {
+                        this.postEditor.currentId = itemId;
+                        this.activeView = 'postEditor';
+                    }
+                },
+                
+                getSelectedPost() {
+                    return this.calendar.posts.find(item => item.id === this.postEditor.currentId);
+                },
+                
+                async exportCampaign() {
+                    if (!this.calendar.selectedCampaignId) {
+                        alert('Please select a campaign to export');
+                        return;
+                    }
+                    
+                    try {
+                        const response = await fetch('/api/campaign/export', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                campaignId: this.calendar.selectedCampaignId,
+                                format: 'csv'
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            const blob = await response.blob();
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = `campaign-${this.calendar.selectedCampaignId}-export.csv`;
+                            document.body.appendChild(a);
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                            document.body.removeChild(a);
+                        } else {
+                            const error = await response.json();
+                            throw new Error(error.detail || 'Export failed');
+                        }
+                    } catch (error) {
+                        console.error('Export error:', error);
+                        alert('Failed to export campaign: ' + error.message);
+                    }
+                },
+                
+                regeneratePost() {
+                    const post = this.getSelectedPost();
+                    if (post) {
+                        post.caption = `Regenerated: ${Math.random().toString(36).substring(7)} - ${post.theme} content for ${post.type}. Fresh AI-generated caption with enhanced engagement potential.`;
+                        alert('Post regenerated!');
+                    }
+                },
+                
+                enhancePost() {
+                    const post = this.getSelectedPost();
+                    if (post) {
+                        post.caption += '\n\n✨ Enhanced with AI optimization for better engagement and reach.';
+                        alert('Post enhanced!');
+                    }
+                },
+                
+                translateToAll() {
+                    alert('Post translated to all languages!');
+                },
+                
+                regenerateImage() {
+                    if (confirm('Generate a new AI image for this post?')) {
+                        alert('🎨 Generating new image with AI... This may take a few moments.\n\nThe image will be optimized based on your post content and brand guidelines.');
+                    }
+                },
+                
+                addPersona() {
+                    const name = prompt('Enter persona name:');
+                    if (name) {
+                        this.personas.push({
+                            id: Date.now(),
+                            name: name,
+                            type: 'Custom',
+                            summary: 'New persona'
+                        });
+                    }
+                },
+                
+                addBrand() {
+                    const name = prompt('Enter brand name:');
+                    if (name) {
+                        this.brands.push({
+                            id: Date.now(),
+                            name: name,
+                            description: 'New brand',
+                            voice: 'Professional'
+                        });
+                    }
+                },
+				generateContent(event) {
+					event?.preventDefault(); 
+                    this.isGenerating = true;
+					var url = ""; // the script where you handle the form input.
+					//alert("clicked=="+document.getElementById('formplatform').textContent+"=="+document.getElementById('formformat').textContent+"=="+document.getElementById('formtone').textContent);
+					if(document.getElementById('formplatform').textContent=="Facebook")
+						url = "/tutorials/generatePOST"; // the script where you handle the form input.
+					alert("url=="+document.getElementById('formplatform').textContent);		
+					alert($("#instaform").serialize());		
+				    $.ajax({
+				           type: "POST",
+				           url: url,
+				           data: $("#instaform").serialize(), // serializes the form's elements.
+				           success: function(data)
+				           {
+				               //alert(data); // show response from the api.
+							   document.getElementById('myiframe').srcdoc=data;
+							   //document.getElementById('post-preview-hidden').innerHTML=data;
+							   
+							   this.isGenerating = false;
+							   //document.getElementById('carousel-slide1').src=document.getElementById('ai-generated-image-slide1').src;
+							   //document.getElementById('carousel-slide2').src=document.getElementById('ai-generated-image-slide2').src;
+							   //document.getElementById('carousel-slide3').src=document.getElementById('ai-generated-image-slide3').src;
+							   //document.getElementById('final-preview-image').src=document.getElementById('ai-generated-image').src;
+							   //document.getElementById('final-preview-text').innerHTML=document.getElementById('ai-generated-text').innerHTML;
+							   //document.getElementById('final-platform-name').innerHTML=document.getElementById('formplatform').textContent;
+							   //document.getElementById('scheduler-platform-name').innerHTML=document.getElementById('formplatform').textContent;
+							   
+							   
+				           }
+				         });
+
+				    return false; // avoid to execute the actual submit of the form.
+								
+					
+		                  
+                }
+            }
+        }
+		let itemId = 1;
+	    
+	    // Function to get events from Alpine.js component
+	    function getCalendarEvents() {
+	        const alpineData = Alpine.$data(document.querySelector('[x-data]'));
+	        if (alpineData && alpineData.calendar && alpineData.calendar.posts) {
+	            return alpineData.calendar.posts.map(post => ({
+	                title: `${post.type}: ${post.topic}`,
+	                date: post.date,
+	                description: post.caption || `${post.theme} content for ${post.type}`,
+	                status: post.status,
+	                postId: post.id
+	            }));
+	        }
+	        return [];
+	    }
+	    
+		const monthNames = [
+	  "January", "February", "March", "April", "May", "June",
+	  "July", "August", "September", "October", "November", "December"
+	];
+
+	    const calendarEl = document.getElementById('calendar');
+	    const modal = document.getElementById('modal');
+	    const modalTitle = document.getElementById('modalTitle');
+	    const modalDate = document.getElementById('modalDate');
+	    const modalDescription = document.getElementById('modalDescription');
+	    const closeModal = document.getElementById('closeModal');
+
+	    let currentDate = new Date();
+	    let viewMode = 'month';
+
+	    function renderCalendar() {
+	      calendarEl.innerHTML = '';
+	      if (viewMode === 'month') renderMonthView();
+	      else renderWeekView();
+	    }
+
+	    function renderMonthView() {
+	      const year = currentDate.getFullYear();
+	      const month = currentDate.getMonth();
+		  
+	      const events = getCalendarEvents(); // Get dynamic events
+		  
+		  document.getElementById('month-name').innerHTML=monthNames[currentDate.getMonth()]+"&nbsp;"+currentDate.getFullYear();
+	      const firstDay = new Date(year, month, 1);
+	      const lastDay = new Date(year, month + 1, 0);
+
+	      for (let day = 1; day <= lastDay.getDate(); day++) {
+	        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+	        const dayEl = document.createElement('div');
+	        dayEl.className = 'day';
+	        dayEl.innerHTML = `<strong>${day}</strong>`;
+
+	        const dayEvents = events.filter(e => e.date === dateStr);
+	        dayEvents.forEach(event => {
+	          const eventEl = document.createElement('div');
+	          eventEl.className = 'event';
+	          eventEl.textContent = event.title;
+	          eventEl.addEventListener('click', () => openModal(event));
+	          dayEl.appendChild(eventEl);
+	        });
+	        calendarEl.appendChild(dayEl);
+	      }
+	    }
+
+	    function renderWeekView() {
+		document.getElementById('month-name').innerHTML='';
+	      const weekStart = new Date(currentDate);
+	      weekStart.setDate(currentDate.getDate() - currentDate.getDay());
+		  
+	      const events = getCalendarEvents(); // Get dynamic events
+		  
+	      for (let i = 0; i < 7; i++) {
+	        const day = new Date(weekStart);
+	        day.setDate(weekStart.getDate() + i);
+	        const dateStr = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
+	        const dayEl = document.createElement('div');
+	        dayEl.className = 'day';
+	        dayEl.innerHTML = `<strong>${day.toDateString()}</strong>`;
+
+	        const dayEvents = events.filter(e => e.date === dateStr);
+	        dayEvents.forEach(event => {
+				
+	          const eventEl = document.createElement('div');
+	          eventEl.className = 'event';
+	          eventEl.textContent = event.title;
+	          eventEl.addEventListener('click', () => openModal(event));
+	          dayEl.appendChild(eventEl);
+	        });
+	        calendarEl.appendChild(dayEl);
+	      }
+	    }
+
+	    function openModal(event,itemId) {
+			
+	      modal.style.display = 'flex';
+	      modalTitle.textContent = event.title;
+	      modalDate.textContent = event.date;
+	      modalDescription.textContent = event.description;
+		  
+		  
+	    }
+
+	    closeModal.addEventListener('click', () => modal.style.display = 'none');
+
+	    document.getElementById('prev').addEventListener('click', () => {
+	      if (viewMode === 'month') currentDate.setMonth(currentDate.getMonth() - 1);
+	      else currentDate.setDate(currentDate.getDate() - 7);
+	      renderCalendar();
+	    });
+
+	    document.getElementById('next').addEventListener('click', () => {
+	      if (viewMode === 'month') currentDate.setMonth(currentDate.getMonth() + 1);
+	      else currentDate.setDate(currentDate.getDate() + 7);
+	      renderCalendar();
+	    });
+
+	    document.getElementById('today').addEventListener('click', () => {
+	      currentDate = new Date();
+	      renderCalendar();
+	    });
+
+	    document.getElementById('monthViewBtn').addEventListener('click', () => {
+	      viewMode = 'month';
+	      document.getElementById('monthViewBtn').classList.add('active');
+	      document.getElementById('weekViewBtn').classList.remove('active');
+	      renderCalendar();
+	    });
+
+	    document.getElementById('weekViewBtn').addEventListener('click', () => {
+	      viewMode = 'week';
+	      document.getElementById('weekViewBtn').classList.add('active');
+	      document.getElementById('monthViewBtn').classList.remove('active');
+	      renderCalendar();
+	    });
+
+	    renderCalendar();
+		
+		// Format selection function
+		      function selectFormat(el, format) {
+		          // Remove selected class from all format options
+		          
+				
+				// Update format text in content editor
+		          	document.getElementById('formformat').textContent=format.charAt(0).toUpperCase() + format.slice(1);
+					document.getElementById('formformat').value=format.charAt(0).toUpperCase() + format.slice(1);
+					document.getElementById('formplatform').textContent="Facebook";
+					document.getElementById('formplatform').value="Facebook";
+		          
+		      }
+			function selectPersona(el) {
+			            
+						
+			            
+						document.getElementById('formpersona').textContent=el.value;
+						document.getElementById('formpersona').value=el.value;
+			}
+			// Tone selection
+		     function selectTone(el) {
+		         // Toggle selected class
+		         //el.classList.toggle('selected');
+			   //alert(el.value);
+			document.getElementById('formtone').textContent=el.value;
+			document.getElementById('formtone').value=el.value;
+		     }
+		   // Tone selection
+		    function selectLLM(el) {
+		        // Toggle selected class
+		        //el.classList.toggle('selected');
+		   //alert(el.value);
+			document.getElementById('selectedllm').textContent=el.value;
+			document.getElementById('selectedllm').value=el.value;
+			alert(document.getElementById('selectedllm').textContent);
+			alert(document.getElementById('selectedllm').value);
+		  }
+		  
+		
+		  
+	  </script>
+
+</body>
+</html>
+                

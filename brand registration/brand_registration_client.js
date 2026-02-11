@@ -130,31 +130,31 @@ class BrandRegistrationClient {
             throw error;
         }
     }
-}
+
     /**
      * Update brand data
      */
     async updateBrand(brandId, updates) {
-    try {
-        const response = await fetch(`${this.apiBase}/update-brand/${brandId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updates)
-        });
+        try {
+            const response = await fetch(`${this.apiBase}/update-brand/${brandId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updates)
+            });
 
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Failed to update brand');
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.detail || 'Failed to update brand');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Update brand error:', error);
+            throw error;
         }
-
-        return await response.json();
-    } catch (error) {
-        console.error('Update brand error:', error);
-        throw error;
     }
-}
 }
 
 /**
@@ -168,6 +168,7 @@ function enhancedBrandContentSystem() {
         activeTab: 'onboarding',
         isGeneratingPlan: false,
         isGeneratingBlueprint: false,
+        isRegenerating: false,
 
         // Brand data
         brand: {
@@ -287,6 +288,7 @@ function enhancedBrandContentSystem() {
                 setTimeout(() => {
                     this.guidelineDoc.status = 'parsed';
                     this.brand.guidelineDoc.status = 'parsed';
+                }, 0);
                 } else {
                     // Fallback: keep the existing "processing" behaviour
                     setTimeout(() => {
@@ -357,6 +359,58 @@ function enhancedBrandContentSystem() {
                 this.isGeneratingBlueprint = false;
                 this.activeTab = 'blueprint';
             }, 3000);
+        },
+
+        /**
+         * Re-generate blueprint from uploaded document
+         */
+        async regenerateBlueprintFromDoc() {
+            if (!this.brand.guidelineDoc || !this.brand.guidelineDoc.path) {
+                alert('Please upload a guideline document first.');
+                return;
+            }
+            
+            this.isRegenerating = true;
+            
+            try {
+                const response = await fetch(`${client.apiBase}/regenerate-blueprint/${this.brand.id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || 'Failed to regenerate blueprint');
+                }
+                
+                const result = await response.json();
+                
+                // Update blueprint with regenerated data
+                if (result.blueprint) {
+                    this.brand.blueprint = {
+                        ...this.brand.blueprint,
+                        ...result.blueprint
+                    };
+                    
+                    // Update product percentage in settings if changed
+                    if (typeof result.blueprint.productDefaultPct === 'number') {
+                        this.settings.productDefaultPct = result.blueprint.productDefaultPct;
+                    }
+                    
+                    // Auto-save the regenerated blueprint
+                    await this.saveBlueprint();
+                    
+                    console.log('Blueprint regenerated successfully from document');
+                }
+                
+            } catch (error) {
+                console.error('Regeneration error:', error);
+                alert(`Failed to regenerate blueprint: ${error.message}`);
+            } finally {
+                this.isRegenerating = false;
+            }
         },
 
         /**
