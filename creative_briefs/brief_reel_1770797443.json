@@ -1,0 +1,61 @@
+{
+  "creative_type": "reel",
+  "timestamp": 1770797443273,
+  "source_analysis": {
+    "visual_dna": {
+      "composition": "Centered profile view with integrated text elements",
+      "palette": "Cool gray (#D0D0D0) 60%, Black (#000000) 20%, Red accents (#FF0000)",
+      "lighting": "Naturalistic with soft shadowing",
+      "style": "Sleek, automotive, technical emphasis"
+    },
+    "strategic_analysis": {
+      "tone": "Technical, high-performance, elite",
+      "cta_style": "Informative with specification details",
+      "emotional_angle": "Precision engineering & speed",
+      "audience": "Car enthusiasts, 30-55, tech-savvy"
+    },
+    "image_composition_analysis": {
+      "focal_points": "Primary focus on car profile with 75% saliency; secondary text elements provide context",
+      "typography_style": "Modern sans-serif, structured alignment, high readability"
+    },
+    "prompt_reconstruction": "Automotive photography, sleek sports car in profile view, technical specifications overlay, soft lighting, cool gray and black color scheme, modern composition, commercial automotive style --ar 16:9 --style raw",
+    "video_prompt_json": {
+      "scene": "sleek automotive studio",
+      "subjects": [
+        {
+          "type": "sports car",
+          "description": "high-performance car with advanced aerodynamics",
+          "position": "center"
+        }
+      ],
+      "style": "commercial automotive, cinematic showcase",
+      "color_palette": [
+        "cool gray #D0D0D0",
+        "black #000000",
+        "red #FF0000"
+      ],
+      "lighting": "soft studio lighting with gentle shadows",
+      "mood": "elite, precise, sophisticated",
+      "camera": "slow dolly shot along car profile",
+      "movement": "reveal of specifications, dynamic light sweeps",
+      "duration_suggestion": "10-15 seconds"
+    },
+    "stored_image_path": "analyzed_images\\HD POSTER PORSCHE_1770797434.jpg",
+    "stored_image_url": "/analyzed_images/HD POSTER PORSCHE_1770797434.jpg"
+  },
+  "transformation_instructions": "make a reel on this image for my porsche car make it race on an open road with realestic camera following. use the tagline \"fast as hell\"",
+  "common": {
+    "objective": "Product Launch",
+    "product": "UltraRun Pro Shoes",
+    "platform": "Instagram",
+    "aspect_ratio": "1:1 (Square)"
+  },
+  "reel_settings": {
+    "scene_count": "4 Scenes (Standard)",
+    "total_duration": "15 seconds",
+    "hook_length": "3 seconds",
+    "music_style": "Upbeat/Energetic",
+    "voiceover": "No",
+    "captions": "Yes - Auto-highlight keywords"
+  }
+}
