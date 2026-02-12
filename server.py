@@ -1,28 +1,92 @@
 import os
+import sys
 import json
 import uvicorn
+<<<<<<< Updated upstream
 from fastapi import FastAPI, UploadFile, File, HTTPException
+=======
+from contextlib import asynccontextmanager
+from fastapi import FastAPI, UploadFile, File, HTTPException, Form, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import HTMLResponse, JSONResponse
+>>>>>>> Stashed changes
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 import shutil
 from pathlib import Path
 from dotenv import load_dotenv
+<<<<<<< Updated upstream
+=======
+from typing import Optional, List
+>>>>>>> Stashed changes
 
-# Import the ImageRater from the inspire me/newimg.py
-# We need to add the directory to sys.path to import it
-import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), 'inspire me'))
-from newimg import ImageRater
+# Set base directories and environment variables FIRST
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+os.environ["DATA_DIR"] = os.path.join(BASE_DIR, 'backend', 'data')
+os.environ["UPLOAD_DIR"] = os.path.join(BASE_DIR, 'backend', 'uploads')
 
+<<<<<<< Updated upstream
 # Import brand registration API
 sys.path.append(os.path.join(os.path.dirname(__file__), 'brand registration'))
 from brand_registration_api import router as brand_router
 
-# Load environment variables
-load_dotenv(os.path.join(os.path.dirname(__file__), 'inspire me', '.env'))
+=======
+# Add all module paths to sys.path
+backend_path = os.path.join(BASE_DIR, 'backend')
+if backend_path not in sys.path:
+    sys.path.insert(0, backend_path)
 
+inspire_path = os.path.join(BASE_DIR, 'inspire me')
+if inspire_path not in sys.path:
+    sys.path.append(inspire_path)
+
+brand_reg_path = os.path.join(BASE_DIR, 'brand registration')
+if brand_reg_path not in sys.path:
+    sys.path.append(brand_reg_path)
+
+>>>>>>> Stashed changes
+# Load environment variables
+load_dotenv(os.path.join(BASE_DIR, '.env'))
+load_dotenv(os.path.join(inspire_path, '.env'))
+
+# Now perform imports that might depend on environment or sys.path
+from app.database import init_db
+from newimg import ImageRater
+from brand_registration_api import router as brand_router
+from app.main import blueprint_router
+from api.v1.router import api_router as campaign_api_router
+
+<<<<<<< Updated upstream
 app = FastAPI()
+=======
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    print("Initializing brand blueprint database...")
+    init_db()
+    print("Brand blueprint database initialized successfully.")
+    
+    # Ensure uploads directory exists
+    uploads_dir = Path("uploads/guidelines")
+    uploads_dir.mkdir(parents=True, exist_ok=True)
+    print(f"Ensured uploads directory exists: {uploads_dir}")
+
+    # Create necessary directories for Campaign module
+    os.makedirs("data/campaigns", exist_ok=True)
+    os.makedirs("data/brands", exist_ok=True)
+    os.makedirs("data/settings", exist_ok=True)
+    os.makedirs("data/inspire", exist_ok=True)
+    os.makedirs("data/engage", exist_ok=True)
+    os.makedirs("uploads", exist_ok=True)
+    print("Ensured campaign module data directories exist.")
+    
+    yield
+    
+    # Shutdown (if needed in future)
+    print("Shutting down...")
+
+app = FastAPI(lifespan=lifespan)
+>>>>>>> Stashed changes
 
 # Add CORS middleware
 app.add_middleware(
@@ -36,6 +100,31 @@ app.add_middleware(
 # Include brand registration router
 app.include_router(brand_router)
 
+<<<<<<< Updated upstream
+=======
+# Include brand blueprint router
+app.include_router(blueprint_router)
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    import logging
+    logger = logging.getLogger("uvicorn")
+    logger.error(f"❌ Validation error at {request.url.path}: {exc.errors()}")
+    try:
+        body = await request.json()
+        logger.error(f"📦 Request body: {json.dumps(body, indent=2)}")
+    except:
+        logger.error("📦 Could not parse request body as JSON")
+    
+    return JSONResponse(
+        status_code=422,
+        content={"detail": exc.errors()}
+    )
+
+# Include Campaign Module API routes
+app.include_router(campaign_api_router, prefix="/api/v1")
+
+>>>>>>> Stashed changes
 # Initialize ImageRater
 api_key = os.getenv('OPENAI_API_KEY')
 if not api_key:
@@ -52,6 +141,16 @@ if api_key:
 app.mount("/templates", StaticFiles(directory="templates"), name="templates")
 app.mount("/inspire me", StaticFiles(directory="inspire me"), name="inspire_me")
 
+<<<<<<< Updated upstream
+=======
+# Mount app/static for brand blueprint assets
+app.mount("/brand-static", StaticFiles(directory="app/static"), name="brand_static")
+
+@app.get("/routes")
+async def get_routes():
+    return [{"path": route.path, "name": route.name, "methods": route.methods} for route in app.routes]
+
+>>>>>>> Stashed changes
 @app.get("/")
 async def root():
     return {"message": "Server is running"}
@@ -64,6 +163,21 @@ async def read_item():
 @app.get("/FACEBOOK-BRAND-REGISTRATION.html", response_class=HTMLResponse)
 async def read_brand_registration():
     with open("templates/FACEBOOK-BRAND-REGISTRATION.html", "r", encoding="utf-8") as f:
+        return f.read()
+
+@app.get("/FACEBOOK-CREATE-CAMPAIGN.html", response_class=HTMLResponse)
+async def read_create_campaign():
+    with open("templates/FACEBOOK-CREATE-CAMPAIGN.html", "r", encoding="utf-8") as f:
+        return f.read()
+
+@app.get("/FACEBOOK-SETTINGS.html", response_class=HTMLResponse)
+async def read_settings():
+    with open("templates/FACEBOOK-SETTINGS.html", "r", encoding="utf-8") as f:
+        return f.read()
+
+@app.get("/FACEBOOK-ENGAGE-BOOST.html", response_class=HTMLResponse)
+async def read_engage_boost():
+    with open("templates/FACEBOOK-ENGAGE-BOOST.html", "r", encoding="utf-8") as f:
         return f.read()
 
 from pydantic import BaseModel
@@ -186,4 +300,5 @@ if __name__ == "__main__":
     logger.info("Starting server via python execution...")
     
     # Run server
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)

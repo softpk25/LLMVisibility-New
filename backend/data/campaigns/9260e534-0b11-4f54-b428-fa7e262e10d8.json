@@ -1,0 +1,133 @@
+{
+  "id": "9260e534-0b11-4f54-b428-fa7e262e10d8",
+  "campaign_metadata": {
+    "id": "70b4fe92-8da3-45e4-a8b3-9f7652d6587c",
+    "name": "M",
+    "objective": "awareness",
+    "target_audience": "General audience",
+    "start_date": "2026-02-12",
+    "end_date": "2026-03-14",
+    "frequency": 1,
+    "status": "draft",
+    "created_at": "2026-02-12 07:46:56.098877",
+    "updated_at": "2026-02-12 07:46:56.098877"
+  },
+  "brand_context": {
+    "brand_id": "brand-techflow-solutions",
+    "brand_name": "TechFlow Solutions",
+    "voice_profile": {
+      "formality": "casual",
+      "humor": "moderate",
+      "tone": "enthusiastic",
+      "personality_traits": [
+        "innovative",
+        "approachable",
+        "expert"
+      ],
+      "do_phrases": [
+        "We believe",
+        "Let's explore",
+        "Together we can"
+      ],
+      "dont_phrases": [
+        "Never",
+        "Impossible",
+        "Can't"
+      ]
+    },
+    "content_pillars": [
+      {
+        "id": "pillar-innovation",
+        "name": "Innovation Spotlight",
+        "type": "educational",
+        "description": "Showcasing cutting-edge technology solutions",
+        "keywords": [
+          "innovation",
+          "technology",
+          "future"
+        ],
+        "percentage": 40
+      },
+      {
+        "id": "pillar-community",
+        "name": "Community Stories",
+        "type": "community",
+        "description": "Highlighting user success stories",
+        "keywords": [
+          "community",
+          "success",
+          "stories"
+        ],
+        "percentage": 30
+      },
+      {
+        "id": "pillar-product",
+        "name": "Product Excellence",
+        "type": "promotional",
+        "description": "Demonstrating product features",
+        "keywords": [
+          "product",
+          "features",
+          "benefits"
+        ],
+        "percentage": 30
+      }
+    ],
+    "guidelines": {
+      "color_palette": [
+        "#5046e5",
+        "#00c4cc",
+        "#1a202c",
+        "#f7fafc"
+      ],
+      "typography": {
+        "primary": "Inter",
+        "secondary": "Arial"
+      }
+    }
+  },
+  "personas": [
+    {
+      "id": "persona-3",
+      "name": "persona-3",
+      "age_range": "Unknown",
+      "interests": [],
+      "demographics": {},
+      "behavior_patterns": []
+    }
+  ],
+  "products": [],
+  "language_config": {
+    "primary_language": "en",
+    "multilingual_enabled": false,
+    "additional_languages": []
+  },
+  "post_mix": {
+    "educational": 50,
+    "entertaining": 0,
+    "promotional": 0,
+    "ugc": 50,
+    "seasonal": 0,
+    "reactive": 0
+  },
+  "content_types": [
+    "link"
+  ],
+  "content_plan": {
+    "generated_plan": "Content Calendar Plan:\n\nDate: 2026-02-12\nTheme: Educational\nPost Idea: \"We believe in the power of technology to transform lives. Let’s explore how our latest AI solution is making a difference. [link]\"\nVoice: Casual, moderate humor, enthusiastic, innovative, approachable, expert.\n\nDate: 2026-02-13\nTheme: User-Generated Content (UGC)\nPost Idea: \"Check out this fantastic review from one of our satisfied customers! [link]\"\nVoice: Casual, moderate humor, enthusiastic, innovative, approachable, expert.\n\nDate: 2026-02-14\nTheme: Educational\nPost Idea: \"Together we can understand the benefits of cloud computing. Find out more in our latest blog post. [link]\"\nVoice: Casual, moderate humor, enthusiastic, innovative, approachable, expert.\n\nDate: 2026-02-15\nTheme: User-Generated Content (UGC)\nPost Idea: \"We love seeing how our customers use our products. Check out this creative use case! [link]\"\nVoice: Casual, moderate humor, enthusiastic, innovative, approachable, expert.\n\n[... similar pattern continues until the end of the campaign...]\n\nDate: 2026-03-13\nTheme: User-Generated Content (UGC)\nPost Idea: \"Hear it straight from our customers. Check out this testimonial of how our solutions have helped transform their business. [link]\"\nVoice: Casual, moderate humor, enthusiastic, innovative, approachable, expert.\n\nDate: 2026-03-14\nTheme: Educational\nPost Idea: \"Our latest article dives into the future of technology and how TechFlow Solutions is leading the way. Don’t miss it! [link]\"\nVoice: Casual, moderate humor, enthusiastic, innovative, approachable, expert.",
+    "generated_at": "2026-02-12T07:48:17.474839",
+    "llm_metadata": {
+      "provider_used": "openai",
+      "available_providers": [
+        "openai",
+        "mock"
+      ],
+      "processing_time": 14.781000000000859
+    }
+  },
+  "posts": {},
+  "status": "draft",
+  "created_at": null,
+  "updated_at": "2026-02-12T07:48:17.474839",
+  "version": "v1"
+}

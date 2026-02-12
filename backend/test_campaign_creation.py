@@ -42,7 +42,7 @@ async def test_campaign_creation():
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
-                "http://localhost:8000/api/v1/campaigns/create",
+                "http://localhost:8009/api/v1/campaigns/create",
                 json=campaign_data,
                 timeout=30.0
             )
