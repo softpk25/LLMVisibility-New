@@ -1,0 +1,61 @@
+{
+  "creative_type": "reel",
+  "timestamp": 1770813525364,
+  "source_analysis": {
+    "visual_dna": {
+      "composition": "Centered layout with high-tech elements and space motifs",
+      "palette": "Space blue (#004C97) 50%, White 30%, with red accents",
+      "lighting": "Flat digital rendering",
+      "style": "Futuristic, tech-oriented, NASA branding"
+    },
+    "strategic_analysis": {
+      "tone": "Innovative, exploratory, authoritative",
+      "cta_style": "Bold and inviting registration",
+      "emotional_angle": "Adventure & discovery",
+      "audience": "Space enthusiasts, all ages, technology admirers"
+    },
+    "image_composition_analysis": {
+      "focal_points": "Primary focus on 'Artemis' logo and QR code; secondary focus on moon illustration",
+      "typography_style": "Clean sans-serif, easy readability, structured organization"
+    },
+    "prompt_reconstruction": "Futuristic space-themed digital pass, focus on Artemis logo, flat lighting, prominent blue and white color scheme, technological and branded composition, NASA style --ar 16:9 --style digital",
+    "video_prompt_json": {
+      "scene": "digital futuristic cockpit interface",
+      "subjects": [
+        {
+          "type": "digital boarding pass",
+          "description": "space mission pass with prominent Artemis branding",
+          "position": "center"
+        }
+      ],
+      "style": "digital animation, sleek informative",
+      "color_palette": [
+        "space blue #004C97",
+        "white",
+        "red accents"
+      ],
+      "lighting": "bright digital glow",
+      "mood": "adventurous, informative, high-tech",
+      "camera": "slow zoom into the QR code",
+      "movement": "pulsating light on QR code, dynamic information transitions",
+      "duration_suggestion": "8-12 seconds"
+    },
+    "stored_image_path": "analyzed_images\\boarding-pass_1770813494.jpg",
+    "stored_image_url": "/analyzed_images/boarding-pass_1770813494.jpg"
+  },
+  "transformation_instructions": "",
+  "common": {
+    "objective": "Product Launch",
+    "product": "UltraRun Pro Shoes",
+    "platform": "Instagram",
+    "aspect_ratio": "1:1 (Square)"
+  },
+  "reel_settings": {
+    "scene_count": "4 Scenes (Standard)",
+    "total_duration": "15 seconds",
+    "hook_length": "3 seconds",
+    "music_style": "Upbeat/Energetic",
+    "voiceover": "No",
+    "captions": "Yes - Auto-highlight keywords"
+  }
+}

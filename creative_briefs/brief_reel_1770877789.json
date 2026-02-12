@@ -1,0 +1,61 @@
+{
+  "creative_type": "reel",
+  "timestamp": 1770877788810,
+  "source_analysis": {
+    "visual_dna": {
+      "composition": "Close-up portrait with focus on facial mask detail",
+      "palette": "Dark charcoal 70%, muted purple 20%, subtle red accents 10%",
+      "lighting": "Soft diffused lighting with cooler tones",
+      "style": "Edgy, cyberpunk, contemporary streetwear"
+    },
+    "strategic_analysis": {
+      "tone": "Mysterious, rebellious, modern",
+      "cta_style": "Implied engagement through visual intrigue",
+      "emotional_angle": "Individuality & edge",
+      "audience": "Youthful, counter-culture enthusiasts, 18-35"
+    },
+    "image_composition_analysis": {
+      "focal_points": "Primary focus on masked face with detailed texture; background fades into gradients",
+      "typography_style": "None present, focus is on visual storytelling through imagery"
+    },
+    "prompt_reconstruction": "Digital portrait artwork, individual with curly hair and detailed face mask, soft diffused lighting, dark charcoal and muted purple color scheme, cyberpunk streetwear style --ar 1:1 --style raw",
+    "video_prompt_json": {
+      "scene": "urban digital landscape",
+      "subjects": [
+        {
+          "type": "individual",
+          "description": "youth with curly hair, wearing a detailed face mask",
+          "position": "center-left profile"
+        }
+      ],
+      "style": "animated, cyberpunk character focus",
+      "color_palette": [
+        "dark charcoal",
+        "muted purple",
+        "subtle red"
+      ],
+      "lighting": "soft diffused lighting with cooler tones",
+      "mood": "mysterious, edgy, modern",
+      "camera": "slow zoom in on character's profile",
+      "movement": "gentle background shimmer, subtle breathing motion",
+      "duration_suggestion": "6-10 seconds"
+    },
+    "stored_image_path": "analyzed_images\\corpse pfp_1770877775.jpg",
+    "stored_image_url": "/analyzed_images/corpse pfp_1770877775.jpg"
+  },
+  "transformation_instructions": "create an advertiisment for him his name is \"corpse husband\"",
+  "common": {
+    "objective": "Product Launch",
+    "product": "UltraRun Pro Shoes",
+    "platform": "Instagram",
+    "aspect_ratio": "1:1 (Square)"
+  },
+  "reel_settings": {
+    "scene_count": "4 Scenes (Standard)",
+    "total_duration": "15 seconds",
+    "hook_length": "3 seconds",
+    "music_style": "Upbeat/Energetic",
+    "voiceover": "No",
+    "captions": "Yes - Auto-highlight keywords"
+  }
+}

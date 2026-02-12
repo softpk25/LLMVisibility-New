@@ -1,0 +1,60 @@
+{
+  "creative_type": "image",
+  "timestamp": 1770813388725,
+  "source_analysis": {
+    "visual_dna": {
+      "composition": "Balanced split layout with strong graphical elements",
+      "palette": "Space-themed blues (#0044CC) 60%, White (#FFFFFF) 30%, accents of red",
+      "lighting": "Flat digital rendering",
+      "style": "Futuristic, informational, space agency branding"
+    },
+    "strategic_analysis": {
+      "tone": "Inspirational, exploratory, official",
+      "cta_style": "Informative with thematic emphasis",
+      "emotional_angle": "Space exploration & adventure",
+      "audience": "Space enthusiasts, tech-savvy, 20-40, explorers at heart"
+    },
+    "image_composition_analysis": {
+      "focal_points": "Primary focus on textual information; secondary focus on graphical elements like logos and QR code",
+      "typography_style": "Bold and clean sans-serif, high readability"
+    },
+    "prompt_reconstruction": "Digital boarding pass design, space-themed, vibrant blue and white color scheme, NASA branding elements, informational layout, futuristic style, official and exploratory tone --ar 16:9 --style raw",
+    "video_prompt_json": {
+      "scene": "digital space-themed interface",
+      "subjects": [
+        {
+          "type": "digital boarding pass",
+          "description": "futuristic boarding pass for lunar mission",
+          "position": "center"
+        }
+      ],
+      "style": "official space agency branding, dynamic presentation",
+      "color_palette": [
+        "space blue #0044CC",
+        "white #FFFFFF",
+        "accent red"
+      ],
+      "lighting": "digital glow and highlights",
+      "mood": "exploratory, authoritative, inspirational",
+      "camera": "slow zoom in to emphasize data",
+      "movement": "slight panning across elements, subtle animations on text",
+      "duration_suggestion": "10-15 seconds"
+    },
+    "stored_image_path": "analyzed_images\\boarding-pass_1770813363.jpg",
+    "stored_image_url": "/analyzed_images/boarding-pass_1770813363.jpg"
+  },
+  "transformation_instructions": "rename to bunny",
+  "common": {
+    "objective": "Product Launch",
+    "product": "UltraRun Pro Shoes",
+    "platform": "Instagram",
+    "aspect_ratio": "1:1 (Square)"
+  },
+  "image_settings": {
+    "style_emphasis": "Product-focused",
+    "background_mood": "Studio/Clean",
+    "headline": "",
+    "subheadline": "",
+    "cta_text": ""
+  }
+}
