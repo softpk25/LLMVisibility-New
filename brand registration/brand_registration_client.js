@@ -130,32 +130,33 @@ class BrandRegistrationClient {
             throw error;
         }
     }
-}
+
     /**
      * Update brand data
      */
     async updateBrand(brandId, updates) {
-    try {
-        const response = await fetch(`${this.apiBase}/update-brand/${brandId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updates)
-        });
+        try {
+            const response = await fetch(`${this.apiBase}/update-brand/${brandId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updates)
+            });
 
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Failed to update brand');
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.detail || 'Failed to update brand');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Update brand error:', error);
+            throw error;
         }
-
-        return await response.json();
-    } catch (error) {
-        console.error('Update brand error:', error);
-        throw error;
     }
 }
-}
+
 
 /**
  * Enhanced Brand Content System with Backend Integration
