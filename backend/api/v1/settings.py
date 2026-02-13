@@ -1,11 +1,13 @@
 """
-Settings API endpoints
+Settings API endpoints using SQLite backend
 """
 
 import uuid
+import json
 from datetime import datetime
-from typing import List, Dict, Any
-from fastapi import APIRouter, HTTPException, Query, Path
+from typing import List, Dict, Any, Optional
+from fastapi import APIRouter, HTTPException, Query, Path, Depends
+from sqlite3 import Connection
 
 from schemas.settings import (
     LanguageSettings,
@@ -25,267 +27,149 @@ from schemas.settings import (
     PersonaCreateRequest,
     ProductCreateRequest,
     SettingsResponse,
-    IntegrationStatus
+    IntegrationStatus,
+    EmojiPolicy,
+    SectorPreset,
+    LanguageCode
 )
-from services.storage import settings_storage, storage
+from core.db import get_db_connection
 from core.logging_config import get_logger
 
 logger = get_logger("settings_api")
 router = APIRouter()
 
-
-# Language Settings
-@router.get("/language", response_model=LanguageSettingsResponse)
-async def get_language_settings():
-    """Get language settings"""
+# Helper to get DB connection
+def get_db():
+    conn = get_db_connection()
     try:
-        settings_data = await settings_storage.get_settings("language")
-        language_settings = LanguageSettings(**settings_data)
-        
-        return LanguageSettingsResponse(settings=language_settings)
-        
-    except Exception as e:
-        logger.error(f"Failed to get language settings: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get language settings")
+        yield conn
+    finally:
+        conn.close()
 
+# ── Settings (Global/Brand-specific) ──────────────────────────────────
+
+async def _get_global_settings(conn: Connection, brand_id: str, settings_type: str) -> Optional[Dict[str, Any]]:
+    cursor = conn.execute(
+        "SELECT config_json FROM global_settings WHERE brand_id = ? AND type = ?",
+        (brand_id, settings_type)
+    )
+    row = cursor.fetchone()
+    if row:
+        return json.loads(row["config_json"])
+    return None
+
+async def _save_global_settings(conn: Connection, brand_id: str, settings_type: str, config: Dict[str, Any]):
+    now = datetime.utcnow().isoformat()
+    config_json = json.dumps(config)
+    conn.execute(
+        """
+        INSERT INTO global_settings (brand_id, type, config_json, updated_at)
+        VALUES (?, ?, ?, ?)
+        ON CONFLICT(brand_id, type) DO UPDATE SET
+            config_json = excluded.config_json,
+            updated_at = excluded.updated_at
+        """,
+        (brand_id, settings_type, config_json, now)
+    )
+    conn.commit()
+
+@router.get("/{brand_id}", response_model=Dict[str, Any])
+async def get_all_settings(brand_id: str, conn: Connection = Depends(get_db)):
+    """Get all settings for a brand"""
+    try:
+        cursor = conn.execute("SELECT type, config_json FROM global_settings WHERE brand_id = ?", (brand_id,))
+        rows = cursor.fetchall()
+        settings = {row["type"]: json.loads(row["config_json"]) for row in rows}
+        return settings
+    except Exception as e:
+        logger.error(f"Failed to get settings for {brand_id}: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get settings")
+
+@router.put("/{brand_id}")
+async def update_all_settings(brand_id: str, settings: Dict[str, Any], conn: Connection = Depends(get_db)):
+    """Update multiple settings types for a brand"""
+    try:
+        for settings_type, config in settings.items():
+            await _save_global_settings(conn, brand_id, settings_type, config)
+        return {"status": "success", "message": "Settings updated"}
+    except Exception as e:
+        logger.error(f"Failed to update settings for {brand_id}: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update settings")
+
+# Compatibility endpoints (default to brand-001)
+@router.get("/language", response_model=LanguageSettingsResponse)
+async def get_language_settings(conn: Connection = Depends(get_db)):
+    data = await _get_global_settings(conn, "brand-001", "language")
+    if not data:
+        return LanguageSettingsResponse(settings=LanguageSettings())
+    return LanguageSettingsResponse(settings=LanguageSettings(**data))
 
 @router.put("/language", response_model=LanguageSettingsResponse)
-async def update_language_settings(settings: LanguageSettings):
-    """Update language settings"""
-    try:
-        settings_data = settings.dict()
-        await settings_storage.update_settings("language", settings_data)
-        
-        logger.info("Updated language settings")
-        
-        return LanguageSettingsResponse(settings=settings)
-        
-    except Exception as e:
-        logger.error(f"Failed to update language settings: {e}")
-        raise HTTPException(status_code=500, detail="Failed to update language settings")
+async def update_language_settings(settings: LanguageSettings, conn: Connection = Depends(get_db)):
+    await _save_global_settings(conn, "brand-001", "language", settings.dict())
+    return LanguageSettingsResponse(settings=settings)
 
-
-# LLM Settings
 @router.get("/llm", response_model=LLMSettingsResponse)
-async def get_llm_settings():
-    """Get LLM provider settings"""
-    try:
-        settings_data = await settings_storage.get_settings("llm")
-        llm_settings = LLMSettings(**settings_data)
-        
-        return LLMSettingsResponse(settings=llm_settings)
-        
-    except Exception as e:
-        logger.error(f"Failed to get LLM settings: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get LLM settings")
-
+async def get_llm_settings(conn: Connection = Depends(get_db)):
+    data = await _get_global_settings(conn, "brand-001", "llm")
+    if not data:
+        # Default LLM settings
+        return LLMSettingsResponse(settings=LLMSettings(
+            primary_provider="openai",
+            monthly_budget_limit=100.0,
+            models={"text_generation": "gpt-4"}
+        ))
+    return LLMSettingsResponse(settings=LLMSettings(**data))
 
 @router.put("/llm", response_model=LLMSettingsResponse)
-async def update_llm_settings(settings: LLMSettings):
-    """Update LLM provider settings"""
-    try:
-        settings_data = settings.dict()
-        await settings_storage.update_settings("llm", settings_data)
-        
-        logger.info(f"Updated LLM settings - Primary provider: {settings.primary_provider}")
-        
-        return LLMSettingsResponse(settings=settings)
-        
-    except Exception as e:
-        logger.error(f"Failed to update LLM settings: {e}")
-        raise HTTPException(status_code=500, detail="Failed to update LLM settings")
+async def update_llm_settings(settings: LLMSettings, conn: Connection = Depends(get_db)):
+    await _save_global_settings(conn, "brand-001", "llm", settings.dict())
+    return LLMSettingsResponse(settings=settings)
 
-
-# Guardrail Settings
 @router.get("/guardrails", response_model=GuardrailSettingsResponse)
-async def get_guardrail_settings():
-    """Get content guardrail settings"""
-    try:
-        settings_data = await settings_storage.get_settings("guardrails")
-        guardrail_settings = GuardrailSettings(**settings_data)
-        
-        return GuardrailSettingsResponse(settings=guardrail_settings)
-        
-    except Exception as e:
-        logger.error(f"Failed to get guardrail settings: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get guardrail settings")
-
+async def get_guardrail_settings(conn: Connection = Depends(get_db)):
+    data = await _get_global_settings(conn, "brand-001", "guardrails")
+    if not data:
+        return GuardrailSettingsResponse(settings=GuardrailSettings())
+    return GuardrailSettingsResponse(settings=GuardrailSettings(**data))
 
 @router.put("/guardrails", response_model=GuardrailSettingsResponse)
-async def update_guardrail_settings(settings: GuardrailSettings):
-    """Update content guardrail settings"""
-    try:
-        settings_data = settings.dict()
-        await settings_storage.update_settings("guardrails", settings_data)
-        
-        logger.info("Updated guardrail settings")
-        
-        return GuardrailSettingsResponse(settings=settings)
-        
-    except Exception as e:
-        logger.error(f"Failed to update guardrail settings: {e}")
-        raise HTTPException(status_code=500, detail="Failed to update guardrail settings")
+async def update_guardrail_settings(settings: GuardrailSettings, conn: Connection = Depends(get_db)):
+    await _save_global_settings(conn, "brand-001", "guardrails", settings.dict())
+    return GuardrailSettingsResponse(settings=settings)
 
+# ── Personas ──────────────────────────────────────────────────────────
 
-# Content Settings
-@router.get("/content", response_model=ContentSettings)
-async def get_content_settings():
-    """Get content generation settings"""
-    try:
-        settings_data = await settings_storage.get_settings("content")
-        content_settings = ContentSettings(**settings_data)
-        
-        return content_settings
-        
-    except Exception as e:
-        logger.error(f"Failed to get content settings: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get content settings")
-
-
-@router.put("/content", response_model=ContentSettings)
-async def update_content_settings(settings: ContentSettings):
-    """Update content generation settings"""
-    try:
-        settings_data = settings.dict()
-        await settings_storage.update_settings("content", settings_data)
-        
-        logger.info("Updated content settings")
-        
-        return settings
-        
-    except Exception as e:
-        logger.error(f"Failed to update content settings: {e}")
-        raise HTTPException(status_code=500, detail="Failed to update content settings")
-
-
-# Sector Settings
-@router.get("/sector", response_model=SectorSettings)
-async def get_sector_settings():
-    """Get industry sector settings"""
-    try:
-        settings_data = await settings_storage.get_settings("sector")
-        
-        if not settings_data:
-            # Return default sector settings
-            return SectorSettings(
-                sector="technology",
-                compliance_rules=[],
-                industry_keywords=[],
-                restricted_topics=[],
-                preferred_content_types=[]
-            )
-        
-        sector_settings = SectorSettings(**settings_data)
-        return sector_settings
-        
-    except Exception as e:
-        logger.error(f"Failed to get sector settings: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get sector settings")
-
-
-@router.put("/sector", response_model=SectorSettings)
-async def update_sector_settings(settings: SectorSettings):
-    """Update industry sector settings"""
-    try:
-        settings_data = settings.dict()
-        await settings_storage.update_settings("sector", settings_data)
-        
-        logger.info(f"Updated sector settings - Sector: {settings.sector}")
-        
-        return settings
-        
-    except Exception as e:
-        logger.error(f"Failed to update sector settings: {e}")
-        raise HTTPException(status_code=500, detail="Failed to update sector settings")
-
-
-# Integration Settings
-@router.get("/integrations", response_model=IntegrationListResponse)
-async def get_integrations():
-    """Get platform integrations"""
-    try:
-        integrations_data = await settings_storage.get_settings("integrations")
-        
-        # Convert to IntegrationConfig objects
-        integrations = []
-        for platform, config in integrations_data.items():
-            integration = IntegrationConfig(
-                platform=platform,
-                status=IntegrationStatus(config.get("status", "disconnected")),
-                credentials=config.get("credentials", {}),
-                settings=config.get("settings", {}),
-                last_sync=config.get("last_sync"),
-                error_message=config.get("error_message")
-            )
-            integrations.append(integration)
-        
-        return IntegrationListResponse(integrations=integrations)
-        
-    except Exception as e:
-        logger.error(f"Failed to get integrations: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get integrations")
-
-
-@router.put("/integrations/{platform}", response_model=IntegrationConfig)
-async def update_integration(platform: str, config: IntegrationConfig):
-    """Update platform integration configuration"""
-    try:
-        # Get current integrations
-        integrations_data = await settings_storage.get_settings("integrations")
-        
-        # Update specific platform
-        integrations_data[platform] = config.dict()
-        
-        # Save updated integrations
-        await settings_storage.update_settings("integrations", integrations_data)
-        
-        logger.info(f"Updated integration for platform: {platform}")
-        
-        return config
-        
-    except Exception as e:
-        logger.error(f"Failed to update integration: {e}")
-        raise HTTPException(status_code=500, detail="Failed to update integration")
-
-
-# Persona Management
-@router.get("/personas", response_model=PersonaListResponse)
+@router.get("/personas/{brand_id}", response_model=PersonaListResponse)
 async def list_personas(
+    brand_id: str,
     limit: int = Query(50, ge=1, le=100),
-    offset: int = Query(0, ge=0)
+    offset: int = Query(0, ge=0),
+    conn: Connection = Depends(get_db)
 ):
-    """List personas"""
+    """List personas for a brand"""
     try:
-        personas_data = await storage.list_items("personas", limit=limit, offset=offset)
-        total = await storage.count_items("personas")
-        
-        # Convert to PersonaData objects
-        personas = []
-        for persona_data in personas_data:
-            try:
-                persona = PersonaData(**persona_data)
-                personas.append(persona)
-            except Exception as e:
-                logger.warning(f"Failed to parse persona data: {e}")
-                continue
-        
-        return PersonaListResponse(
-            personas=personas,
-            total=total
+        cursor = conn.execute(
+            "SELECT data_json FROM personas WHERE brand_id = ? LIMIT ? OFFSET ?",
+            (brand_id, limit, offset)
         )
+        rows = cursor.fetchall()
+        personas = [PersonaData(**json.loads(row["data_json"])) for row in rows]
         
+        count_cursor = conn.execute("SELECT COUNT(*) FROM personas WHERE brand_id = ?", (brand_id,))
+        total = count_cursor.fetchone()[0]
+        
+        return PersonaListResponse(personas=personas, total=total)
     except Exception as e:
         logger.error(f"Failed to list personas: {e}")
         raise HTTPException(status_code=500, detail="Failed to list personas")
 
-
-@router.post("/personas", response_model=PersonaData)
-async def create_persona(request: PersonaCreateRequest):
-    """Create new persona"""
+@router.post("/personas/{brand_id}", response_model=PersonaData)
+async def create_persona(brand_id: str, request: PersonaCreateRequest, conn: Connection = Depends(get_db)):
+    """Create new persona for a brand"""
     try:
         persona_id = str(uuid.uuid4())
-        
-        persona = PersonaData(
+        persona_data = PersonaData(
             id=persona_id,
             name=request.name,
             age_range=request.age_range,
@@ -298,41 +182,39 @@ async def create_persona(request: PersonaCreateRequest):
             social_platforms=request.social_platforms
         )
         
-        # Save persona
-        await storage.save("personas", persona_id, persona.dict())
-        
-        logger.info(f"Created persona {persona_id}: {request.name}")
-        
-        return persona
-        
+        now = datetime.utcnow().isoformat()
+        conn.execute(
+            "INSERT INTO personas (id, brand_id, data_json, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
+            (persona_id, brand_id, json.dumps(persona_data.dict()), now, now)
+        )
+        conn.commit()
+        return persona_data
     except Exception as e:
         logger.error(f"Failed to create persona: {e}")
         raise HTTPException(status_code=500, detail="Failed to create persona")
 
-
-@router.get("/personas/{persona_id}", response_model=PersonaData)
-async def get_persona(persona_id: str = Path(..., description="Persona ID")):
+@router.get("/persona/{persona_id}", response_model=PersonaData)
+async def get_persona(persona_id: str, conn: Connection = Depends(get_db)):
     """Get persona by ID"""
-    try:
-        persona_data = await storage.load("personas", persona_id)
-        persona = PersonaData(**persona_data)
-        
-        return persona
-        
-    except Exception as e:
-        logger.error(f"Failed to get persona {persona_id}: {e}")
+    cursor = conn.execute("SELECT data_json FROM personas WHERE id = ?", (persona_id,))
+    row = cursor.fetchone()
+    if not row:
         raise HTTPException(status_code=404, detail="Persona not found")
+    return PersonaData(**json.loads(row["data_json"]))
 
-
-@router.put("/personas/{persona_id}", response_model=PersonaData)
-async def update_persona(persona_id: str, request: PersonaCreateRequest):
+@router.put("/persona/{persona_id}", response_model=PersonaData)
+async def update_persona(persona_id: str, request: PersonaCreateRequest, conn: Connection = Depends(get_db)):
     """Update persona"""
     try:
-        # Get existing persona
-        existing_persona = await storage.load("personas", persona_id)
+        cursor = conn.execute("SELECT brand_id, created_at FROM personas WHERE id = ?", (persona_id,))
+        row = cursor.fetchone()
+        if not row:
+            raise HTTPException(status_code=404, detail="Persona not found")
         
-        # Update with new data
-        updated_persona = PersonaData(
+        brand_id = row["brand_id"]
+        created_at = row["created_at"]
+        
+        persona_data = PersonaData(
             id=persona_id,
             name=request.name,
             age_range=request.age_range,
@@ -345,85 +227,62 @@ async def update_persona(persona_id: str, request: PersonaCreateRequest):
             social_platforms=request.social_platforms
         )
         
-        # Save updated persona
-        await storage.save("personas", persona_id, updated_persona.dict())
-        
-        logger.info(f"Updated persona {persona_id}")
-        
-        return updated_persona
-        
+        now = datetime.utcnow().isoformat()
+        conn.execute(
+            "UPDATE personas SET data_json = ?, updated_at = ? WHERE id = ?",
+            (json.dumps(persona_data.dict()), now, persona_id)
+        )
+        conn.commit()
+        return persona_data
     except Exception as e:
         logger.error(f"Failed to update persona {persona_id}: {e}")
         raise HTTPException(status_code=500, detail="Failed to update persona")
 
-
-@router.delete("/personas/{persona_id}")
-async def delete_persona(persona_id: str = Path(..., description="Persona ID")):
+@router.delete("/persona/{persona_id}")
+async def delete_persona(persona_id: str, conn: Connection = Depends(get_db)):
     """Delete persona"""
-    try:
-        success = await storage.delete("personas", persona_id)
-        
-        if not success:
-            raise HTTPException(status_code=404, detail="Persona not found")
-        
-        logger.info(f"Deleted persona {persona_id}")
-        
-        return {
-            "persona_id": persona_id,
-            "status": "success",
-            "message": "Persona deleted successfully"
-        }
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Failed to delete persona {persona_id}: {e}")
-        raise HTTPException(status_code=500, detail="Failed to delete persona")
+    cursor = conn.execute("DELETE FROM personas WHERE id = ?", (persona_id,))
+    if cursor.rowcount == 0:
+        raise HTTPException(status_code=404, detail="Persona not found")
+    conn.commit()
+    return {"status": "success", "message": "Persona deleted"}
 
+# ── Products ──────────────────────────────────────────────────────────
 
-# Product Management
-@router.get("/products", response_model=ProductListResponse)
+@router.get("/products/{brand_id}", response_model=ProductListResponse)
 async def list_products(
+    brand_id: str,
     limit: int = Query(50, ge=1, le=100),
     offset: int = Query(0, ge=0),
-    category: str = Query(None, description="Filter by category")
+    category: str = Query(None),
+    conn: Connection = Depends(get_db)
 ):
-    """List products"""
+    """List products for a brand"""
     try:
-        products_data = await storage.list_items("products", limit=limit, offset=offset)
-        total = await storage.count_items("products")
+        query = "SELECT data_json FROM products WHERE brand_id = ?"
+        params = [brand_id]
         
-        # Apply category filter
+        cursor = conn.execute(f"{query} LIMIT ? OFFSET ?", (*params, limit, offset))
+        rows = cursor.fetchall()
+        products = [ProductData(**json.loads(row["data_json"])) for row in rows]
+        
         if category:
-            products_data = [p for p in products_data if p.get("category") == category]
+            products = [p for p in products if p.category == category]
+            
+        count_cursor = conn.execute("SELECT COUNT(*) FROM products WHERE brand_id = ?", (brand_id,))
+        total = count_cursor.fetchone()[0]
         
-        # Convert to ProductData objects
-        products = []
-        for product_data in products_data:
-            try:
-                product = ProductData(**product_data)
-                products.append(product)
-            except Exception as e:
-                logger.warning(f"Failed to parse product data: {e}")
-                continue
-        
-        return ProductListResponse(
-            products=products,
-            total=total
-        )
-        
+        return ProductListResponse(products=products, total=total)
     except Exception as e:
         logger.error(f"Failed to list products: {e}")
         raise HTTPException(status_code=500, detail="Failed to list products")
 
-
-@router.post("/products", response_model=ProductData)
-async def create_product(request: ProductCreateRequest):
-    """Create new product"""
+@router.post("/products/{brand_id}", response_model=ProductData)
+async def create_product(brand_id: str, request: ProductCreateRequest, conn: Connection = Depends(get_db)):
+    """Create new product for a brand"""
     try:
         product_id = str(uuid.uuid4())
-        
-        product = ProductData(
+        product_data = ProductData(
             id=product_id,
             name=request.name,
             category=request.category,
@@ -437,41 +296,39 @@ async def create_product(request: ProductCreateRequest):
             availability=request.availability
         )
         
-        # Save product
-        await storage.save("products", product_id, product.dict())
-        
-        logger.info(f"Created product {product_id}: {request.name}")
-        
-        return product
-        
+        now = datetime.utcnow().isoformat()
+        conn.execute(
+            "INSERT INTO products (id, brand_id, data_json, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
+            (product_id, brand_id, json.dumps(product_data.dict()), now, now)
+        )
+        conn.commit()
+        return product_data
     except Exception as e:
         logger.error(f"Failed to create product: {e}")
         raise HTTPException(status_code=500, detail="Failed to create product")
 
-
-@router.get("/products/{product_id}", response_model=ProductData)
-async def get_product(product_id: str = Path(..., description="Product ID")):
+@router.get("/product/{product_id}", response_model=ProductData)
+async def get_product(product_id: str, conn: Connection = Depends(get_db)):
     """Get product by ID"""
-    try:
-        product_data = await storage.load("products", product_id)
-        product = ProductData(**product_data)
-        
-        return product
-        
-    except Exception as e:
-        logger.error(f"Failed to get product {product_id}: {e}")
+    cursor = conn.execute("SELECT data_json FROM products WHERE id = ?", (product_id,))
+    row = cursor.fetchone()
+    if not row:
         raise HTTPException(status_code=404, detail="Product not found")
+    return ProductData(**json.loads(row["data_json"]))
 
-
-@router.put("/products/{product_id}", response_model=ProductData)
-async def update_product(product_id: str, request: ProductCreateRequest):
+@router.put("/product/{product_id}", response_model=ProductData)
+async def update_product(product_id: str, request: ProductCreateRequest, conn: Connection = Depends(get_db)):
     """Update product"""
     try:
-        # Get existing product
-        existing_product = await storage.load("products", product_id)
+        cursor = conn.execute("SELECT brand_id, created_at FROM products WHERE id = ?", (product_id,))
+        row = cursor.fetchone()
+        if not row:
+            raise HTTPException(status_code=404, detail="Product not found")
         
-        # Update with new data
-        updated_product = ProductData(
+        brand_id = row["brand_id"]
+        created_at = row["created_at"]
+        
+        product_data = ProductData(
             id=product_id,
             name=request.name,
             category=request.category,
@@ -485,37 +342,25 @@ async def update_product(product_id: str, request: ProductCreateRequest):
             availability=request.availability
         )
         
-        # Save updated product
-        await storage.save("products", product_id, updated_product.dict())
-        
-        logger.info(f"Updated product {product_id}")
-        
-        return updated_product
-        
+        now = datetime.utcnow().isoformat()
+        conn.execute(
+            "UPDATE products SET data_json = ?, updated_at = ? WHERE id = ?",
+            (json.dumps(product_data.dict()), now, product_id)
+        )
+        conn.commit()
+        return product_data
     except Exception as e:
         logger.error(f"Failed to update product {product_id}: {e}")
         raise HTTPException(status_code=500, detail="Failed to update product")
 
-
-@router.delete("/products/{product_id}")
-async def delete_product(product_id: str = Path(..., description="Product ID")):
+@router.delete("/product/{product_id}")
+async def delete_product(product_id: str, conn: Connection = Depends(get_db)):
     """Delete product"""
-    try:
-        success = await storage.delete("products", product_id)
-        
-        if not success:
-            raise HTTPException(status_code=404, detail="Product not found")
-        
-        logger.info(f"Deleted product {product_id}")
-        
-        return {
-            "product_id": product_id,
-            "status": "success",
-            "message": "Product deleted successfully"
-        }
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Failed to delete product {product_id}: {e}")
-        raise HTTPException(status_code=500, detail="Failed to delete product")
+    cursor = conn.execute("DELETE FROM products WHERE id = ?", (product_id,))
+    if cursor.rowcount == 0:
+        raise HTTPException(status_code=404, detail="Product not found")
+    conn.commit()
+    return {"status": "success", "message": "Product deleted"}
+
+
+

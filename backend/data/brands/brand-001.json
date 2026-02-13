@@ -1,0 +1,61 @@
+{
+    "id": "brand-001",
+    "brand_name": "TechBrand",
+    "industry": "Technology",
+    "description": "Leading innovation in tech.",
+    "website_url": "https://techbrand.com",
+    "voice_profile": {
+        "formality": "neutral",
+        "humor": "subtle",
+        "tone": "professional",
+        "personality_traits": [
+            "innovative",
+            "reliable"
+        ],
+        "do_phrases": [],
+        "dont_phrases": []
+    },
+    "content_pillars": [
+        {
+            "id": "pillar-1",
+            "name": "Innovation",
+            "type": "educational",
+            "description": "Latest tech trends",
+            "keywords": [
+                "AI",
+                "Future"
+            ],
+            "percentage": 50
+        },
+        {
+            "id": "pillar-2",
+            "name": "Community",
+            "type": "community",
+            "description": "User stories",
+            "keywords": [
+                "Connect"
+            ],
+            "percentage": 50
+        }
+    ],
+    "brand_guidelines": {
+        "logo_usage": {},
+        "color_palette": [
+            "#000000",
+            "#FFFFFF"
+        ],
+        "typography": {},
+        "imagery_style": {},
+        "messaging_guidelines": {},
+        "compliance_rules": []
+    },
+    "target_demographics": {},
+    "brand_values": [
+        "Innovation",
+        "Integrity"
+    ],
+    "status": "active",
+    "created_at": "2024-01-01T00:00:00.000000",
+    "updated_at": "2024-01-01T00:00:00.000000",
+    "version": "v1"
+}

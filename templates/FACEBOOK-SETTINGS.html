@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.2/cdn.min.js" defer></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        
+
         :root {
             --primary: #5046e5;
             --primary-dark: #4039c0;
@@ -20,7 +21,7 @@
             --warning: #f59e0b;
             --danger: #ef4444;
         }
-        
+
         body {
             font-family: 'Inter', sans-serif;
             color: var(--text-dark);
@@ -29,7 +30,7 @@
             display: flex;
             overflow-x: hidden;
         }
-        
+
         .btn-primary {
             background-color: var(--primary);
             color: white;
@@ -43,18 +44,18 @@
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .btn-primary:hover {
             background-color: var(--primary-dark);
             transform: translateY(-1px);
         }
-        
+
         .btn-primary:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none;
         }
-        
+
         .btn-secondary {
             background-color: white;
             color: var(--primary);
@@ -68,12 +69,12 @@
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .btn-secondary:hover {
             background-color: rgba(80, 70, 229, 0.05);
             border-color: var(--primary);
         }
-        
+
         .btn-success {
             background-color: var(--success);
             color: white;
@@ -87,7 +88,7 @@
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .sidebar {
             width: 280px;
             background-color: white;
@@ -102,12 +103,12 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             overflow-y: auto;
         }
-        
+
         .sidebar-header {
             padding: 0 1.5rem 1.5rem;
             border-bottom: 1px solid #e2e8f0;
         }
-        
+
         .prometrix-wordmark {
             font-size: 28px;
             font-weight: 800;
@@ -116,17 +117,22 @@
             align-items: center;
             margin-bottom: 4px;
         }
-        
+
         .gradient-text {
             background: linear-gradient(135deg, #5046e5 0%, #00c4cc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        
-        .primary-text { color: #5046e5; }
-        .dark-text { color: #1a202c; }
-        
+
+        .primary-text {
+            color: #5046e5;
+        }
+
+        .dark-text {
+            color: #1a202c;
+        }
+
         .analytics-bars {
             display: flex;
             align-items: end;
@@ -134,30 +140,44 @@
             margin-left: 8px;
             margin-right: 4px;
         }
-        
+
         .bar {
             border-radius: 2px;
             background: linear-gradient(135deg, #00c4cc 0%, #5046e5 100%);
             width: 3px;
         }
-        
-        .bar1 { height: 10px; opacity: 0.7; }
-        .bar2 { height: 14px; opacity: 0.8; }
-        .bar3 { height: 18px; opacity: 0.9; }
-        .bar4 { height: 22px; }
-        
+
+        .bar1 {
+            height: 10px;
+            opacity: 0.7;
+        }
+
+        .bar2 {
+            height: 14px;
+            opacity: 0.8;
+        }
+
+        .bar3 {
+            height: 18px;
+            opacity: 0.9;
+        }
+
+        .bar4 {
+            height: 22px;
+        }
+
         .tagline-small {
             font-size: 9px;
             font-weight: 600;
             letter-spacing: 1px;
             color: #718096;
         }
-        
+
         .menu {
             margin-top: 1.5rem;
             list-style: none;
         }
-        
+
         .menu-item {
             padding: 0.75rem 1.5rem;
             display: flex;
@@ -169,29 +189,29 @@
             border-left: 3px solid transparent;
             cursor: pointer;
         }
-        
+
         .menu-item:hover {
             background-color: rgba(80, 70, 229, 0.05);
             color: var(--primary);
         }
-        
+
         .menu-item.active {
             color: var(--primary);
             background-color: rgba(80, 70, 229, 0.1);
             border-left-color: var(--primary);
         }
-        
+
         .submenu {
             list-style: none;
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease;
         }
-        
+
         .submenu.open {
             max-height: 400px;
         }
-        
+
         .submenu-item {
             padding: 0.5rem 1.5rem 0.5rem 3.5rem;
             display: flex;
@@ -204,27 +224,27 @@
             transition: all 0.2s;
             cursor: pointer;
         }
-        
+
         .submenu-item:hover {
             background-color: rgba(80, 70, 229, 0.05);
             color: var(--primary);
         }
-        
+
         .submenu-item.active {
             color: var(--primary);
             font-weight: 600;
         }
-        
+
         .chevron {
             margin-left: auto;
             transition: transform 0.3s ease;
             font-size: 0.75rem;
         }
-        
+
         .chevron.open {
             transform: rotate(180deg);
         }
-        
+
         .main-content {
             flex: 1;
             margin-left: 280px;
@@ -232,26 +252,26 @@
             max-width: calc(100vw - 280px);
             transition: all 0.3s ease;
         }
-        
+
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
         }
-        
+
         .title-section h1 {
             font-size: 2rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
             color: var(--text-dark);
         }
-        
+
         .subtitle {
             color: var(--text-light);
             font-size: 1rem;
         }
-        
+
         .card {
             background-color: white;
             border-radius: 0.75rem;
@@ -261,11 +281,11 @@
             border: 1px solid #e2e8f0;
             transition: all 0.3s;
         }
-        
+
         .card:hover {
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
-        
+
         .card-header {
             padding: 1.25rem 1.5rem;
             border-bottom: 1px solid #e2e8f0;
@@ -274,28 +294,28 @@
             align-items: center;
             background-color: #f8fafc;
         }
-        
+
         .card-title {
             font-size: 1.125rem;
             font-weight: 600;
             color: var(--text-dark);
         }
-        
+
         .card-body {
             padding: 1.5rem;
         }
-        
+
         .form-group {
             margin-bottom: 1.25rem;
         }
-        
+
         .form-label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
             color: var(--text-dark);
         }
-        
+
         .form-control {
             width: 100%;
             padding: 0.75rem;
@@ -305,26 +325,26 @@
             transition: all 0.2s;
             font-family: inherit;
         }
-        
+
         .form-control:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(80, 70, 229, 0.1);
         }
-        
+
         .toggle-switch {
             position: relative;
             display: inline-block;
             width: 44px;
             height: 24px;
         }
-        
+
         .toggle-switch input {
             opacity: 0;
             width: 0;
             height: 0;
         }
-        
+
         .toggle-slider {
             position: absolute;
             cursor: pointer;
@@ -336,7 +356,7 @@
             transition: .4s;
             border-radius: 24px;
         }
-        
+
         .toggle-slider:before {
             position: absolute;
             content: "";
@@ -348,15 +368,15 @@
             transition: .4s;
             border-radius: 50%;
         }
-        
-        input:checked + .toggle-slider {
+
+        input:checked+.toggle-slider {
             background-color: var(--primary);
         }
-        
-        input:checked + .toggle-slider:before {
+
+        input:checked+.toggle-slider:before {
             transform: translateX(20px);
         }
-        
+
         .chip {
             display: inline-flex;
             align-items: center;
@@ -368,34 +388,34 @@
             margin-right: 0.5rem;
             margin-bottom: 0.5rem;
         }
-        
+
         .chip-remove {
             cursor: pointer;
             color: #6b7280;
             font-weight: bold;
         }
-        
+
         .chip-remove:hover {
             color: #ef4444;
         }
-        
+
         .status-badge {
             padding: 0.25rem 0.75rem;
             border-radius: 9999px;
             font-size: 0.75rem;
             font-weight: 600;
         }
-        
+
         .status-connected {
             background-color: #dcfce7;
             color: #059669;
         }
-        
+
         .status-disconnected {
             background-color: #fee2e2;
             color: #dc2626;
         }
-        
+
         .integration-card {
             display: flex;
             align-items: center;
@@ -406,7 +426,7 @@
             border-radius: 0.5rem;
             margin-bottom: 1rem;
         }
-        
+
         .integration-icon {
             width: 40px;
             height: 40px;
@@ -417,7 +437,7 @@
             font-weight: bold;
             color: white;
         }
-        
+
         .range-slider {
             width: 100%;
             height: 6px;
@@ -426,7 +446,7 @@
             outline: none;
             -webkit-appearance: none;
         }
-        
+
         .range-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
@@ -436,7 +456,7 @@
             background: var(--primary);
             cursor: pointer;
         }
-        
+
         .upload-area {
             border: 2px dashed #d1d5db;
             border-radius: 0.5rem;
@@ -445,17 +465,17 @@
             transition: all 0.2s;
             cursor: pointer;
         }
-        
+
         .upload-area:hover {
             border-color: var(--primary);
             background-color: rgba(80, 70, 229, 0.02);
         }
-        
+
         .model-table {
             width: 100%;
             border-collapse: collapse;
         }
-        
+
         .model-table th {
             text-align: left;
             padding: 0.75rem;
@@ -464,15 +484,17 @@
             font-weight: 600;
             font-size: 0.875rem;
         }
-        
+
         .model-table td {
             padding: 0.75rem;
             border-bottom: 1px solid #f1f5f9;
         }
     </style>
 </head>
+
 <body x-data="brandContentSystem()" x-init="init()">
-    <!-- Sidebar -->    <aside class="sidebar">
+    <!-- Sidebar -->
+    <aside class="sidebar">
         <div style="padding: 0 1.5rem 1.5rem; border-bottom: 1px solid #e2e8f0;">
             <div style="text-align: left;">
                 <div class="prometrix-wordmark">
@@ -499,7 +521,7 @@
                         <span>Create Campaign</span>
                     </a>
                 </li>
-                
+
                 <!-- Brand Registration -->
                 <li>
                     <a class="menu-item" href="FACEBOOK-BRAND-REGISTRATION.html" style="text-decoration: none;">
@@ -507,7 +529,7 @@
                         <span>Brand Registration</span>
                     </a>
                 </li>
-                
+
                 <!-- Inspire Me -->
                 <li>
                     <a class="menu-item" href="FACEBOOK-INSPIRE-ME.html" style="text-decoration: none;">
@@ -515,62 +537,15 @@
                         <span>Inspire Me</span>
                     </a>
                 </li>
-                
-                <!-- Engage Boost with Submenu -->
-                <li x-data="{ engageOpen: false }">
-                    <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html" style="text-decoration: none; justify-content: space-between;">
-                        <span style="display: flex; align-items: center; gap: 0.75rem;">
-                            <span>💬</span>
-                            <span>Engage Boost</span>
-                        </span>
-                        <span x-text="engageOpen ? '▼' : '▶'" style="font-size: 0.7rem;"></span>
+
+                <!-- Engage Boost -->
+                <li>
+                    <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html" style="text-decoration: none;">
+                        <span>💬</span>
+                        <span>Engage Boost</span>
                     </a>
-                    <ul x-show="engageOpen" x-transition style="list-style: none; background: #f8fafc; margin: 0; padding: 0;">
-                        <li>
-                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#pending" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
-                                <span>⏳</span>
-                                <span>Pending Reviews</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#all" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
-                                <span>💭</span>
-                                <span>All Comments</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#approved" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
-                                <span>✅</span>
-                                <span>Approved</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#rejected" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
-                                <span>❌</span>
-                                <span>Rejected</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#knowledge" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
-                                <span>📚</span>
-                                <span>Knowledge Base</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#analytics" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
-                                <span>📊</span>
-                                <span>Analytics</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#settings" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
-                                <span>⚙️</span>
-                                <span>Settings</span>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
-                
+
                 <!-- Insights -->
                 <li>
                     <a class="menu-item" href="#" style="text-decoration: none;">
@@ -578,45 +553,65 @@
                         <span>Insights</span>
                     </a>
                 </li>
-                
+
                 <!-- Settings with Submenu -->
                 <li x-data="{ settingsOpen: true }">
-                    <a class="menu-item active" @click="settingsOpen = !settingsOpen" style="text-decoration: none; justify-content: space-between;">
+                    <a class="menu-item active" @click="settingsOpen = !settingsOpen"
+                        style="text-decoration: none; justify-content: space-between;">
                         <span style="display: flex; align-items: center; gap: 0.75rem;">
                             <span>⚙️</span>
                             <span>Settings</span>
                         </span>
                         <span x-text="settingsOpen ? '▼' : '▶'" style="font-size: 0.7rem;"></span>
                     </a>
-                    <ul x-show="settingsOpen" x-transition style="list-style: none; background: #f8fafc; margin: 0; padding: 0;">
+                    <ul x-show="settingsOpen" x-transition
+                        style="list-style: none; background: #f8fafc; margin: 0; padding: 0;">
                         <li>
-                            <a class="menu-item" :class="{ 'active': activeTab === 'settings-language' }" @click="activeTab = 'settings-language'" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                            <a class="menu-item" :class="{ 'active': activeTab === 'settings-language' }"
+                                @click="activeTab = 'settings-language'"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
                                 <span>🌐</span>
                                 <span>Language</span>
                             </a>
                         </li>
                         <li>
-                            <a class="menu-item" :class="{ 'active': activeTab === 'settings-llm' }" @click="activeTab = 'settings-llm'" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                            <a class="menu-item" :class="{ 'active': activeTab === 'settings-llm' }"
+                                @click="activeTab = 'settings-llm'"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
                                 <span>🤖</span>
                                 <span>LLM Settings</span>
                             </a>
                         </li>
                         <li>
-                            <a class="menu-item" :class="{ 'active': activeTab === 'settings-guardrails' }" @click="activeTab = 'settings-guardrails'" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                            <a class="menu-item" :class="{ 'active': activeTab === 'settings-guardrails' }"
+                                @click="activeTab = 'settings-guardrails'"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
                                 <span>🛡️</span>
                                 <span>Guardrails</span>
                             </a>
                         </li>
                         <li>
-                            <a class="menu-item" :class="{ 'active': activeTab === 'settings-integrations' }" @click="activeTab = 'settings-integrations'" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                            <a class="menu-item" :class="{ 'active': activeTab === 'settings-integrations' }"
+                                @click="activeTab = 'settings-integrations'"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
                                 <span>🔗</span>
                                 <span>Integrations</span>
                             </a>
                         </li>
                         <li>
-                            <a class="menu-item" :class="{ 'active': activeTab === 'settings-products' }" @click="activeTab = 'settings-products'" style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                            <a class="menu-item" :class="{ 'active': activeTab === 'settings-products' }"
+                                @click="activeTab = 'settings-products'"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
                                 <span>📦</span>
                                 <span>Products</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" :class="{ 'active': activeTab === 'settings-personas' }"
+                                @click="activeTab = 'settings-personas'"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>👥</span>
+                                <span>Personas</span>
                             </a>
                         </li>
                     </ul>
@@ -624,7 +619,7 @@
             </ul>
         </nav>
     </aside>
-    
+
     <!-- Main Content -->
     <main class="main-content">
         <!-- Dynamic Header based on active tab -->
@@ -635,11 +630,16 @@
                 <h1 x-show="activeTab === 'settings-guardrails'">🛡️ Guardrails</h1>
                 <h1 x-show="activeTab === 'settings-integrations'">🔗 Integrations</h1>
                 <h1 x-show="activeTab === 'settings-products'">📦 Products</h1>
-                <p class="subtitle" x-show="activeTab === 'settings-language'">Configure language preferences and localization settings</p>
+                <h1 x-show="activeTab === 'settings-personas'">👥 Personas</h1>
+                <p class="subtitle" x-show="activeTab === 'settings-language'">Configure language preferences and
+                    localization settings</p>
                 <p class="subtitle" x-show="activeTab === 'settings-llm'">Manage AI models and usage limits</p>
-                <p class="subtitle" x-show="activeTab === 'settings-guardrails'">Set content policies and brand safety rules</p>
-                <p class="subtitle" x-show="activeTab === 'settings-integrations'">Connect external platforms and services</p>
+                <p class="subtitle" x-show="activeTab === 'settings-guardrails'">Set content policies and brand safety
+                    rules</p>
+                <p class="subtitle" x-show="activeTab === 'settings-integrations'">Connect external platforms and
+                    services</p>
                 <p class="subtitle" x-show="activeTab === 'settings-products'">Manage your product catalog</p>
+                <p class="subtitle" x-show="activeTab === 'settings-personas'">Manage target audience personas</p>
             </div>
         </div>
 
@@ -660,7 +660,7 @@
                             <option value="ja">Japanese</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label">Allowed Locales</label>
                         <div style="margin-bottom: 0.5rem;">
@@ -683,39 +683,43 @@
                             <button @click="addLocale()" class="btn-secondary">Add</button>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <div style="display: flex; align-items: center; gap: 0.75rem;">
                             <label class="toggle-switch">
                                 <input type="checkbox" x-model="settings.enableRTL">
                                 <span class="toggle-slider"></span>
                             </label>
-                            <label style="margin: 0; cursor: pointer;" @click="settings.enableRTL = !settings.enableRTL">Enable RTL Support</label>
+                            <label style="margin: 0; cursor: pointer;"
+                                @click="settings.enableRTL = !settings.enableRTL">Enable RTL Support</label>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <div style="display: flex; align-items: center; gap: 0.75rem;">
                             <label class="toggle-switch">
                                 <input type="checkbox" x-model="settings.autoTranslate">
                                 <span class="toggle-slider"></span>
                             </label>
-                            <label style="margin: 0; cursor: pointer;" @click="settings.autoTranslate = !settings.autoTranslate">Auto-translate Drafts</label>
+                            <label style="margin: 0; cursor: pointer;"
+                                @click="settings.autoTranslate = !settings.autoTranslate">Auto-translate Drafts</label>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <div style="display: flex; align-items: center; gap: 0.75rem;">
                             <label class="toggle-switch">
                                 <input type="checkbox" x-model="settings.languageGuardrails">
                                 <span class="toggle-slider"></span>
                             </label>
-                            <label style="margin: 0; cursor: pointer;" @click="settings.languageGuardrails = !settings.languageGuardrails">Language-Specific Guardrails</label>
+                            <label style="margin: 0; cursor: pointer;"
+                                @click="settings.languageGuardrails = !settings.languageGuardrails">Language-Specific
+                                Guardrails</label>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
             <div style="text-align: center; margin-top: 2rem;">
                 <button class="btn-success" @click="saveAllSettings()" style="padding: 1rem 3rem;">
                     Save Settings
@@ -736,12 +740,12 @@
                             <option value="gpt-4-turbo">GPT-4 Turbo</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label">Monthly Budget Guard ($)</label>
                         <input x-model="settings.monthlyBudget" type="number" class="form-control" placeholder="100">
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label">Registered Models</label>
                         <div style="overflow-x: auto;">
@@ -761,7 +765,9 @@
                                             <td x-text="model.provider"></td>
                                             <td x-text="model.useCase"></td>
                                             <td>
-                                                <span class="status-badge" :class="model.status === 'active' ? 'status-connected' : 'status-disconnected'" x-text="model.status === 'active' ? 'Active' : 'Inactive'"></span>
+                                                <span class="status-badge"
+                                                    :class="model.status === 'active' ? 'status-connected' : 'status-disconnected'"
+                                                    x-text="model.status === 'active' ? 'Active' : 'Inactive'"></span>
                                             </td>
                                         </tr>
                                     </template>
@@ -769,30 +775,37 @@
                             </table>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
-                        <h3 style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem;">Per-Content-Type Model Selection</h3>
-                        
+                        <h3 style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem;">Per-Content-Type
+                            Model Selection</h3>
+
                         <div style="margin-bottom: 0.75rem;">
-                            <label style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 0.25rem; display: block;">Text Generation</label>
+                            <label
+                                style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 0.25rem; display: block;">Text
+                                Generation</label>
                             <select x-model="settings.modelsByType.text" class="form-control">
                                 <option value="gpt-4.1">GPT-4.1</option>
                                 <option value="claude-3.5">Claude 3.5 Sonnet</option>
                                 <option value="gemini-pro">Gemini Pro</option>
                             </select>
                         </div>
-                        
+
                         <div style="margin-bottom: 0.75rem;">
-                            <label style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 0.25rem; display: block;">Image Generation</label>
+                            <label
+                                style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 0.25rem; display: block;">Image
+                                Generation</label>
                             <select x-model="settings.modelsByType.image" class="form-control">
                                 <option value="dall-e-3">DALL-E 3</option>
                                 <option value="midjourney">Midjourney</option>
                                 <option value="stable-diffusion">Stable Diffusion</option>
                             </select>
                         </div>
-                        
+
                         <div>
-                            <label style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 0.25rem; display: block;">Video Script</label>
+                            <label
+                                style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 0.25rem; display: block;">Video
+                                Script</label>
                             <select x-model="settings.modelsByType.video" class="form-control">
                                 <option value="gpt-4.1">GPT-4.1</option>
                                 <option value="claude-3.5">Claude 3.5 Sonnet</option>
@@ -801,7 +814,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div style="text-align: center; margin-top: 2rem;">
                 <button class="btn-success" @click="saveAllSettings()" style="padding: 1rem 3rem;">
                     Save Settings
@@ -823,15 +836,17 @@
                             <option value="technology">Technology</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label">Default Product Inclusion %</label>
                         <div style="display: flex; align-items: center; gap: 1rem;">
-                            <input type="range" x-model="settings.guardrails.productInclusionPct" min="0" max="100" class="range-slider" style="flex: 1;">
-                            <span x-text="settings.guardrails.productInclusionPct + '%'" style="font-weight: 600; color: var(--primary); min-width: 50px; text-align: right;"></span>
+                            <input type="range" x-model="settings.guardrails.productInclusionPct" min="0" max="100"
+                                class="range-slider" style="flex: 1;">
+                            <span x-text="settings.guardrails.productInclusionPct + '%'"
+                                style="font-weight: 600; color: var(--primary); min-width: 50px; text-align: right;"></span>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label">Emoji Policy</label>
                         <select x-model="settings.guardrails.emojiPolicy" class="form-control">
@@ -841,27 +856,32 @@
                             <option value="rich">Rich (5+ per post)</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
-                        <h3 style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem;">Content Safety Options</h3>
-                        
+                        <h3 style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem;">Content Safety
+                            Options</h3>
+
                         <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
                             <label class="toggle-switch">
                                 <input type="checkbox" x-model="settings.guardrails.flagSensitiveClaims">
                                 <span class="toggle-slider"></span>
                             </label>
-                            <label style="margin: 0; cursor: pointer;" @click="settings.guardrails.flagSensitiveClaims = !settings.guardrails.flagSensitiveClaims">Flag Sensitive Claims</label>
+                            <label style="margin: 0; cursor: pointer;"
+                                @click="settings.guardrails.flagSensitiveClaims = !settings.guardrails.flagSensitiveClaims">Flag
+                                Sensitive Claims</label>
                         </div>
-                        
+
                         <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
                             <label class="toggle-switch">
                                 <input type="checkbox" x-model="settings.guardrails.enforceHashtagLimit">
                                 <span class="toggle-slider"></span>
                             </label>
-                            <label style="margin: 0; cursor: pointer;" @click="settings.guardrails.enforceHashtagLimit = !settings.guardrails.enforceHashtagLimit">Enforce Hashtag Limit</label>
+                            <label style="margin: 0; cursor: pointer;"
+                                @click="settings.guardrails.enforceHashtagLimit = !settings.guardrails.enforceHashtagLimit">Enforce
+                                Hashtag Limit</label>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label">Disallow Forbidden Phrases</label>
                         <div style="margin-bottom: 0.5rem;">
@@ -873,18 +893,20 @@
                             </template>
                         </div>
                         <div style="display: flex; gap: 0.5rem;">
-                            <input x-model="settings.newForbiddenPhrase" type="text" class="form-control" placeholder="Add phrase" style="flex: 1;" @keyup.enter="addForbiddenPhrase()">
+                            <input x-model="settings.newForbiddenPhrase" type="text" class="form-control"
+                                placeholder="Add phrase" style="flex: 1;" @keyup.enter="addForbiddenPhrase()">
                             <button @click="addForbiddenPhrase()" class="btn-secondary">Add</button>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label">Custom Rules JSON (Advanced)</label>
-                        <textarea x-model="settings.guardrails.customRulesJSON" class="form-control" rows="4" placeholder='{"rule": "value"}'></textarea>
+                        <textarea x-model="settings.guardrails.customRulesJSON" class="form-control" rows="4"
+                            placeholder='{"rule": "value"}'></textarea>
                     </div>
                 </div>
             </div>
-            
+
             <div style="text-align: center; margin-top: 2rem;">
                 <button class="btn-success" @click="saveAllSettings()" style="padding: 1rem 3rem;">
                     Save Settings
@@ -904,19 +926,26 @@
                             </div>
                             <div>
                                 <p style="font-weight: 600; margin: 0;">Facebook Pages</p>
-                                <p style="font-size: 0.875rem; color: var(--text-light); margin: 0;" x-text="settings.integrations.facebook.connected ? settings.integrations.facebook.pageName : 'Not connected'"></p>
+                                <p style="font-size: 0.875rem; color: var(--text-light); margin: 0;"
+                                    x-text="settings.integrations.facebook.connected ? settings.integrations.facebook.pageName : 'Not connected'">
+                                </p>
                             </div>
                         </div>
                         <div>
-                            <span class="status-badge" :class="settings.integrations.facebook.connected ? 'status-connected' : 'status-disconnected'" x-text="settings.integrations.facebook.connected ? 'Connected' : 'Not Connected'"></span>
-                            <button class="btn-secondary" style="margin-left: 0.5rem;" @click="toggleFacebookConnection()" x-text="settings.integrations.facebook.connected ? 'Disconnect' : 'Connect'"></button>
+                            <span class="status-badge"
+                                :class="settings.integrations.facebook.connected ? 'status-connected' : 'status-disconnected'"
+                                x-text="settings.integrations.facebook.connected ? 'Connected' : 'Not Connected'"></span>
+                            <button class="btn-secondary" style="margin-left: 0.5rem;"
+                                @click="toggleFacebookConnection()"
+                                x-text="settings.integrations.facebook.connected ? 'Disconnect' : 'Connect'"></button>
                         </div>
                     </div>
-                    
+
                     <!-- Instagram -->
                     <div class="integration-card">
                         <div style="display: flex; align-items: center; gap: 0.75rem;">
-                            <div class="integration-icon" style="background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);">
+                            <div class="integration-icon"
+                                style="background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);">
                                 <span>IG</span>
                             </div>
                             <div>
@@ -929,7 +958,7 @@
                             <button class="btn-secondary" style="margin-left: 0.5rem;" disabled>Connect</button>
                         </div>
                     </div>
-                    
+
                     <!-- LinkedIn -->
                     <div class="integration-card">
                         <div style="display: flex; align-items: center; gap: 0.75rem;">
@@ -946,7 +975,7 @@
                             <button class="btn-secondary" style="margin-left: 0.5rem;" disabled>Connect</button>
                         </div>
                     </div>
-                    
+
                     <!-- Analytics -->
                     <div class="integration-card">
                         <div style="display: flex; align-items: center; gap: 0.75rem;">
@@ -955,15 +984,21 @@
                             </div>
                             <div>
                                 <p style="font-weight: 600; margin: 0;">Analytics & Insights</p>
-                                <p style="font-size: 0.875rem; color: var(--text-light); margin: 0;" x-text="settings.integrations.analytics.connected ? 'Connected' : 'Performance tracking'"></p>
+                                <p style="font-size: 0.875rem; color: var(--text-light); margin: 0;"
+                                    x-text="settings.integrations.analytics.connected ? 'Connected' : 'Performance tracking'">
+                                </p>
                             </div>
                         </div>
                         <div>
-                            <span class="status-badge" :class="settings.integrations.analytics.connected ? 'status-connected' : 'status-disconnected'" x-text="settings.integrations.analytics.connected ? 'Connected' : 'Not Connected'"></span>
-                            <button class="btn-secondary" style="margin-left: 0.5rem;" @click="settings.integrations.analytics.connected = !settings.integrations.analytics.connected" x-text="settings.integrations.analytics.connected ? 'Disconnect' : 'Connect'"></button>
+                            <span class="status-badge"
+                                :class="settings.integrations.analytics.connected ? 'status-connected' : 'status-disconnected'"
+                                x-text="settings.integrations.analytics.connected ? 'Connected' : 'Not Connected'"></span>
+                            <button class="btn-secondary" style="margin-left: 0.5rem;"
+                                @click="settings.integrations.analytics.connected = !settings.integrations.analytics.connected"
+                                x-text="settings.integrations.analytics.connected ? 'Disconnect' : 'Connect'"></button>
                         </div>
                     </div>
-                    
+
                     <!-- Google Analytics -->
                     <div class="integration-card">
                         <div style="display: flex; align-items: center; gap: 0.75rem;">
@@ -982,7 +1017,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div style="text-align: center; margin-top: 2rem;">
                 <button class="btn-success" @click="saveAllSettings()" style="padding: 1rem 3rem;">
                     Save Settings
@@ -996,7 +1031,8 @@
                 <div class="card-body">
                     <!-- Add Product Button -->
                     <div style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem;">
-                        <button class="btn-primary" @click="showProductForm = true; editingProduct = null; resetProductForm()">
+                        <button class="btn-primary"
+                            @click="showProductForm = true; editingProduct = null; resetProductForm()">
                             + Add Product
                         </button>
                     </div>
@@ -1009,44 +1045,57 @@
                                 <p>Add your first product to start including them in your content</p>
                             </div>
                         </template>
-                        
+
                         <template x-if="products.length > 0">
                             <div style="display: grid; gap: 1rem;">
                                 <template x-for="(product, index) in products" :key="product.id">
-                                    <div style="border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 1rem; display: flex; gap: 1rem; transition: all 0.2s;">
+                                    <div
+                                        style="border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 1rem; display: flex; gap: 1rem; transition: all 0.2s;">
                                         <!-- Product Image -->
-                                        <div style="width: 80px; height: 80px; border-radius: 0.5rem; background-color: #f1f5f9; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                                        <div
+                                            style="width: 80px; height: 80px; border-radius: 0.5rem; background-color: #f1f5f9; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                                             <template x-if="product.imageUrl">
-                                                <img :src="product.imageUrl" :alt="product.name" style="width: 100%; height: 100%; object-fit: cover;">
+                                                <img :src="product.imageUrl" :alt="product.name"
+                                                    style="width: 100%; height: 100%; object-fit: cover;">
                                             </template>
                                             <template x-if="!product.imageUrl">
                                                 <span style="font-size: 2rem;">📦</span>
                                             </template>
                                         </div>
-                                        
+
                                         <!-- Product Details -->
                                         <div style="flex: 1;">
-                                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                            <div
+                                                style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
                                                 <div>
-                                                    <h3 style="font-weight: 600; font-size: 1.125rem; margin-bottom: 0.25rem;" x-text="product.name"></h3>
-                                                    <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
-                                                        <span class="chip" style="margin: 0;" x-text="product.category"></span>
-                                                        <span style="font-weight: 600; color: var(--primary);" x-text="'$' + product.price"></span>
+                                                    <h3 style="font-weight: 600; font-size: 1.125rem; margin-bottom: 0.25rem;"
+                                                        x-text="product.name"></h3>
+                                                    <div
+                                                        style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+                                                        <span class="chip" style="margin: 0;"
+                                                            x-text="product.category"></span>
+                                                        <span style="font-weight: 600; color: var(--primary);"
+                                                            x-text="'$' + product.price"></span>
                                                     </div>
                                                 </div>
                                                 <div style="display: flex; gap: 0.5rem;">
-                                                    <button @click="editProduct(index)" class="btn-secondary" style="padding: 0.5rem 1rem;">
+                                                    <button @click="editProduct(index)" class="btn-secondary"
+                                                        style="padding: 0.5rem 1rem;">
                                                         Edit
                                                     </button>
-                                                    <button @click="deleteProduct(index)" style="padding: 0.5rem 1rem; background-color: var(--danger); color: white; border: none; border-radius: 0.5rem; cursor: pointer;">
+                                                    <button @click="deleteProduct(index)"
+                                                        style="padding: 0.5rem 1rem; background-color: var(--danger); color: white; border: none; border-radius: 0.5rem; cursor: pointer;">
                                                         Delete
                                                     </button>
                                                 </div>
                                             </div>
-                                            <p style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 0.5rem;" x-text="product.description"></p>
-                                            <div style="display: flex; gap: 1rem; font-size: 0.875rem; color: var(--text-light);">
+                                            <p style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 0.5rem;"
+                                                x-text="product.description"></p>
+                                            <div
+                                                style="display: flex; gap: 1rem; font-size: 0.875rem; color: var(--text-light);">
                                                 <span>SKU: <strong x-text="product.sku"></strong></span>
-                                                <span x-show="product.stock">Stock: <strong x-text="product.stock"></strong></span>
+                                                <span x-show="product.stock">Stock: <strong
+                                                        x-text="product.stock"></strong></span>
                                             </div>
                                         </div>
                                     </div>
@@ -1054,22 +1103,26 @@
                             </div>
                         </template>
                     </div>
-                    
+
                     <!-- Product Form -->
                     <div x-show="showProductForm">
                         <div style="margin-bottom: 1.5rem;">
-                            <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;" x-text="editingProduct !== null ? 'Edit Product' : 'Add New Product'"></h3>
-                            <p style="color: var(--text-light); font-size: 0.875rem;">Products will be associated with <strong x-text="brand.name"></strong></p>
+                            <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;"
+                                x-text="editingProduct !== null ? 'Edit Product' : 'Add New Product'"></h3>
+                            <p style="color: var(--text-light); font-size: 0.875rem;">Products will be associated with
+                                <strong x-text="brand.name"></strong>
+                            </p>
                         </div>
-                        
+
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
                             <!-- Left Column -->
                             <div>
                                 <div class="form-group">
                                     <label class="form-label">Product Name *</label>
-                                    <input x-model="productForm.name" type="text" class="form-control" placeholder="e.g., Premium Widget">
+                                    <input x-model="productForm.name" type="text" class="form-control"
+                                        placeholder="e.g., Premium Widget">
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label class="form-label">Category *</label>
                                     <select x-model="productForm.category" class="form-control">
@@ -1086,48 +1139,56 @@
                                         <option value="Other">Other</option>
                                     </select>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label class="form-label">Price ($) *</label>
-                                    <input x-model="productForm.price" type="number" step="0.01" class="form-control" placeholder="0.00">
+                                    <input x-model="productForm.price" type="number" step="0.01" class="form-control"
+                                        placeholder="0.00">
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label class="form-label">SKU</label>
-                                    <input x-model="productForm.sku" type="text" class="form-control" placeholder="e.g., PROD-001">
+                                    <input x-model="productForm.sku" type="text" class="form-control"
+                                        placeholder="e.g., PROD-001">
                                 </div>
                             </div>
-                            
+
                             <!-- Right Column -->
                             <div>
                                 <div class="form-group">
                                     <label class="form-label">Description</label>
-                                    <textarea x-model="productForm.description" class="form-control" rows="4" placeholder="Describe your product..."></textarea>
+                                    <textarea x-model="productForm.description" class="form-control" rows="4"
+                                        placeholder="Describe your product..."></textarea>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label class="form-label">Image URL</label>
-                                    <input x-model="productForm.imageUrl" type="url" class="form-control" placeholder="https://example.com/image.jpg">
+                                    <input x-model="productForm.imageUrl" type="url" class="form-control"
+                                        placeholder="https://example.com/image.jpg">
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label class="form-label">Stock Quantity</label>
-                                    <input x-model="productForm.stock" type="number" class="form-control" placeholder="0">
+                                    <input x-model="productForm.stock" type="number" class="form-control"
+                                        placeholder="0">
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label class="form-label">Tags (comma-separated)</label>
-                                    <input x-model="productForm.tags" type="text" class="form-control" placeholder="e.g., new, featured, sale">
+                                    <input x-model="productForm.tags" type="text" class="form-control"
+                                        placeholder="e.g., new, featured, sale">
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Form Actions -->
-                        <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;">
+                        <div
+                            style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;">
                             <button @click="cancelProductForm()" class="btn-secondary">
                                 Cancel
                             </button>
-                            <button @click="saveProduct()" class="btn-success" :disabled="!productForm.name || !productForm.category || !productForm.price">
+                            <button @click="saveProduct()" class="btn-success"
+                                :disabled="!productForm.name || !productForm.category || !productForm.price">
                                 <span x-text="editingProduct !== null ? 'Update Product' : 'Add Product'"></span>
                             </button>
                         </div>
@@ -1136,11 +1197,128 @@
             </div>
         </div>
 
-        <!-- Other tabs -->
-        <div x-show="!activeTab.startsWith('settings') && activeTab !== 'onboarding' && activeTab !== 'blueprint' && activeTab !== 'planner' && activeTab !== 'creator' && activeTab !== 'calendar' && activeTab !== 'insights'" style="padding: 3rem; text-align: center; color: var(--text-light);">
-            <p style="font-size: 1.25rem;">Other tabs (Onboarding, Blueprint, Planner, etc.) remain unchanged</p>
-            <p style="margin-top: 1rem;">Click Settings in the sidebar to view the updated settings with sub-menu navigation</p>
+        <!-- Personas Tab -->
+        <div x-show="activeTab === 'settings-personas'">
+            <div x-show="!showPersonaForm">
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem;">
+                    <button @click="showPersonaForm = true; resetPersonaForm()" class="btn-primary">
+                        <span>+</span> Add Persona
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <template x-for="(persona, index) in personas" :key="persona.id">
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="card-title" x-text="persona.name"></span>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button @click="editPersona(index)" class="text-indigo-600 hover:text-indigo-900"
+                                        title="Edit">
+                                        ✏️
+                                    </button>
+                                    <button @click="deletePersona(index)" class="text-red-600 hover:text-red-900"
+                                        title="Delete">
+                                        🗑️
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div style="margin-bottom: 0.5rem;">
+                                    <span class="text-sm font-semibold text-gray-500">Age Range:</span>
+                                    <span class="text-sm" x-text="persona.age_range"></span>
+                                </div>
+                                <div style="margin-bottom: 0.5rem;">
+                                    <span class="text-sm font-semibold text-gray-500">Gender:</span>
+                                    <span class="text-sm" x-text="persona.gender || 'Any'"></span>
+                                </div>
+                                <div style="margin-bottom: 1rem;">
+                                    <span class="text-sm font-semibold text-gray-500">Interests:</span>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 0.25rem; margin-top: 0.25rem;">
+                                        <template x-for="interest in persona.interests" :key="interest">
+                                            <span class="text-xs bg-indigo-50 text-indigo-700 px-2 py-1 rounded"
+                                                x-text="interest"></span>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <div x-show="personas.length === 0"
+                    style="padding: 3rem; text-align: center; color: var(--text-light); background: white; border-radius: 0.75rem; border: 1px dashed #e2e8f0;">
+                    <p style="font-size: 1.125rem;">No personas found. Create your first target audience persona!</p>
+                </div>
+            </div>
+
+            <!-- Persona Form -->
+            <div x-show="showPersonaForm" class="card">
+                <div class="card-header">
+                    <h3 class="card-title" x-text="editingPersona !== null ? 'Edit Persona' : 'Add New Persona'"></h3>
+                </div>
+                <div class="card-body">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <!-- Left Column -->
+                        <div>
+                            <div class="form-group">
+                                <label class="form-label">Persona Name</label>
+                                <input x-model="personaForm.name" type="text" class="form-control"
+                                    placeholder="e.g., Tech-Savvy Millennial">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Age Range (e.g., 25-34)</label>
+                                <input x-model="personaForm.age_range" type="text" class="form-control"
+                                    placeholder="25-34">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Gender</label>
+                                <select x-model="personaForm.gender" class="form-control">
+                                    <option value="">Any</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Non-binary">Non-binary</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Location</label>
+                                <input x-model="personaForm.location" type="text" class="form-control"
+                                    placeholder="e.g., USA, New York">
+                            </div>
+                        </div>
+
+                        <!-- Right Column -->
+                        <div>
+                            <div class="form-group">
+                                <label class="form-label">Interests (comma separated)</label>
+                                <textarea x-model="personaForm.interests" class="form-control" rows="2"
+                                    placeholder="e.g., Technology, Gaming, AI"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Behaviors (comma separated)</label>
+                                <textarea x-model="personaForm.behaviors" class="form-control" rows="2"
+                                    placeholder="e.g., Early adopter, Online shopper"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Pain Points (comma separated)</label>
+                                <textarea x-model="personaForm.pain_points" class="form-control" rows="2"
+                                    placeholder="e.g., High cost, Lack of support"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;">
+                        <button @click="showPersonaForm = false; editingPersona = null"
+                            class="btn-secondary">Cancel</button>
+                        <button @click="savePersona()" class="btn-success"
+                            :disabled="!personaForm.name || !personaForm.age_range">
+                            <span x-text="editingPersona !== null ? 'Update Persona' : 'Add Persona'"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- Only settings tabs are available -->
     </main>
 
     <script>
@@ -1148,7 +1326,7 @@
             return {
                 activeTab: 'settings-language',
                 settingsMenuOpen: true,
-                
+
                 // Products
                 products: [
                     {
@@ -1175,130 +1353,200 @@
                     stock: '',
                     tags: ''
                 },
-                
+
+                // Personas
+                personas: [],
+                showPersonaForm: false,
+                editingPersona: null,
+                personaForm: {
+                    name: '',
+                    age_range: '',
+                    gender: '',
+                    location: '',
+                    interests: '',
+                    behaviors: '',
+                    pain_points: ''
+                },
+
                 brand: {
                     id: 'brand-001',
                     name: 'TechBrand'
                 },
-                
+
                 settings: {
-                    // Brand Registration
-                    brandWebsite: '',
-                    uploadedGuideline: '',
-                    manualInputs: {
-                        fonts: '',
-                        primaryColor: '#5046e5',
-                        secondaryColor: '#00c4cc',
-                        dosAndDonts: '',
-                        policies: ''
-                    },
-                    
-                    // Language Settings
                     defaultLanguage: 'en',
-                    allowedLocales: ['English', 'Spanish'],
+                    allowedLocales: ['en', 'es', 'fr'],
                     newLocale: '',
                     enableRTL: false,
                     autoTranslate: false,
-                    languageGuardrails: true,
-                    
-                    // LLM Settings
+                    languageGuardrails: false,
                     defaultLLM: 'gpt-4.1',
                     monthlyBudget: 100,
                     registeredModels: [
-                        { name: 'GPT-4.1', provider: 'OpenAI', useCase: 'Text Generation', status: 'active' },
-                        { name: 'Claude 3.5', provider: 'Anthropic', useCase: 'Text Generation', status: 'active' },
-                        { name: 'Gemini Pro', provider: 'Google', useCase: 'Text/Summarization', status: 'active' },
-                        { name: 'DALL-E 3', provider: 'OpenAI', useCase: 'Image Generation', status: 'active' }
+                        { name: 'GPT-4.1', provider: 'OpenAI', useCase: 'General', status: 'active' },
+                        { name: 'Claude 3.5 Sonnet', provider: 'Anthropic', useCase: 'Creative', status: 'active' },
+                        { name: 'Gemini Pro', provider: 'Google', useCase: 'Fast', status: 'active' }
                     ],
                     modelsByType: {
                         text: 'gpt-4.1',
                         image: 'dall-e-3',
                         video: 'gpt-4.1'
                     },
-                    
-                    // Guardrails
                     guardrails: {
                         sector: 'general',
-                        productInclusionPct: 30,
-                        emojiPolicy: 'medium',
+                        productInclusionPct: 20,
+                        emojiPolicy: 'moderate',
                         flagSensitiveClaims: true,
                         enforceHashtagLimit: true,
-                        forbiddenPhrases: ['buy now', 'limited time', 'act fast'],
+                        forbiddenPhrases: [],
                         customRulesJSON: ''
                     },
-                    newForbiddenPhrase: '',
-                    
-                    // Integrations
                     integrations: {
-                        facebook: {
-                            connected: true,
-                            pageName: 'TechBrand Page'
-                        },
-                        analytics: {
-                            connected: false
+                        facebook: { connected: false, pageName: null },
+                        analytics: { connected: false }
+                    },
+                    newForbiddenPhrase: ''
+                },
+
+                async init() {
+                    console.log('Brand Content System initialized');
+                    // Read URL params for tab redirect (e.g. after Facebook OAuth callback)
+                    const params = new URLSearchParams(window.location.search);
+                    const tab = params.get('tab');
+                    if (tab && tab.startsWith('settings-')) {
+                        this.activeTab = tab;
+                    }
+                    await this.loadAll();
+                    // Show success message if redirected from Facebook connect
+                    if (params.get('fb_connected') === 'true') {
+                        this.settings.integrations.facebook.connected = true;
+                        alert('Facebook connected successfully!');
+                    }
+                },
+
+                async loadAll() {
+                    try {
+                        const brandId = this.brand.id;
+                        // Load Products
+                        const prodResp = await fetch(`/api/v1/settings/products/${brandId}`);
+                        if (prodResp.ok) {
+                            const data = await prodResp.json();
+                            this.products = data.products;
+                        }
+
+                        // Load Personas
+                        const persResp = await fetch(`/api/v1/settings/personas/${brandId}`);
+                        if (persResp.ok) {
+                            const data = await persResp.json();
+                            this.personas = data.personas;
+                        }
+
+                        // Load Settings
+                        const settResp = await fetch(`/api/v1/settings/${brandId}`);
+                        if (settResp.ok) {
+                            const data = await settResp.json();
+                            // Deep-merge integrations so defaults (analytics) aren't lost
+                            if (data.integrations) {
+                                data.integrations = Object.assign({}, this.settings.integrations, data.integrations);
+                            }
+                            Object.assign(this.settings, data);
+                        }
+                    } catch (e) {
+                        console.error('Failed to load data:', e);
+                    }
+                },
+
+                // Persona Management
+                resetPersonaForm() {
+                    this.personaForm = {
+                        name: '',
+                        age_range: '',
+                        gender: '',
+                        location: '',
+                        interests: '',
+                        behaviors: '',
+                        pain_points: ''
+                    };
+                },
+
+                editPersona(index) {
+                    this.editingPersona = index;
+                    const persona = this.personas[index];
+                    this.personaForm = {
+                        name: persona.name,
+                        age_range: persona.age_range,
+                        gender: persona.gender || '',
+                        location: persona.location || '',
+                        interests: persona.interests.join(', '),
+                        behaviors: persona.behaviors.join(', '),
+                        pain_points: persona.pain_points.join(', ')
+                    };
+                    this.showPersonaForm = true;
+                },
+
+                async savePersona() {
+                    try {
+                        const brandId = this.brand.id;
+                        const payload = {
+                            name: this.personaForm.name,
+                            age_range: this.personaForm.age_range,
+                            gender: this.personaForm.gender || null,
+                            location: this.personaForm.location || null,
+                            interests: this.personaForm.interests.split(',').map(s => s.trim()).filter(s => s),
+                            behaviors: this.personaForm.behaviors.split(',').map(s => s.trim()).filter(s => s),
+                            pain_points: this.personaForm.pain_points.split(',').map(s => s.trim()).filter(s => s),
+                            preferred_content: [],
+                            social_platforms: []
+                        };
+
+                        let resp;
+                        if (this.editingPersona !== null) {
+                            const personaId = this.personas[this.editingPersona].id;
+                            resp = await fetch(`/api/v1/settings/persona/${personaId}`, {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: json.stringify(payload)
+                            });
+                        } else {
+                            resp = await fetch(`/api/v1/settings/personas/${brandId}`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(payload)
+                            });
+                        }
+
+                        if (resp.ok) {
+                            await this.loadAll();
+                            this.showPersonaForm = false;
+                            this.editingPersona = null;
+                            this.resetPersonaForm();
+                            alert('Persona saved successfully!');
+                        } else {
+                            alert('Failed to save persona');
+                        }
+                    } catch (e) {
+                        console.error('Error saving persona:', e);
+                    }
+                },
+
+                async deletePersona(index) {
+                    if (confirm('Are you sure you want to delete this persona?')) {
+                        try {
+                            const personaId = this.personas[index].id;
+                            const resp = await fetch(`/api/v1/settings/persona/${personaId}`, {
+                                method: 'DELETE'
+                            });
+                            if (resp.ok) {
+                                await this.loadAll();
+                                alert('Persona deleted successfully!');
+                            }
+                        } catch (e) {
+                            console.error('Error deleting persona:', e);
                         }
                     }
                 },
-                
-                init() {
-                    console.log('Brand Content System initialized');
-                },
-                
-                toggleSettingsMenu() {
-                    this.settingsMenuOpen = !this.settingsMenuOpen;
-                    if (this.settingsMenuOpen && !this.activeTab.startsWith('settings')) {
-                        this.activeTab = 'settings-brand';
-                    }
-                },
-                
-                handleBrandGuidelineUpload(event) {
-                    const file = event.target.files[0];
-                    if (file) {
-                        this.settings.uploadedGuideline = file.name;
-                    }
-                },
-                
-                generateBrandBlueprint() {
-                    alert('Generating Brand Blueprint from uploaded guidelines and manual inputs...');
-                },
-                
-                addLocale() {
-                    if (this.settings.newLocale && !this.settings.allowedLocales.includes(this.settings.newLocale)) {
-                        this.settings.allowedLocales.push(this.settings.newLocale);
-                        this.settings.newLocale = '';
-                    }
-                },
-                
-                removeLocale(index) {
-                    this.settings.allowedLocales.splice(index, 1);
-                },
-                
-                addForbiddenPhrase() {
-                    if (this.settings.newForbiddenPhrase.trim()) {
-                        this.settings.guardrails.forbiddenPhrases.push(this.settings.newForbiddenPhrase.trim());
-                        this.settings.newForbiddenPhrase = '';
-                    }
-                },
-                
-                removeForbiddenPhrase(index) {
-                    this.settings.guardrails.forbiddenPhrases.splice(index, 1);
-                },
-                
-                toggleFacebookConnection() {
-                    this.settings.integrations.facebook.connected = !this.settings.integrations.facebook.connected;
-                    if (!this.settings.integrations.facebook.connected) {
-                        this.settings.integrations.facebook.pageName = '';
-                    } else {
-                        this.settings.integrations.facebook.pageName = 'TechBrand Page';
-                    }
-                },
-                
-                saveAllSettings() {
-                    console.log('Saving all settings:', this.settings);
-                    alert('All settings saved successfully!');
-                },
-                
-                // Product Management Functions
+
+                // Product Management Helpers
                 resetProductForm() {
                     this.productForm = {
                         name: '',
@@ -1311,52 +1559,146 @@
                         tags: ''
                     };
                 },
-                
-                editProduct(index) {
-                    this.editingProduct = index;
-                    const product = this.products[index];
-                    this.productForm = {
-                        name: product.name,
-                        description: product.description,
-                        category: product.category,
-                        price: product.price,
-                        sku: product.sku,
-                        imageUrl: product.imageUrl,
-                        stock: product.stock,
-                        tags: product.tags
-                    };
-                    this.showProductForm = true;
-                },
-                
-                saveProduct() {
-                    if (this.editingProduct !== null) {
-                        this.products[this.editingProduct] = {
-                            ...this.products[this.editingProduct],
-                            ...this.productForm
-                        };
-                    } else {
-                        this.products.push({
-                            id: 'prod-' + Date.now(),
-                            ...this.productForm
-                        });
-                    }
-                    this.cancelProductForm();
-                    alert('Product saved successfully!');
-                },
-                
-                deleteProduct(index) {
-                    if (confirm('Are you sure you want to delete this product?')) {
-                        this.products.splice(index, 1);
-                    }
-                },
-                
+
                 cancelProductForm() {
                     this.showProductForm = false;
                     this.editingProduct = null;
                     this.resetProductForm();
+                },
+
+                // Product Management (Updated for Backend)
+                async saveProduct() {
+                    // Validation
+                    if (!this.productForm.name) {
+                        alert('Product Name is required');
+                        return;
+                    }
+                    if (!this.productForm.category) {
+                        alert('Category is required');
+                        return;
+                    }
+                    if (!this.productForm.price) {
+                        alert('Price is required');
+                        return;
+                    }
+                    if (!this.productForm.description || this.productForm.description.length < 10) {
+                        alert('Description must be at least 10 characters long');
+                        return;
+                    }
+
+                    try {
+                        const brandId = this.brand.id;
+                        const payload = {
+                            name: this.productForm.name,
+                            category: this.productForm.category,
+                            price: parseFloat(this.productForm.price),
+                            currency: 'USD',
+                            description: this.productForm.description,
+                            features: this.productForm.tags.split(',').map(s => s.trim()).filter(s => s), // using tags as features for now
+                            benefits: [],
+                            target_audience: [],
+                            image_urls: this.productForm.imageUrl ? [this.productForm.imageUrl] : [],
+                            availability: true
+                        };
+
+                        let resp;
+                        if (this.editingProduct !== null) {
+                            const productId = this.products[this.editingProduct].id;
+                            resp = await fetch(`/api/v1/settings/product/${productId}`, {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(payload)
+                            });
+                        } else {
+                            resp = await fetch(`/api/v1/settings/products/${brandId}`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(payload)
+                            });
+                        }
+
+                        if (resp.ok) {
+                            await this.loadAll();
+                            this.cancelProductForm();
+                            alert('Product saved successfully!');
+                        } else {
+                            const errorData = await resp.json();
+                            console.error('Save product failed:', errorData);
+                            let errorMessage = 'Failed to save product';
+                            if (errorData.detail) {
+                                if (Array.isArray(errorData.detail)) {
+                                    errorMessage += ':\n' + errorData.detail.map(e => `${e.loc.join('.')}: ${e.msg}`).join('\n');
+                                } else {
+                                    errorMessage += ': ' + errorData.detail;
+                                }
+                            }
+                            alert(errorMessage);
+                        }
+                    } catch (e) {
+                        console.error('Error saving product:', e);
+                        alert('An unexpected error occurred while saving the product.');
+                    }
+                },
+
+                async deleteProduct(index) {
+                    if (confirm('Are you sure you want to delete this product?')) {
+                        try {
+                            const productId = this.products[index].id;
+                            const resp = await fetch(`/api/v1/settings/product/${productId}`, {
+                                method: 'DELETE'
+                            });
+                            if (resp.ok) {
+                                await this.loadAll();
+                                alert('Product deleted successfully!');
+                            }
+                        } catch (e) {
+                            console.error('Error deleting product:', e);
+                        }
+                    }
+                },
+
+                async saveAllSettings() {
+                    try {
+                        const brandId = this.brand.id;
+                        const resp = await fetch(`/api/v1/settings/${brandId}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(this.settings)
+                        });
+                        if (resp.ok) {
+                            alert('All settings saved successfully!');
+                        }
+                    } catch (e) {
+                        console.error('Error saving settings:', e);
+                    }
+                },
+
+                // Integrations
+                toggleFacebookConnection() {
+                    const brandId = this.brand.id;
+                    if (this.settings.integrations.facebook.connected) {
+                        // Disconnect logic
+                        if (confirm('Are you sure you want to disconnect Facebook?')) {
+                            fetch(`/api/v1/integrations/facebook/disconnect?brand_id=${brandId}`, { method: 'POST' })
+                                .then(response => response.json())
+                                .then(data => {
+                                    this.settings.integrations.facebook.connected = false;
+                                    this.settings.integrations.facebook.pageName = null;
+                                    alert('Facebook disconnected successfully');
+                                })
+                                .catch(err => {
+                                    console.error('Disconnect failed', err);
+                                    alert('Failed to disconnect Facebook');
+                                });
+                        }
+                    } else {
+                        // Connect logic - Redirect to OAuth
+                        window.location.href = `/api/v1/integrations/facebook/auth?brand_id=${brandId}`;
+                    }
                 }
             }
         }
     </script>
 </body>
+
 </html>

@@ -1,0 +1,124 @@
+{
+  "id": "8b3486a9-60e2-4299-bdf4-0916d13bc1ac",
+  "campaign_metadata": {
+    "id": "63784148-9f54-46e4-8a68-ef164345808e",
+    "name": "m",
+    "objective": "awareness",
+    "target_audience": "General audience",
+    "start_date": "2026-02-13",
+    "end_date": "2026-03-15",
+    "frequency": 1,
+    "status": "draft",
+    "created_at": "2026-02-13 07:28:03.089808",
+    "updated_at": "2026-02-13 07:28:03.089808"
+  },
+  "brand_context": {
+    "brand_id": "brand-techflow-solutions",
+    "brand_name": "TechFlow Solutions",
+    "voice_profile": {
+      "formality": "casual",
+      "humor": "moderate",
+      "tone": "enthusiastic",
+      "personality_traits": [
+        "innovative",
+        "approachable",
+        "expert"
+      ],
+      "do_phrases": [
+        "We believe",
+        "Let's explore",
+        "Together we can"
+      ],
+      "dont_phrases": [
+        "Never",
+        "Impossible",
+        "Can't"
+      ]
+    },
+    "content_pillars": [
+      {
+        "id": "pillar-innovation",
+        "name": "Innovation Spotlight",
+        "type": "educational",
+        "description": "Showcasing cutting-edge technology solutions",
+        "keywords": [
+          "innovation",
+          "technology",
+          "future"
+        ],
+        "percentage": 40
+      },
+      {
+        "id": "pillar-community",
+        "name": "Community Stories",
+        "type": "community",
+        "description": "Highlighting user success stories",
+        "keywords": [
+          "community",
+          "success",
+          "stories"
+        ],
+        "percentage": 30
+      },
+      {
+        "id": "pillar-product",
+        "name": "Product Excellence",
+        "type": "promotional",
+        "description": "Demonstrating product features",
+        "keywords": [
+          "product",
+          "features",
+          "benefits"
+        ],
+        "percentage": 30
+      }
+    ],
+    "guidelines": {
+      "color_palette": [
+        "#5046e5",
+        "#00c4cc",
+        "#1a202c",
+        "#f7fafc"
+      ],
+      "typography": {
+        "primary": "Inter",
+        "secondary": "Arial"
+      }
+    }
+  },
+  "personas": [
+    {
+      "id": "8ac09b9a-5103-4c5c-bdbd-094aa3d4ce92",
+      "name": "8ac09b9a-5103-4c5c-bdbd-094aa3d4ce92",
+      "age_range": "Unknown",
+      "interests": [],
+      "demographics": {},
+      "behavior_patterns": []
+    }
+  ],
+  "products": [],
+  "language_config": {
+    "primary_language": "en",
+    "multilingual_enabled": false,
+    "additional_languages": []
+  },
+  "post_mix": null,
+  "content_types": [],
+  "content_plan": {
+    "generated_plan": "Strategic Summary:\nIn the \"m\" campaign, TechFlow Solutions aims to raise awareness about its brand, focusing on our innovative tech solutions, community success stories, and product features. By employing an enthusiastic, approachable tone, we seek to connect with a general audience, sparking their interest and assisting them in understanding our work's value. The campaign will run from February 13, 2026, to March 15, 2026, with daily posts.\n\nKey Messaging Themes:\n1. Innovation Spotlight: Through this theme, we will share content that highlights our cutting-edge technology solutions. We will focus on the \"innovation,\" \"technology,\" and \"future\" aspects of our work.\n2. Community Stories: We will share stories from our community to highlight how our products have led to their success. These stories will revolve around the \"community,\" \"success,\" and \"stories\" aspects of our brand.\n3. Product Excellence: We will demonstrate our product features and benefits, focusing on the \"product,\" \"features,\" and \"benefits\" aspects of our work.\n\nContent Distribution Strategy:\n1. Facebook & Instagram: Use these platforms to share community stories and product features through visually appealing images, infographics, and short videos.\n2. LinkedIn: Share innovation spotlight posts, focusing on thought leadership content related to emerging technology trends and our innovative solutions.\n3. Twitter: Use for quick updates, sharing blog posts, community stories, and engaging with the audience through polls and Q&A sessions.\n4. YouTube: Publish explanatory videos demonstrating our product excellence and innovative solutions in action.\n\nRemember to align all posts with our brand voice: casual yet expert, enthusiastic, and moderately humorous. Use phrases like \"We believe,\" \"Let's explore,\" and \"Together we can\" while avoiding words like \"Never,\" \"Impossible,\" and \"Can't\".",
+    "generated_at": "2026-02-13T07:56:33.026045",
+    "llm_metadata": {
+      "provider_used": "openai",
+      "available_providers": [
+        "openai",
+        "mock"
+      ],
+      "processing_time": 1709.968000000008
+    }
+  },
+  "posts": {},
+  "status": "draft",
+  "created_at": null,
+  "updated_at": "2026-02-13T07:56:33.026045",
+  "version": "v1"
+}

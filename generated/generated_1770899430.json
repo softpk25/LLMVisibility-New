@@ -1,0 +1,19 @@
+{
+  "visual_dna": {
+    "composition": "Dynamic, flowing lines leading to dramatic perspective",
+    "palette": "Vibrant rainbow hues with emphasis on cyan and magenta",
+    "lighting": "High gloss with reflective highlights",
+    "style": "Futuristic, sleek, automotive artistry"
+  },
+  "strategic_analysis": {
+    "tone": "Innovative, high-energy, forward-thinking",
+    "cta_style": "Implicit motivation through visual excitement",
+    "emotional_angle": "Speed & cutting-edge technology",
+    "audience": "Tech enthusiasts, 20-40, luxury vehicle aficionados"
+  },
+  "image_composition_analysis": {
+    "focal_points": "Central focus on car with ~70% saliency; light trails create motion",
+    "typography_style": "N/A"
+  },
+  "prompt_reconstruction": "Render of a futuristic car, vibrant multicolor light trails, high-gloss finish, dynamic motion lines, bold contrasting colors, sleek and modern design, ultra-modern visual style --ar 16:9 --style cinematic"
+}

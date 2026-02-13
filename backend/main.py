@@ -25,13 +25,20 @@ setup_logging()
 logger = logging.getLogger(__name__)
 
 
+from core.db import init_db as settings_init_db
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan manager"""
     logger.info("Starting Prometrix Backend...")
     
+    # Initialize settings database
+    logger.info("Initializing settings database...")
+    settings_init_db()
+    
     # Create necessary directories
     os.makedirs("data/campaigns", exist_ok=True)
+
     os.makedirs("data/brands", exist_ok=True)
     os.makedirs("data/settings", exist_ok=True)
     os.makedirs("data/inspire", exist_ok=True)
