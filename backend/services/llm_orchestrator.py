@@ -356,21 +356,26 @@ class LLMOrchestrator:
         if not self.providers:
             logger.warning("No LLM providers available")
     
-    async def generate(self, payload: Dict[str, Any], provider: str = None) -> Dict[str, Any]:
+    async def generate(self, payload: Dict[str, Any], provider: str = None, tried_providers: set = None) -> Dict[str, Any]:
         """Generate content using specified or default provider"""
         
+        if tried_providers is None:
+            tried_providers = set()
+            
         # Determine provider
         if not provider:
             provider = settings.DEFAULT_LLM_PROVIDER
         
-        if provider not in self.providers:
+        if provider not in self.providers or provider in tried_providers:
             # Try fallback providers
-            available_providers = list(self.providers.keys())
+            available_providers = [p for p in self.providers.keys() if p not in tried_providers]
             if available_providers:
                 provider = available_providers[0]
-                logger.warning(f"Requested provider not available, using {provider}")
+                logger.warning(f"Requested provider not available or already tried, using {provider}")
             else:
-                raise LLMProviderError("orchestrator", "No LLM providers available")
+                raise LLMProviderError("orchestrator", "No LLM providers available or all attempted providers failed")
+        
+        tried_providers.add(provider)
         
         # Add metadata to payload
         payload.setdefault("metadata", {}).update({
@@ -380,7 +385,15 @@ class LLMOrchestrator:
         })
         
         try:
-            result = await self.providers[provider].generate(payload)
+            logger.info(f"--- Attempting LLM generation with provider: {provider} ---")
+            
+            # Add timeout to the generation call (30 seconds)
+            result = await asyncio.wait_for(
+                self.providers[provider].generate(payload),
+                timeout=30.0
+            )
+            
+            logger.info(f"✅ LLM generation successful with provider: {provider}")
             
             # Add orchestrator metadata
             result["orchestrator_metadata"] = {
@@ -391,15 +404,27 @@ class LLMOrchestrator:
             
             return result
             
-        except LLMProviderError as e:
-            logger.error(f"Provider {provider} failed: {e.message}")
-            
+        except asyncio.TimeoutError:
+            logger.error(f"❌ Provider {provider} timed out after 30s")
             # Try fallback if available
-            fallback_providers = [p for p in self.providers.keys() if p != provider]
+            fallback_providers = [p for p in self.providers.keys() if p not in tried_providers]
             if fallback_providers:
                 logger.info(f"Trying fallback provider: {fallback_providers[0]}")
-                return await self.generate(payload, fallback_providers[0])
+                return await self.generate(payload, fallback_providers[0], tried_providers)
+            raise LLMProviderError("orchestrator", f"All providers failed or timed out. Last provider {provider} timed out.")
             
+        except LLMProviderError as e:
+            logger.error(f"❌ Provider {provider} failed: {e.message}")
+            
+            # Try fallback if available
+            fallback_providers = [p for p in self.providers.keys() if p not in tried_providers]
+            if fallback_providers:
+                logger.info(f"Trying fallback provider: {fallback_providers[0]}")
+                return await self.generate(payload, fallback_providers[0], tried_providers)
+            
+            raise e
+        except Exception as e:
+            logger.error(f"❌ Unexpected error with provider {provider}: {str(e)}")
             raise e
     
     def get_available_providers(self) -> List[str]:

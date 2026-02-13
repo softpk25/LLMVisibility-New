@@ -14,6 +14,23 @@ __pycache__/
 *.so
 .kiro/
 # Generated files
+
+#pycache from brand registrations
+brand registration/__pycache__/
+#pycache from inspire me
+inspire me/__pycache__/
+#pycache from backend/api
+backend/api/__pycache__/
+backend/api/v1/__pycache__/
+backend/api/v1/router/__pycache__/
+backend/api/v1/router/campaign/__pycache__/
+backend/api/v1/router/campaign/routes/__pycache__/
+backend/api/v1/router/campaign/routes/campaigns/__pycache__/
+backend/api/v1/router/campaign/routes/campaigns/routes/__pycache__/
+backend/api/v1/router/campaign/routes/campaigns/routes/campaigns/__pycache__/
+backend/api/v1/router/campaign/routes/campaigns/routes/campaigns/routes/__pycache__/
+backend/api/v1/router/campaign/routes/campaigns/routes/campaigns/routes/campaigns/__pycache__/
+backend/api/__init__.pyc
 generated/
 temp_uploads/
 image_analysis/

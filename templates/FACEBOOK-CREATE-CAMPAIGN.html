@@ -1546,28 +1546,19 @@
                 settingsTab: 'personas',
                 isGenerating: false,  // Add loading state
 
-                personas: [
-                    { id: 'persona-1', name: 'Tech Enthusiasts', type: 'AI', summary: 'Age 28-38, High engagement with innovation content' },
-                    { id: 'persona-2', name: 'Budget Millennials', type: 'AI', summary: 'Age 25-35, Value-driven purchasing' },
-                    { id: 'persona-3', name: 'Gen Z Adopters', type: 'Custom', summary: 'Age 18-25, Mobile-first, sustainability-focused' }
-                ],
-
+                personas: [],
                 brands: [
+                    { id: 'brand-001', name: 'TechBrand', description: 'Main Brand', voice: 'Professional' },
                     { id: 'brand-techflow-solutions', name: 'TechFlow Solutions', description: 'Leading innovation company', voice: 'Professional' },
                     { id: 'brand-creative-studio', name: 'Creative Studio', description: 'Design & Marketing partner', voice: 'Casual & Friendly' }
                 ],
-
-                products: [
-                    { id: 1, name: 'Product A', sku: 'SKU-001', category: 'Electronics' },
-                    { id: 2, name: 'Product B', sku: 'SKU-002', category: 'Accessories' },
-                    { id: 3, name: 'Product C', sku: 'SKU-003', category: 'Software' }
-                ],
+                products: [],
 
                 workflow: {
                     currentStep: 1,
                     selectedPersonaIds: [],
-                    selectedBrandId: '',
-                    campaignId: '',  // Add campaign ID storage
+                    selectedBrandId: 'brand-001',
+                    campaignId: '',
                     name: '',
                     objective: 'awareness',
                     audience: '',
@@ -1589,6 +1580,35 @@
                         link: { count: 0, split: { educational: 0, entertaining: 0, promotional: 0, ugc: 0, seasonal: 0, reactive: 0 } }
                     },
                     generatedItems: []
+                },
+
+                async init() {
+                    console.log('Campaign Workflow initialized');
+                    await this.loadAll();
+                },
+
+                async loadAll() {
+                    try {
+                        const brandId = this.workflow.selectedBrandId || 'brand-001';
+                        // Load Products
+                        const prodResp = await fetch(`/api/v1/settings/products/${brandId}`);
+                        if (prodResp.ok) {
+                            const data = await prodResp.json();
+                            this.products = data.products;
+                        }
+
+                        // Load Personas
+                        const persResp = await fetch(`/api/v1/settings/personas/${brandId}`);
+                        if (persResp.ok) {
+                            const data = await persResp.json();
+                            this.personas = data.personas.map(p => ({
+                                ...p,
+                                summary: `${p.age_range}, ${p.gender || 'Any'}, ${p.location || 'Global'}`
+                            }));
+                        }
+                    } catch (e) {
+                        console.error('Failed to load data:', e);
+                    }
                 },
 
                 calendar: {
@@ -1619,6 +1639,7 @@
                     const brand = this.brands.find(b => b.id == this.workflow.selectedBrandId);
                     if (brand) {
                         this.workflow.brandVoice = brand.voice;
+                        this.loadAll(); // Reload personas/products for this brand
                     }
                 },
 

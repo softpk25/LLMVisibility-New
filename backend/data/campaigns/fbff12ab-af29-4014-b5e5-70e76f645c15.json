@@ -1,0 +1,124 @@
+{
+  "id": "fbff12ab-af29-4014-b5e5-70e76f645c15",
+  "campaign_metadata": {
+    "id": "e7e20039-d11c-44ef-89e1-d1e35c3a7a2a",
+    "name": "M",
+    "objective": "awareness",
+    "target_audience": "General audience",
+    "start_date": "2026-02-12",
+    "end_date": "2026-03-14",
+    "frequency": 1,
+    "status": "draft",
+    "created_at": "2026-02-12 12:26:19.227018",
+    "updated_at": "2026-02-12 12:26:19.227018"
+  },
+  "brand_context": {
+    "brand_id": "brand-creative-studio",
+    "brand_name": "Creative Studio Pro",
+    "voice_profile": {
+      "formality": "neutral",
+      "humor": "subtle",
+      "tone": "friendly",
+      "personality_traits": [
+        "creative",
+        "professional",
+        "inspiring"
+      ],
+      "do_phrases": [
+        "Let's create",
+        "Imagine",
+        "Bring to life"
+      ],
+      "dont_phrases": [
+        "Boring",
+        "Generic",
+        "Standard"
+      ]
+    },
+    "content_pillars": [
+      {
+        "id": "pillar-inspiration",
+        "name": "Design Inspiration",
+        "type": "inspirational",
+        "description": "Showcasing creative design work",
+        "keywords": [
+          "design",
+          "creativity",
+          "inspiration"
+        ],
+        "percentage": 50
+      },
+      {
+        "id": "pillar-process",
+        "name": "Behind the Process",
+        "type": "behind_scenes",
+        "description": "Design process and methodology",
+        "keywords": [
+          "process",
+          "methodology",
+          "workflow"
+        ],
+        "percentage": 30
+      },
+      {
+        "id": "pillar-services",
+        "name": "Our Services",
+        "type": "promotional",
+        "description": "Design services and capabilities",
+        "keywords": [
+          "services",
+          "branding",
+          "digital"
+        ],
+        "percentage": 20
+      }
+    ],
+    "guidelines": {
+      "color_palette": [
+        "#ff6b6b",
+        "#4ecdc4",
+        "#45b7d1",
+        "#f9ca24"
+      ],
+      "typography": {
+        "primary": "Montserrat",
+        "secondary": "Open Sans"
+      }
+    }
+  },
+  "personas": [
+    {
+      "id": "8ac09b9a-5103-4c5c-bdbd-094aa3d4ce92",
+      "name": "8ac09b9a-5103-4c5c-bdbd-094aa3d4ce92",
+      "age_range": "Unknown",
+      "interests": [],
+      "demographics": {},
+      "behavior_patterns": []
+    }
+  ],
+  "products": [],
+  "language_config": {
+    "primary_language": "en",
+    "multilingual_enabled": false,
+    "additional_languages": []
+  },
+  "post_mix": null,
+  "content_types": [],
+  "content_plan": {
+    "generated_plan": "1. Strategic Summary:\nThe \"M\" campaign aims to raise awareness about Creative Studio Pro's exceptional design services, their creative process, and the inspirational work they produce. Using a friendly, subtly humorous, and professional tone, the campaign will engage a general audience with daily posts that highlight the brand's creativity and professionalism.\n\n2. Key Messaging Themes:\n   - Theme 1: 'Design Inspiration' - Highlight the unique and creative designs produced by Creative Studio Pro. Use phrases like \"Let's create\" and \"Bring to life\" to inspire and captivate the audience.\n   - Theme 2: 'Behind the Process' - Showcase the methodological and professional approach of Creative Studio Pro, guiding the audience through the design process and workflow.\n   - Theme 3: 'Our Services' - Promote the wide range of design services offered by Creative Studio Pro, emphasizing creativity, branding, and digital prowess.\n\n3. Content Distribution Strategy:\n   - 50% of the content should focus on 'Design Inspiration', showcasing different creative designs produced by the studio. This could include images, videos, or stories of previous works.\n   - 30% of the content should be dedicated to 'Behind the Process', showing the audience how the team works on projects, their methodology, and workflow. This could be shared in the form of BTS videos, infographics, or time-lapse videos.\n   - The remaining 20% should focus on promoting 'Our Services'. This could be done through client testimonials, showcasing successful projects, or explainer videos detailing the services.\n   \nEach piece of content should be shared once per day, for optimal engagement and to maintain a consistent online presence throughout the campaign duration.",
+    "generated_at": "2026-02-12T12:26:34.195661",
+    "llm_metadata": {
+      "provider_used": "openai",
+      "available_providers": [
+        "openai",
+        "mock"
+      ],
+      "processing_time": 14.96900000000096
+    }
+  },
+  "posts": {},
+  "status": "draft",
+  "created_at": null,
+  "updated_at": "2026-02-12T12:26:34.197177",
+  "version": "v1"
+}

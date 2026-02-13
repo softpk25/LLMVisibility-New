@@ -1,0 +1,22 @@
+{
+  "source_filename": "free-photo-of-sleek-red-ferrari-supercar-in-indoor-garage.jpeg",
+  "analysis": {
+    "visual_dna": {
+      "composition": "Vehicle-centered with dynamic angle",
+      "palette": "Vibrant red (#FF2D00) 70%, Dark gray (#333333) 20%, plus supporting neutrals",
+      "lighting": "Low ambient with strategic highlights",
+      "style": "Luxury, sleek, performance-oriented"
+    },
+    "strategic_analysis": {
+      "tone": "Bold, aspirational, high-performance",
+      "cta_style": "Subtle prestige focus",
+      "emotional_angle": "Speed & luxury",
+      "audience": "Automotive enthusiasts, 30-55, luxury-oriented"
+    },
+    "image_composition_analysis": {
+      "focal_points": "Primary focus on car with ~80% saliency; subdued background enhances focus",
+      "typography_style": "Sophisticated serif logo, minimalistic branding"
+    },
+    "prompt_reconstruction": "Professional automotive photography, luxury sports car in low-light setting, vibrant red and dark gray color scheme, dynamic angle, sleek and performance-oriented, commercial advertising style --ar 16:9 --style raw"
+  }
+}

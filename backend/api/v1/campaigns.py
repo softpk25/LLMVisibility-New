@@ -143,7 +143,11 @@ async def create_campaign(request: CampaignCreateRequest):
         }
         
         logger.info(f"Triggering AI strategy generation for campaign {campaign_id}")
-        llm_result = await orchestrator.generate(llm_payload)
+        try:
+            llm_result = await orchestrator.generate(llm_payload)
+        except Exception as e:
+            logger.error(f"🚨 Critical failure in orchestrator for campaign {campaign_id}: {str(e)}")
+            llm_result = {"success": False, "error": str(e)}
         
         if llm_result.get("success"):
             # Add content plan to campaign data
@@ -152,19 +156,24 @@ async def create_campaign(request: CampaignCreateRequest):
                 "generated_at": datetime.utcnow().isoformat(),
                 "llm_metadata": llm_result.get("orchestrator_metadata", {})
             }
-            
-            # Update stored campaign with AI generated strategy
+
+            # Persist updated campaign to storage
             updates = {
                 "content_plan": content_plan,
                 "updated_at": datetime.utcnow().isoformat()
             }
-            updated_data = await campaign_storage.update_campaign(campaign_id, updates)
+            await campaign_storage.update_campaign(campaign_id, updates)
+
+            # Update the CampaignData model directly for the response
+            campaign_data.content_plan = content_plan
             
+            logger.info(f"✅ Campaign {campaign_id} created successfully with AI strategy")
+
             return CampaignResponse(
                 campaign_id=campaign_id,
                 status="success",
                 message="Campaign created with AI strategy",
-                data=updated_data
+                data=campaign_data
             )
         
         logger.info(f"Created campaign {campaign_id} (without AI strategy due to generation error or skip)")

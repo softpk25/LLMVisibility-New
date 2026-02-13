@@ -2,7 +2,13 @@ import os
 import json
 import uvicorn
 from contextlib import asynccontextmanager
+<<<<<<< HEAD
 from fastapi import FastAPI, UploadFile, File, HTTPException, Form
+=======
+from fastapi import FastAPI, UploadFile, File, HTTPException, Form, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import HTMLResponse, JSONResponse
+>>>>>>> d34cec1 (working settings minor issues in Jyotir Kartikey)
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -10,7 +16,10 @@ import shutil
 from pathlib import Path
 from dotenv import load_dotenv
 from typing import Optional, List
+<<<<<<< HEAD
 from app.database import init_db
+=======
+>>>>>>> d34cec1 (working settings minor issues in Jyotir Kartikey)
 
 # Import the ImageRater from the inspire me/newimg.py
 # We need to add the directory to sys.path to import it
@@ -18,6 +27,7 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), 'inspire me'))
 from newimg import ImageRater
 
+<<<<<<< HEAD
 # Load environment variables from root .env
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 # Import brand registration API
@@ -46,24 +56,125 @@ async def lifespan(app: FastAPI):
     
     # Shutdown (if needed in future)
     print("Shutting down...")
+=======
+# Add all module paths to sys.path
+backend_path = os.path.join(BASE_DIR, 'backend')
+if backend_path not in sys.path:
+    sys.path.insert(0, backend_path)
+
+inspire_path = os.path.join(BASE_DIR, 'inspire me')
+if inspire_path not in sys.path:
+    sys.path.append(inspire_path)
+
+brand_reg_path = os.path.join(BASE_DIR, 'brand registration')
+if brand_reg_path not in sys.path:
+    sys.path.append(brand_reg_path)
+
+# Load environment variables
+load_dotenv(os.path.join(BASE_DIR, '.env'))
+load_dotenv(os.path.join(inspire_path, '.env'))
+
+# Initialize logging early
+from core.logging_config import setup_logging
+setup_logging()
+
+# Now perform imports that might depend on environment or sys.path
+try:
+    from app.database import init_db as brand_init_db
+except ImportError:
+    brand_init_db = lambda: print("Warning: brand_init_db not found")
+
+from core.db import init_db as settings_init_db
+from newimg import ImageRater
+from brand_registration_api import router as brand_router
+try:
+    from app.main import blueprint_router
+except ImportError:
+    from fastapi import APIRouter
+    blueprint_router = APIRouter()
+    print("Warning: blueprint_router (app.main) not found. Using empty router.")
+
+from api.v1.router import api_router as campaign_api_router
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    try:
+        # Startup
+        print("Initializing brand blueprint database...")
+        brand_init_db()
+        print("Brand blueprint database initialized.")
+        
+        print("Initializing settings database (SQLite)...")
+        settings_init_db()
+        print("Settings database initialized.")
+        
+        # Create necessary directories for Campaign module
+        data_dir_path = os.environ.get("DATA_DIR", "data")
+        data_dir = Path(data_dir_path)
+        (data_dir / "campaigns").mkdir(parents=True, exist_ok=True)
+        (data_dir / "brands").mkdir(parents=True, exist_ok=True)
+        (data_dir / "settings").mkdir(parents=True, exist_ok=True)
+        (data_dir / "inspire").mkdir(parents=True, exist_ok=True)
+        (data_dir / "engage").mkdir(parents=True, exist_ok=True)
+        
+        # Ensure uploads directory exists
+        upload_dir_path = os.environ.get("UPLOAD_DIR", "uploads")
+        uploads_dir = Path(upload_dir_path)
+        uploads_dir.mkdir(parents=True, exist_ok=True)
+        (uploads_dir / "guidelines").mkdir(parents=True, exist_ok=True)
+        
+        print(f"Ensured campaign module data directories exist in {data_dir}")
+        
+        yield
+        
+        # Shutdown (if needed in future)
+        print("Shutting down...")
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise e
+>>>>>>> d34cec1 (working settings minor issues in Jyotir Kartikey)
 
 app = FastAPI(lifespan=lifespan)
 
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-# Include brand registration router
+# Include routers
 app.include_router(brand_router)
+<<<<<<< HEAD
 
 # Include brand blueprint router
+=======
+>>>>>>> d34cec1 (working settings minor issues in Jyotir Kartikey)
 app.include_router(blueprint_router)
+app.include_router(campaign_api_router, prefix="/api/v1")
 
+<<<<<<< HEAD
+=======
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    import logging
+    logger = logging.getLogger("uvicorn")
+    logger.error(f"❌ Validation error at {request.url.path}: {exc.errors()}")
+    try:
+        body = await request.json()
+        logger.error(f"📦 Request body: {json.dumps(body, indent=2)}")
+    except:
+        logger.error("📦 Could not parse request body as JSON")
+    
+    return JSONResponse(
+        status_code=422,
+        content={"detail": exc.errors()}
+    )
+
+>>>>>>> d34cec1 (working settings minor issues in Jyotir Kartikey)
 # Initialize ImageRater
 api_key = os.getenv('OPENAI_API_KEY')
 if not api_key:
@@ -83,6 +194,13 @@ app.mount("/inspire me", StaticFiles(directory="inspire me"), name="inspire_me")
 # Mount app/static for brand blueprint assets
 app.mount("/brand-static", StaticFiles(directory="app/static"), name="brand_static")
 
+<<<<<<< HEAD
+=======
+@app.get("/routes")
+async def get_routes():
+    return [{"path": route.path, "name": route.name, "methods": route.methods} for route in app.routes]
+
+>>>>>>> d34cec1 (working settings minor issues in Jyotir Kartikey)
 @app.get("/")
 async def root():
     return {"message": "Server is running"}
