@@ -9,7 +9,6 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 import PyPDF2
 from docx import Document
-from openai import OpenAI
 from app.config import get_settings
 
 
@@ -18,9 +17,22 @@ class PDFProcessor:
     
     def __init__(self):
         self.settings = get_settings()
-        self.client = OpenAI(api_key=self.settings.OPENAI_API_KEY)
+        self.client = None
         self.uploads_dir = Path(__file__).parent.parent / "uploads" / "guidelines"
         self.uploads_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Initialize OpenAI client with error handling
+        try:
+            from openai import OpenAI
+            if self.settings.OPENAI_API_KEY:
+                self.client = OpenAI(api_key=self.settings.OPENAI_API_KEY)
+            else:
+                print("Warning: OPENAI_API_KEY not configured. AI analysis will use defaults.")
+        except ImportError as e:
+            print(f"Warning: Could not import OpenAI. Please install openai package: pip install openai>=1.0.0")
+            print(f"Error details: {e}")
+        except Exception as e:
+            print(f"Warning: Could not initialize OpenAI client: {e}")
     
     def extract_text_from_pdf(self, file_path: str) -> str:
         """Extract text from PDF file."""
@@ -114,6 +126,28 @@ Brand Guideline Text:
 
 Return only the JSON, no additional text or explanation."""
 
+        # Check if OpenAI client is available
+        if not self.client:
+            print("OpenAI client not available. Returning default brand structure.")
+            return {
+                "brandName": "Unknown Brand",
+                "industry": "General",
+                "targetAudience": "General audience",
+                "pillars": [
+                    {"name": "Educational Content", "description": "Share knowledge and insights", "weight": 40},
+                    {"name": "Product Updates", "description": "Showcase products and features", "weight": 30},
+                    {"name": "Community Stories", "description": "Highlight customer success", "weight": 30}
+                ],
+                "forbiddenPhrases": [],
+                "brandHashtags": [],
+                "voice": {
+                    "formality": 50,
+                    "humor": 30,
+                    "warmth": 60,
+                    "emojiPolicy": "light"
+                }
+            }
+        
         try:
             response = self.client.chat.completions.create(
                 model="gpt-4-turbo-preview",

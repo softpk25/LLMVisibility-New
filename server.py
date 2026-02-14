@@ -2,61 +2,23 @@ import os
 import json
 import uvicorn
 from contextlib import asynccontextmanager
-<<<<<<< HEAD
-from fastapi import FastAPI, UploadFile, File, HTTPException, Form
-=======
 from fastapi import FastAPI, UploadFile, File, HTTPException, Form, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import HTMLResponse, JSONResponse
->>>>>>> d34cec1 (working settings minor issues in Jyotir Kartikey)
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 import shutil
 from pathlib import Path
 from dotenv import load_dotenv
 from typing import Optional, List
-<<<<<<< HEAD
-from app.database import init_db
-=======
->>>>>>> d34cec1 (working settings minor issues in Jyotir Kartikey)
+
+# Get base directory
+BASE_DIR = Path(__file__).resolve().parent
 
 # Import the ImageRater from the inspire me/newimg.py
 # We need to add the directory to sys.path to import it
 import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), 'inspire me'))
-from newimg import ImageRater
 
-<<<<<<< HEAD
-# Load environment variables from root .env
-load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
-# Import brand registration API
-sys.path.append(os.path.join(os.path.dirname(__file__), 'brand registration'))
-from brand_registration_api import router as brand_router
-
-# Import brand blueprint router
-from app.main import blueprint_router
-
-# Load environment variables
-load_dotenv(os.path.join(os.path.dirname(__file__), 'inspire me', '.env'))
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Startup
-    print("Initializing brand blueprint database...")
-    init_db()
-    print("Brand blueprint database initialized successfully.")
-    
-    # Ensure uploads directory exists
-    uploads_dir = Path("uploads/guidelines")
-    uploads_dir.mkdir(parents=True, exist_ok=True)
-    print(f"Ensured uploads directory exists: {uploads_dir}")
-    
-    yield
-    
-    # Shutdown (if needed in future)
-    print("Shutting down...")
-=======
 # Add all module paths to sys.path
 backend_path = os.path.join(BASE_DIR, 'backend')
 if backend_path not in sys.path:
@@ -74,9 +36,13 @@ if brand_reg_path not in sys.path:
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 load_dotenv(os.path.join(inspire_path, '.env'))
 
-# Initialize logging early
-from core.logging_config import setup_logging
-setup_logging()
+# Initialize logging early (if available)
+try:
+    from core.logging_config import setup_logging
+    setup_logging()
+except (ImportError, Exception) as e:
+    # Logging config not available or has errors, continue without it
+    print(f"Warning: Could not initialize logging config: {e}")
 
 # Now perform imports that might depend on environment or sys.path
 try:
@@ -84,9 +50,14 @@ try:
 except ImportError:
     brand_init_db = lambda: print("Warning: brand_init_db not found")
 
-from core.db import init_db as settings_init_db
+try:
+    from core.db import init_db as settings_init_db
+except ImportError:
+    settings_init_db = lambda: print("Warning: settings_init_db not found")
+
 from newimg import ImageRater
 from brand_registration_api import router as brand_router
+
 try:
     from app.main import blueprint_router
 except ImportError:
@@ -94,7 +65,12 @@ except ImportError:
     blueprint_router = APIRouter()
     print("Warning: blueprint_router (app.main) not found. Using empty router.")
 
-from api.v1.router import api_router as campaign_api_router
+try:
+    from api.v1.router import api_router as campaign_api_router
+except ImportError:
+    from fastapi import APIRouter
+    campaign_api_router = APIRouter()
+    print("Warning: campaign_api_router not found. Using empty router.")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -133,7 +109,6 @@ async def lifespan(app: FastAPI):
         import traceback
         traceback.print_exc()
         raise e
->>>>>>> d34cec1 (working settings minor issues in Jyotir Kartikey)
 
 app = FastAPI(lifespan=lifespan)
 
@@ -148,16 +123,9 @@ app.add_middleware(
 
 # Include routers
 app.include_router(brand_router)
-<<<<<<< HEAD
-
-# Include brand blueprint router
-=======
->>>>>>> d34cec1 (working settings minor issues in Jyotir Kartikey)
 app.include_router(blueprint_router)
 app.include_router(campaign_api_router, prefix="/api/v1")
 
-<<<<<<< HEAD
-=======
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     import logging
@@ -173,8 +141,6 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         status_code=422,
         content={"detail": exc.errors()}
     )
-
->>>>>>> d34cec1 (working settings minor issues in Jyotir Kartikey)
 # Initialize ImageRater
 api_key = os.getenv('OPENAI_API_KEY')
 if not api_key:
@@ -194,13 +160,10 @@ app.mount("/inspire me", StaticFiles(directory="inspire me"), name="inspire_me")
 # Mount app/static for brand blueprint assets
 app.mount("/brand-static", StaticFiles(directory="app/static"), name="brand_static")
 
-<<<<<<< HEAD
-=======
 @app.get("/routes")
 async def get_routes():
     return [{"path": route.path, "name": route.name, "methods": route.methods} for route in app.routes]
 
->>>>>>> d34cec1 (working settings minor issues in Jyotir Kartikey)
 @app.get("/")
 async def root():
     return {"message": "Server is running"}
@@ -213,6 +176,16 @@ async def read_item():
 @app.get("/FACEBOOK-BRAND-REGISTRATION.html", response_class=HTMLResponse)
 async def read_brand_registration():
     with open("templates/FACEBOOK-BRAND-REGISTRATION.html", "r", encoding="utf-8") as f:
+        return f.read()
+
+@app.get("/FACEBOOK-CREATE-CAMPAIGN.html", response_class=HTMLResponse)
+async def read_create_campaign():
+    with open("templates/FACEBOOK-CREATE-CAMPAIGN.html", "r", encoding="utf-8") as f:
+        return f.read()
+
+@app.get("/FACEBOOK-SETTINGS.html", response_class=HTMLResponse)
+async def read_settings():
+    with open("templates/FACEBOOK-SETTINGS.html", "r", encoding="utf-8") as f:
         return f.read()
 
 from pydantic import BaseModel
