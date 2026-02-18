@@ -3,7 +3,7 @@ import sys
 import json
 import uvicorn
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, UploadFile, File, HTTPException, Form, Request
+from fastapi import FastAPI, UploadFile, File, HTTPException, Form, Request, Depends
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -45,7 +45,7 @@ try:
 except ImportError:
     brand_init_db = lambda: print("Warning: brand_init_db not found")
 
-from core.db import init_db as settings_init_db
+from core.db import init_db as settings_init_db, get_db
 from newimg import ImageRater
 from brand_registration_api import router as brand_router
 try:
@@ -145,6 +145,16 @@ app.mount("/inspire me", StaticFiles(directory="inspire me"), name="inspire_me")
 
 # Mount app/static for brand blueprint assets
 app.mount("/brand-static", StaticFiles(directory="app/static"), name="brand_static")
+
+@app.get("/facebook/callback")
+async def facebook_callback_shortcut(
+    request: Request,
+    code: str, 
+    state: str,
+    conn=Depends(get_db)
+):
+    from api.v1.integrations import facebook_callback
+    return await facebook_callback(request, code, state, conn)
 
 @app.get("/routes")
 async def get_routes():
@@ -299,5 +309,5 @@ if __name__ == "__main__":
     logger.info("Starting server via python execution...")
     
     # Run server
-    port = int(os.getenv("PORT", 8000))
+    port = int(os.getenv("PORT", 8080))
     uvicorn.run(app, host="0.0.0.0", port=port)
