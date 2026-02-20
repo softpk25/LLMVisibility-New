@@ -12,8 +12,12 @@ from pathlib import Path
 from dotenv import load_dotenv
 from typing import Optional, List
 
-# Get base directory
+# Get base directory (project root)
 BASE_DIR = Path(__file__).resolve().parent
+
+# Ensure production uses project root for all relative paths (data files, DB, uploads)
+os.environ.setdefault("PROJECT_ROOT", str(BASE_DIR))
+os.chdir(BASE_DIR)
 
 # Import the ImageRater from the inspire me/newimg.py
 # We need to add the directory to sys.path to import it

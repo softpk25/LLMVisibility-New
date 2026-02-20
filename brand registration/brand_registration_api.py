@@ -39,6 +39,9 @@ except ImportError:  # pragma: no cover - optional dependency
 # Create router for brand registration endpoints
 router = APIRouter(prefix="/api/brand-registration", tags=["brand-registration"])
 
+# Project root for absolute paths (production-safe)
+_ROOT = Path(os.environ.get("PROJECT_ROOT", str(Path(__file__).resolve().parent.parent)))
+
 # Data models
 class BrandSettings(BaseModel):
     defaultLanguage: str = "en"
@@ -81,9 +84,11 @@ class BrandRegistrationData(BaseModel):
 class BrandRegistrationService:
     """Service class to handle brand registration operations"""
     
-    def __init__(self, data_file: str = "brand_registrations.json"):
-        self.data_file = Path(data_file)
-        self.upload_dir = Path("brand registration/uploads")
+    def __init__(self, data_file: Optional[str] = None, upload_dir: Optional[Path] = None, root: Optional[Path] = None):
+        root = root or _ROOT
+        self.data_file = Path(data_file) if data_file else (root / "brand_registrations.json")
+        self.upload_dir = upload_dir if upload_dir is not None else (root / "brand registration" / "uploads")
+        self.upload_dir = Path(self.upload_dir)
         self.upload_dir.mkdir(parents=True, exist_ok=True)
         
     def _load_data(self) -> Dict[str, Any]:

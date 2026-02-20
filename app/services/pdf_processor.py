@@ -18,7 +18,8 @@ class PDFProcessor:
     def __init__(self):
         self.settings = get_settings()
         self.client = None
-        self.uploads_dir = Path(__file__).parent.parent / "uploads" / "guidelines"
+        # Use config UPLOAD_DIR (absolute path in production)
+        self.uploads_dir = Path(self.settings.UPLOAD_DIR)
         self.uploads_dir.mkdir(parents=True, exist_ok=True)
         
         # Initialize OpenAI client with error handling

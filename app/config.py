@@ -3,9 +3,13 @@ Standalone Brand Blueprint Configuration
 Manages environment variables and application settings.
 """
 
+import os
 from pydantic_settings import BaseSettings
 from functools import lru_cache
 from pathlib import Path
+
+# Project root for absolute paths (set by server.py in production)
+_ROOT = Path(os.environ.get("PROJECT_ROOT", os.getcwd()))
 
 
 class Settings(BaseSettings):
@@ -14,11 +18,11 @@ class Settings(BaseSettings):
     # OpenAI Configuration
     OPENAI_API_KEY: str = ""
     
-    # Database Configuration
-    DATABASE_URL: str = "sqlite:///./brand_blueprint.db"
+    # Database Configuration (absolute path for production)
+    DATABASE_URL: str = f"sqlite:///{_ROOT / 'brand_blueprint.db'}"
     
-    # Upload Configuration
-    UPLOAD_DIR: str = "./uploads/guidelines"
+    # Upload Configuration (absolute path for production)
+    UPLOAD_DIR: str = str(_ROOT / "uploads" / "guidelines")
     MAX_UPLOAD_SIZE: int = 52428800  # 50 MB in bytes
     
     # Application Configuration
