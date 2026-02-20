@@ -1,8 +1,9 @@
 import os
+import sys
 import json
 import uvicorn
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, UploadFile, File, HTTPException, Form, Request
+from fastapi import FastAPI, UploadFile, File, HTTPException, Form, Request, Depends
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -14,10 +15,6 @@ from typing import Optional, List
 
 # Get base directory
 BASE_DIR = Path(__file__).resolve().parent
-
-# Import the ImageRater from the inspire me/newimg.py
-# We need to add the directory to sys.path to import it
-import sys
 
 # Add all module paths to sys.path
 backend_path = os.path.join(BASE_DIR, 'backend')
@@ -51,9 +48,10 @@ except ImportError:
     brand_init_db = lambda: print("Warning: brand_init_db not found")
 
 try:
-    from core.db import init_db as settings_init_db
+    from core.db import init_db as settings_init_db, get_db
 except ImportError:
     settings_init_db = lambda: print("Warning: settings_init_db not found")
+    get_db = None
 
 from newimg import ImageRater
 from brand_registration_api import router as brand_router
@@ -159,6 +157,16 @@ app.mount("/inspire me", StaticFiles(directory="inspire me"), name="inspire_me")
 
 # Mount app/static for brand blueprint assets
 app.mount("/brand-static", StaticFiles(directory="app/static"), name="brand_static")
+
+@app.get("/facebook/callback")
+async def facebook_callback_shortcut(
+    request: Request,
+    code: str, 
+    state: str,
+    conn=Depends(get_db)
+):
+    from api.v1.integrations import facebook_callback
+    return await facebook_callback(request, code, state, conn)
 
 @app.get("/routes")
 async def get_routes():

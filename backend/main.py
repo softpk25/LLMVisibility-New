@@ -16,6 +16,8 @@ from core.config import settings
 from core.logging_config import setup_logging
 from core.exceptions import setup_exception_handlers
 from api.v1.router import api_router
+from app.routes.facebook import router as facebook_router
+from app.core.db_sqlalchemy import engine, Base
 
 # Load environment variables
 load_dotenv()
@@ -44,6 +46,10 @@ async def lifespan(app: FastAPI):
     os.makedirs("data/inspire", exist_ok=True)
     os.makedirs("data/engage", exist_ok=True)
     os.makedirs("uploads", exist_ok=True)
+    
+    # Initialize SQLAlchemy database tables
+    logger.info("Initializing Facebook module database tables...")
+    Base.metadata.create_all(bind=engine)
     
     yield
     
@@ -81,6 +87,7 @@ setup_exception_handlers(app)
 
 # Include API routes
 app.include_router(api_router, prefix="/api/v1")
+app.include_router(facebook_router, prefix="/api/v1", tags=["facebook"])
 
 # Mount static files
 app.mount("/templates", StaticFiles(directory="../templates"), name="templates")

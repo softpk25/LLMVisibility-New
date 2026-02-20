@@ -249,6 +249,38 @@ class BrandStorage:
         return await self.storage.list_items(self.collection, limit, offset)
 
 
+class PersonaStorage:
+    """Persona-specific storage operations"""
+    
+    def __init__(self, storage: JSONStorage):
+        self.storage = storage
+        self.collection = "personas"
+    
+    async def get_persona(self, persona_id: str) -> Dict[str, Any]:
+        """Get persona by ID"""
+        return await self.storage.load(self.collection, persona_id)
+    
+    async def list_personas(self, limit: int = 50, offset: int = 0) -> List[Dict[str, Any]]:
+        """List personas"""
+        return await self.storage.list_items(self.collection, limit, offset)
+
+
+class ProductStorage:
+    """Product-specific storage operations"""
+    
+    def __init__(self, storage: JSONStorage):
+        self.storage = storage
+        self.collection = "products"
+    
+    async def get_product(self, product_id: str) -> Dict[str, Any]:
+        """Get product by ID"""
+        return await self.storage.load(self.collection, product_id)
+    
+    async def list_products(self, limit: int = 50, offset: int = 0) -> List[Dict[str, Any]]:
+        """List products"""
+        return await self.storage.list_items(self.collection, limit, offset)
+
+
 class SettingsStorage:
     """Settings-specific storage operations"""
     
@@ -314,4 +346,6 @@ class SettingsStorage:
 storage = JSONStorage()
 campaign_storage = CampaignStorage(storage)
 brand_storage = BrandStorage(storage)
+persona_storage = PersonaStorage(storage)
+product_storage = ProductStorage(storage)
 settings_storage = SettingsStorage(storage)

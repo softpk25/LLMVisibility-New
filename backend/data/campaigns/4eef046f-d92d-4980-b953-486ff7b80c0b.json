@@ -1,0 +1,124 @@
+{
+  "id": "4eef046f-d92d-4980-b953-486ff7b80c0b",
+  "campaign_metadata": {
+    "id": "0f7ffd84-d312-4989-8b0f-ce71ef468643",
+    "name": "M",
+    "objective": "awareness",
+    "target_audience": "General audience",
+    "start_date": "2026-02-12",
+    "end_date": "2026-03-14",
+    "frequency": 1,
+    "status": "draft",
+    "created_at": "2026-02-12 07:34:14.831037",
+    "updated_at": "2026-02-12 07:34:14.831037"
+  },
+  "brand_context": {
+    "brand_id": "brand-creative-studio",
+    "brand_name": "Creative Studio Pro",
+    "voice_profile": {
+      "formality": "neutral",
+      "humor": "subtle",
+      "tone": "friendly",
+      "personality_traits": [
+        "creative",
+        "professional",
+        "inspiring"
+      ],
+      "do_phrases": [
+        "Let's create",
+        "Imagine",
+        "Bring to life"
+      ],
+      "dont_phrases": [
+        "Boring",
+        "Generic",
+        "Standard"
+      ]
+    },
+    "content_pillars": [
+      {
+        "id": "pillar-inspiration",
+        "name": "Design Inspiration",
+        "type": "inspirational",
+        "description": "Showcasing creative design work",
+        "keywords": [
+          "design",
+          "creativity",
+          "inspiration"
+        ],
+        "percentage": 50
+      },
+      {
+        "id": "pillar-process",
+        "name": "Behind the Process",
+        "type": "behind_scenes",
+        "description": "Design process and methodology",
+        "keywords": [
+          "process",
+          "methodology",
+          "workflow"
+        ],
+        "percentage": 30
+      },
+      {
+        "id": "pillar-services",
+        "name": "Our Services",
+        "type": "promotional",
+        "description": "Design services and capabilities",
+        "keywords": [
+          "services",
+          "branding",
+          "digital"
+        ],
+        "percentage": 20
+      }
+    ],
+    "guidelines": {
+      "color_palette": [
+        "#ff6b6b",
+        "#4ecdc4",
+        "#45b7d1",
+        "#f9ca24"
+      ],
+      "typography": {
+        "primary": "Montserrat",
+        "secondary": "Open Sans"
+      }
+    }
+  },
+  "personas": [
+    {
+      "id": "persona-3",
+      "name": "persona-3",
+      "age_range": "Unknown",
+      "interests": [],
+      "demographics": {},
+      "behavior_patterns": []
+    }
+  ],
+  "products": [],
+  "language_config": {
+    "primary_language": "en",
+    "multilingual_enabled": false,
+    "additional_languages": []
+  },
+  "post_mix": null,
+  "content_types": [],
+  "content_plan": {
+    "generated_plan": "1. Strategic Summary:\nThe M campaign by Creative Studio Pro aims to raise awareness among the general audience about their unique creative design capabilities, inspirational design work, and the process behind creating them. The campaign will leverage the brand's voice profile to engage the audience in a friendly yet professional manner, promoting creativity and inspiration while avoiding generic or standard design terminologies.\n\n2. Key Messaging Themes:\n   - Theme 1: \"Let's Create Together\" - Highlighting the creativity and uniqueness of Creative Studio Pro's designs. This theme will focus on the 'Design Inspiration' content pillar.\n   - Theme 2: \"Imagine the Process\" - Showcasing the behind-the-scenes of the design process and methodology. This theme will focus on the 'Behind the Process' content pillar.\n   - Theme 3: \"Bring Your Brand to Life\" - Promoting the design services and capabilities of Creative Studio Pro. This theme will focus on the 'Our Services' content pillar.\n\n3. Content Distribution Strategy:\n   - Social Media: Daily posts on platforms like Instagram, Facebook, LinkedIn, and Twitter. The posts will follow the key messaging themes, with 50% focusing on 'Design Inspiration', 30% on 'Behind the Process', and 20% on 'Our Services'.\n   - Blog Posts: Weekly blog posts on the website sharing detailed insights into the design process, methodology, and services. These will be shared on social media platforms.\n   - Email Marketing: Weekly newsletters to subscribers with exclusive behind-the-scenes content, new service announcements, and inspiring design work.\n   - Influencer Partnerships: Collaborate with design influencers to share Creative Studio Pro's work and process on their platforms, increasing reach and awareness.\n   \nRemember, all content should maintain the brand's voice profile - creative, professional, and inspiring, with subtle humor and a friendly tone. Avoid using phrases like 'boring', 'generic', or 'standard'.",
+    "generated_at": "2026-02-12T07:34:27.398634",
+    "llm_metadata": {
+      "provider_used": "openai",
+      "available_providers": [
+        "openai",
+        "mock"
+      ],
+      "processing_time": 12.563000000000102
+    }
+  },
+  "posts": {},
+  "status": "draft",
+  "created_at": null,
+  "updated_at": "2026-02-12T07:34:27.398634",
+  "version": "v1"
+}

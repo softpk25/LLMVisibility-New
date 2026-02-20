@@ -1735,13 +1735,13 @@
                             this.isGenerating = false;
                             console.error('❌ Error creating campaign:', error);
                             console.error('❌ Error details:', error.message);
-                            
+
                             // Try to get more details from the response
                             if (error.response) {
                                 console.error('❌ Response status:', error.response.status);
                                 console.error('❌ Response data:', error.response.data);
                             }
-                            
+
                             alert(`Failed to create campaign: ${error.message}`);
 
                             // Fallback logic removed to ensure user knows it failed
@@ -1802,32 +1802,53 @@
                     this.isGenerating = true;
 
                     // Prepare post mix data for backend
+                    const totalCount = this.totalPlannedCount();
                     const postMixData = {
                         campaign_id: this.workflow.campaignId || 'temp-campaign-id',
                         content_types: Object.keys(this.workflow.types).filter(key => this.workflow.types[key].count > 0),
                         post_distribution: {
                             educational: 0,
+                            entertaining: 0,
                             promotional: 0,
-                            behind_scenes: 0,
-                            user_generated: 0,
+                            ugc: 0,
                             seasonal: 0,
-                            trending: 0
+                            reactive: 0
                         }
                     };
 
-                    // Calculate distribution from the existing split data
-                    Object.keys(this.workflow.types).forEach(typeKey => {
-                        const type = this.workflow.types[typeKey];
-                        if (type.count > 0) {
-                            const split = type.split;
-                            postMixData.post_distribution.educational += split.educational || 0;
-                            postMixData.post_distribution.promotional += split.promotional || 0;
-                            postMixData.post_distribution.behind_scenes += split.entertaining || 0;
-                            postMixData.post_distribution.user_generated += split.ugc || 0;
-                            postMixData.post_distribution.seasonal += split.seasonal || 0;
-                            postMixData.post_distribution.trending += split.reactive || 0;
+                    if (totalCount > 0) {
+                        // Calculate distribution from the existing split data
+                        Object.keys(this.workflow.types).forEach(typeKey => {
+                            const type = this.workflow.types[typeKey];
+                            if (type.count > 0) {
+                                const split = type.split;
+                                postMixData.post_distribution.educational += split.educational || 0;
+                                postMixData.post_distribution.entertaining += split.entertaining || 0;
+                                postMixData.post_distribution.promotional += split.promotional || 0;
+                                postMixData.post_distribution.ugc += split.ugc || 0;
+                                postMixData.post_distribution.seasonal += split.seasonal || 0;
+                                postMixData.post_distribution.reactive += split.reactive || 0;
+                            }
+                        });
+
+                        // Convert counts to percentages that sum to 100
+                        const keys = Object.keys(postMixData.post_distribution);
+                        let sum = 0;
+                        keys.forEach(k => {
+                            postMixData.post_distribution[k] = Math.round((postMixData.post_distribution[k] / totalCount) * 100);
+                            sum += postMixData.post_distribution[k];
+                        });
+
+                        // Adjust for rounding errors to ensure exactly 100%
+                        if (sum !== 100 && sum > 0) {
+                            const diff = 100 - sum;
+                            const maxKey = keys.reduce((a, b) => postMixData.post_distribution[a] > postMixData.post_distribution[b] ? a : b);
+                            postMixData.post_distribution[maxKey] += diff;
                         }
-                    });
+                    } else {
+                        // Default distribution if count is 0
+                        postMixData.post_distribution.educational = 100;
+                    }
 
                     // Call backend API for post mix configuration
                     fetch('/api/v1/campaigns/post-mix', {
@@ -1837,7 +1858,14 @@
                         },
                         body: JSON.stringify(postMixData)
                     })
-                        .then(response => response.json())
+                        .then(async response => {
+                            const data = await response.json();
+                            if (!response.ok) {
+                                console.error('❌ Post mix error details:', data);
+                                throw new Error(data.detail?.[0]?.msg || 'Validation failed');
+                            }
+                            return data;
+                        })
                         .then(data => {
                             console.log('Post mix configured:', data);
 

@@ -76,69 +76,14 @@ class OpenAIProvider(LLMProvider):
     def __init__(self, api_key: str, model: str = "gpt-4"):
         super().__init__(api_key, model)
         # Import here to avoid dependency issues if not installed
-        self.client = None
         try:
             import openai
-            # Check version and AsyncOpenAI availability (requires openai>=1.0.0)
-            openai_version = getattr(openai, '__version__', '0.0.0')
-            
-            # Check if version is compatible before trying to import
-            try:
-                from packaging import version
-                if version.parse(openai_version) < version.parse("1.0.0"):
-                    # Version is too old, skip initialization
-                    raise LLMProviderError(
-                        "openai", 
-                        f"OpenAI package version too old (installed: {openai_version}). "
-                        "AsyncOpenAI requires openai>=1.0.0. "
-                        "Please upgrade: pip install --upgrade 'openai>=1.0.0'"
-                    )
-            except ImportError:
-                # packaging module not available, try to import anyway
-                pass
-            
-            # Try to import AsyncOpenAI directly
-            try:
-                from openai import AsyncOpenAI
-                self.client = AsyncOpenAI(api_key=api_key)
-            except (ImportError, AttributeError) as import_err:
-                # Check if it exists as an attribute (for some edge cases)
-                if hasattr(openai, 'AsyncOpenAI'):
-                    try:
-                        self.client = openai.AsyncOpenAI(api_key=api_key)
-                    except AttributeError:
-                        # Old version of openai package
-                        raise LLMProviderError(
-                            "openai", 
-                            f"OpenAI package version too old (installed: {openai_version}). "
-                            "AsyncOpenAI requires openai>=1.0.0. "
-                            "Please upgrade: pip install --upgrade 'openai>=1.0.0'. "
-                            f"Import error: {import_err}"
-                        )
-                else:
-                    # Old version of openai package
-                    raise LLMProviderError(
-                        "openai", 
-                        f"OpenAI package version too old (installed: {openai_version}). "
-                        "AsyncOpenAI requires openai>=1.0.0. "
-                        "Please upgrade: pip install --upgrade 'openai>=1.0.0'. "
-                        f"Import error: {import_err}"
-                    )
+            self.client = openai.AsyncOpenAI(api_key=api_key)
         except ImportError:
-            raise LLMProviderError("openai", "OpenAI package not installed. Install with: pip install 'openai>=1.0.0'")
-        except AttributeError as e:
-            openai_version = getattr(openai, '__version__', 'unknown') if 'openai' in locals() else 'unknown'
-            raise LLMProviderError(
-                "openai",
-                f"OpenAI package version incompatible (installed: {openai_version}). "
-                f"AsyncOpenAI not found. Please upgrade: pip install --upgrade 'openai>=1.0.0'. "
-                f"Error: {e}"
-            )
+            raise LLMProviderError("openai", "OpenAI package not installed")
     
     async def generate_text(self, prompt: str, **kwargs) -> Dict[str, Any]:
         """Generate text using OpenAI"""
-        if not self.client:
-            raise LLMProviderError("openai", "OpenAI client not initialized. Please upgrade openai package: pip install --upgrade 'openai>=1.0.0'")
         try:
             response = await self.client.chat.completions.create(
                 model=kwargs.get('model', self.model),
@@ -161,8 +106,6 @@ class OpenAIProvider(LLMProvider):
     
     async def analyze_image(self, image_path: str, prompt: str, **kwargs) -> Dict[str, Any]:
         """Analyze image using OpenAI Vision"""
-        if not self.client:
-            raise LLMProviderError("openai", "OpenAI client not initialized. Please upgrade openai package: pip install --upgrade 'openai>=1.0.0'")
         try:
             import base64
             
@@ -201,8 +144,6 @@ class OpenAIProvider(LLMProvider):
     
     async def moderate_content(self, content: str, **kwargs) -> Dict[str, Any]:
         """Moderate content using OpenAI"""
-        if not self.client:
-            raise LLMProviderError("openai", "OpenAI client not initialized. Please upgrade openai package: pip install --upgrade 'openai>=1.0.0'")
         try:
             response = await self.client.moderations.create(input=content)
             
@@ -395,25 +336,8 @@ class LLMOrchestrator:
         # OpenAI
         if settings.OPENAI_API_KEY:
             try:
-                # Check if OpenAI package supports AsyncOpenAI before initializing
-                try:
-                    import openai
-                    openai_version = getattr(openai, '__version__', '0.0.0')
-                    # Try to check if AsyncOpenAI is available
-                    try:
-                        from openai import AsyncOpenAI
-                        # If we get here, AsyncOpenAI is available
-                        self.providers["openai"] = OpenAIProvider(settings.OPENAI_API_KEY)
-                        logger.info("OpenAI provider initialized")
-                    except (ImportError, AttributeError):
-                        logger.warning(
-                            f"OpenAI package version {openai_version} is too old. "
-                            "AsyncOpenAI requires openai>=1.0.0. "
-                            "Please upgrade with: pip install --upgrade 'openai>=1.0.0'. "
-                            "OpenAI provider will not be available until upgraded."
-                        )
-                except ImportError:
-                    logger.warning("OpenAI package not installed. OpenAI provider will not be available.")
+                self.providers["openai"] = OpenAIProvider(settings.OPENAI_API_KEY)
+                logger.info("OpenAI provider initialized")
             except Exception as e:
                 logger.warning(f"Failed to initialize OpenAI provider: {e}")
         

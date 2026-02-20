@@ -5,7 +5,7 @@ Configuration settings for Prometrix backend
 import os
 from typing import List
 from pydantic_settings import BaseSettings
-from pydantic import ConfigDict, validator
+from pydantic import validator
 
 
 class Settings(BaseSettings):
@@ -48,31 +48,10 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
     LOG_FORMAT: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     
-    # Facebook/Instagram/Social Media (optional - allow extra fields)
-    FB_APP_ID: str = ""
-    FB_APP_SECRET: str = ""
-    FB_APP_REDIRECT_URL: str = ""
-    FACEBOOK_GRAPH_API_URL: str = ""
-    FACEBOOK_ACCESS_TOKEN: str = ""
-    FACEBOOK_PAGE_ID: str = ""
-    FACEBOOK_PAGE_ACCESS_TOKEN: str = ""
-    INSTAGRAM_BUSINESS_ID: str = ""
-    FACEBOOK_AD_ACCOUNT_ID: str = ""
-    FACEBOOK_AD_SET_ID: str = ""
-    
-    # Database
-    DATABASE_URL: str = ""
-    
-    # Additional API Keys
-    GEMINI_API_KEY: str = ""
-    KLING_ACCESS_KEY: str = ""
-    KLING_SECRET_KEY: str = ""
-    
-    model_config = ConfigDict(
-        env_file=".env",
-        case_sensitive=True,
-        extra="ignore"  # Ignore extra fields from .env that aren't defined here
-    )
+    class Config:
+        env_file = ".env"
+        case_sensitive = True
+        extra = "ignore"
 
 
 # Global settings instance

@@ -157,6 +157,7 @@ class BrandRegistrationClient {
     }
 }
 
+
 /**
  * Enhanced Brand Content System with Backend Integration
  */
@@ -168,7 +169,6 @@ function enhancedBrandContentSystem() {
         activeTab: 'onboarding',
         isGeneratingPlan: false,
         isGeneratingBlueprint: false,
-        isRegenerating: false,
 
         // Brand data
         brand: {
@@ -260,27 +260,6 @@ function enhancedBrandContentSystem() {
                     status: 'uploaded'
                 };
 
-                // Update brand data with file details
-                this.brand.guidelineDoc = {
-                    ...this.guidelineDoc,
-                    path: result.path,
-                    uploadTime: result.upload_time
-                };
-
-                // If the backend managed to generate a draft blueprint from
-                // the document, immediately hydrate the Blueprint tab with it
-                // so the user sees auto-filled sliders, pillars, and policies.
-                if (result.blueprint) {
-                    this.brand.blueprint = {
-                        ...this.brand.blueprint,
-                        ...result.blueprint
-                    };
-
-                    // Keep the onboarding product slider in sync when possible
-                    if (typeof result.blueprint.productDefaultPct === 'number') {
-                        this.settings.productDefaultPct = result.blueprint.productDefaultPct;
-                    }
-
                 // Update brand data
                 this.brand.guidelineDoc = this.guidelineDoc;
 
@@ -288,14 +267,7 @@ function enhancedBrandContentSystem() {
                 setTimeout(() => {
                     this.guidelineDoc.status = 'parsed';
                     this.brand.guidelineDoc.status = 'parsed';
-                }, 0);
-                } else {
-                    // Fallback: keep the existing "processing" behaviour
-                    setTimeout(() => {
-                        this.guidelineDoc.status = 'parsed';
-                        this.brand.guidelineDoc.status = 'parsed';
-                    }, 2000);
-                }
+                }, 2000);
 
             } catch (error) {
                 console.error('Upload failed:', error);
@@ -359,58 +331,6 @@ function enhancedBrandContentSystem() {
                 this.isGeneratingBlueprint = false;
                 this.activeTab = 'blueprint';
             }, 3000);
-        },
-
-        /**
-         * Re-generate blueprint from uploaded document
-         */
-        async regenerateBlueprintFromDoc() {
-            if (!this.brand.guidelineDoc || !this.brand.guidelineDoc.path) {
-                alert('Please upload a guideline document first.');
-                return;
-            }
-            
-            this.isRegenerating = true;
-            
-            try {
-                const response = await fetch(`${client.apiBase}/regenerate-blueprint/${this.brand.id}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.detail || 'Failed to regenerate blueprint');
-                }
-                
-                const result = await response.json();
-                
-                // Update blueprint with regenerated data
-                if (result.blueprint) {
-                    this.brand.blueprint = {
-                        ...this.brand.blueprint,
-                        ...result.blueprint
-                    };
-                    
-                    // Update product percentage in settings if changed
-                    if (typeof result.blueprint.productDefaultPct === 'number') {
-                        this.settings.productDefaultPct = result.blueprint.productDefaultPct;
-                    }
-                    
-                    // Auto-save the regenerated blueprint
-                    await this.saveBlueprint();
-                    
-                    console.log('Blueprint regenerated successfully from document');
-                }
-                
-            } catch (error) {
-                console.error('Regeneration error:', error);
-                alert(`Failed to regenerate blueprint: ${error.message}`);
-            } finally {
-                this.isRegenerating = false;
-            }
         },
 
         /**

@@ -1,0 +1,6 @@
+{
+  "source_filename": "free-photo-of-sleek-red-ferrari-supercar-in-indoor-garage.jpeg",
+  "analysis": {
+    "error": "API request failed: 401 Client Error: Unauthorized for url: https://api.openai.com/v1/chat/completions"
+  }
+}

@@ -1331,15 +1331,14 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Transformation Instructions (Optional)</label>
-                        <textarea id="transformation-instructions"
-                            placeholder="E.g., Replace the Coca-Cola bottle with the Pepsi bottle, change the background color to blue, add a sunset effect..."></textarea>
-                        <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">💡 Describe how you
-                            want to modify the creative when a reference image is added</p>
+                        <label>What do you like about this creative? (Optional)</label>
+                        <textarea
+                            placeholder="E.g., The bold colors, the dynamic composition, the way it showcases the product..."></textarea>
                     </div>
 
                     <div style="display: flex; justify-content: flex-end; margin-top: 32px;">
-                        <button class="btn btn-primary" id="analyzeBtn">Analyze Creative DNA →</button>
+                        <button class="btn btn-primary" onclick="nextStep(1)" id="analyzeBtn">Analyze Creative DNA
+                            →</button>
                     </div>
                 </div>
             </div>
@@ -1370,21 +1369,20 @@
                         <div class="analysis-section">
                             <h3>🎨 Visual DNA</h3>
                             <ul>
-                                <li><strong>Composition:</strong> <span id="dna-composition">Analyzing...</span></li>
-                                <li><strong>Palette:</strong> <span id="dna-palette">Analyzing...</span></li>
-                                <li><strong>Lighting:</strong> <span id="dna-lighting">Analyzing...</span></li>
-                                <li><strong>Style:</strong> <span id="dna-style">Analyzing...</span></li>
+                                <li><strong>Composition:</strong> Hero-centered with dynamic diagonal lines</li>
+                                <li><strong>Palette:</strong> Bold orange (#FF6B35) 45%, Navy (#004E89) 30%</li>
+                                <li><strong>Lighting:</strong> High contrast studio lighting</li>
+                                <li><strong>Style:</strong> Premium, athletic, modern minimalism</li>
                             </ul>
                         </div>
 
                         <div class="analysis-section">
                             <h3>💡 Strategic Analysis</h3>
                             <ul>
-                                <li><strong>Tone:</strong> <span id="strategy-tone">Analyzing...</span></li>
-                                <li><strong>CTA Style:</strong> <span id="strategy-cta">Analyzing...</span></li>
-                                <li><strong>Emotional Angle:</strong> <span id="strategy-emotion">Analyzing...</span>
-                                </li>
-                                <li><strong>Audience:</strong> <span id="strategy-audience">Analyzing...</span></li>
+                                <li><strong>Tone:</strong> Confident, aspirational, energetic</li>
+                                <li><strong>CTA Style:</strong> Direct action with urgency</li>
+                                <li><strong>Emotional Angle:</strong> Performance & achievement</li>
+                                <li><strong>Audience:</strong> Active lifestyle, 25-45, performance-driven</li>
                             </ul>
                         </div>
                     </div>
@@ -1395,18 +1393,21 @@
                         <div class="analysis-grid">
                             <div class="analysis-section">
                                 <h4>Focal Points</h4>
-                                <p id="image-focal-points">Analyzing...</p>
+                                <p>Primary focus on product with 60% saliency, secondary background elements create
+                                    depth</p>
                             </div>
                             <div class="analysis-section">
                                 <h4>Typography Style</h4>
-                                <p id="image-typography">Analyzing...</p>
+                                <p>Bold sans-serif headlines, minimal copy, high contrast for legibility</p>
                             </div>
                         </div>
                         <div class="content-card mt-4">
                             <h3>📝 Prompt Reconstruction</h3>
-                            <p id="image-prompt-reconstruction"
+                            <p
                                 style="background: var(--bg-main); padding: 16px; border-radius: 8px; font-family: monospace; font-size: 13px;">
-                                Analyzing...
+                                "Professional product photography, athletic shoe on gradient background, dramatic studio
+                                lighting, high contrast, bold orange and navy color scheme, modern minimalist
+                                composition, commercial advertising style --ar 1:1 --style raw"
                             </p>
                         </div>
                     </div>
@@ -1532,7 +1533,7 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label>Campaign Objective</label>
-                            <select id="brief-objective">
+                            <select>
                                 <option>Product Launch</option>
                                 <option>Awareness</option>
                                 <option>Engagement</option>
@@ -1542,7 +1543,7 @@
 
                         <div class="form-group">
                             <label>Product</label>
-                            <select id="brief-product">
+                            <select>
                                 <option>UltraRun Pro Shoes</option>
                                 <option>FlexFit Leggings</option>
                                 <option>PowerGrip Gloves</option>
@@ -1551,7 +1552,7 @@
 
                         <div class="form-group">
                             <label>Platform</label>
-                            <select id="brief-platform">
+                            <select>
                                 <option>Instagram</option>
                                 <option>TikTok</option>
                                 <option>Facebook</option>
@@ -1561,7 +1562,7 @@
 
                         <div class="form-group">
                             <label>Aspect Ratio</label>
-                            <select id="brief-aspect-ratio">
+                            <select>
                                 <option>1:1 (Square)</option>
                                 <option>4:5 (Portrait)</option>
                                 <option>9:16 (Story)</option>
@@ -1575,7 +1576,7 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label>Style Emphasis</label>
-                                <select id="image-style">
+                                <select>
                                     <option>Product-focused</option>
                                     <option>Lifestyle</option>
                                     <option>Branded/Abstract</option>
@@ -1584,7 +1585,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Background Mood</label>
-                                <select id="image-background">
+                                <select>
                                     <option>Studio/Clean</option>
                                     <option>Gradient</option>
                                     <option>Lifestyle Scene</option>
@@ -1593,16 +1594,16 @@
                             </div>
                             <div class="form-group full-width">
                                 <label>Headline (Optional)</label>
-                                <input type="text" id="image-headline" placeholder="Speed, Unleashed." maxlength="60">
+                                <input type="text" placeholder="Speed, Unleashed." maxlength="60">
                             </div>
                             <div class="form-group full-width">
                                 <label>Subheadline (Optional)</label>
-                                <input type="text" id="image-subheadline"
-                                    placeholder="Carbon plate technology for elite performance" maxlength="100">
+                                <input type="text" placeholder="Carbon plate technology for elite performance"
+                                    maxlength="100">
                             </div>
                             <div class="form-group full-width">
                                 <label>CTA Text (Optional)</label>
-                                <input type="text" id="image-cta" placeholder="Shop Now" maxlength="30">
+                                <input type="text" placeholder="Shop Now" maxlength="30">
                             </div>
                         </div>
                     </div>
@@ -1834,7 +1835,7 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label>Loop Type</label>
-                                <select id="gif-loop">
+                                <select>
                                     <option>Seamless</option>
                                     <option>Ping-pong (Reverse)</option>
                                     <option>Standard (Reset)</option>
@@ -1842,7 +1843,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Frame Rate (FPS)</label>
-                                <select id="gif-fps">
+                                <select>
                                     <option>12 FPS (Smooth)</option>
                                     <option>24 FPS (Premium)</option>
                                     <option>30 FPS (Ultra-smooth)</option>
@@ -1850,7 +1851,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Duration</label>
-                                <select id="gif-duration">
+                                <select>
                                     <option>1.5s (Quick)</option>
                                     <option>2.0s (Standard)</option>
                                     <option>3.0s (Extended)</option>
@@ -1859,7 +1860,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Animation Style</label>
-                                <select id="gif-animation">
+                                <select>
                                     <option>Product rotation</option>
                                     <option>Zoom in/out</option>
                                     <option>Feature reveal</option>
@@ -1868,7 +1869,7 @@
                             </div>
                             <div class="form-group full-width">
                                 <label>Text Overlay (Optional)</label>
-                                <input type="text" id="gif-text" placeholder="e.g., 'New Collection'">
+                                <input type="text" placeholder="e.g., 'New Collection'">
                             </div>
                         </div>
                     </div>
@@ -1879,7 +1880,7 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label>Scene Count</label>
-                                <select id="reel-scenes">
+                                <select>
                                     <option>3 Scenes (Quick)</option>
                                     <option selected>4 Scenes (Standard)</option>
                                     <option>5 Scenes (Detailed)</option>
@@ -1887,7 +1888,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Total Duration</label>
-                                <select id="reel-duration">
+                                <select>
                                     <option>15 seconds</option>
                                     <option>30 seconds</option>
                                     <option>60 seconds</option>
@@ -1895,7 +1896,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Hook Length</label>
-                                <select id="reel-hook">
+                                <select>
                                     <option>1-2 seconds</option>
                                     <option selected>3 seconds</option>
                                     <option>5 seconds</option>
@@ -1903,7 +1904,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Music Style</label>
-                                <select id="reel-music">
+                                <select>
                                     <option>Upbeat/Energetic</option>
                                     <option>Trending Audio</option>
                                     <option>Calm/Ambient</option>
@@ -1915,7 +1916,7 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label>Include Voiceover?</label>
-                                <select id="reel-voiceover">
+                                <select>
                                     <option>Yes - Energetic</option>
                                     <option>Yes - Professional</option>
                                     <option selected>No</option>
@@ -1923,7 +1924,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Captions</label>
-                                <select id="reel-captions">
+                                <select>
                                     <option selected>Yes - Auto-highlight keywords</option>
                                     <option>Yes - Standard</option>
                                     <option>No</option>
@@ -1943,41 +1944,6 @@
                                 <strong>Scene 4 (CTA):</strong> Product in action + call-to-action
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Additional Image Upload (Optional) -->
-                <div class="content-card" style="margin-top: 24px;">
-                    <h3>📎 Reference Image (Optional)</h3>
-                    <p class="subtitle">Upload an additional reference image to guide the generation</p>
-
-                    <div class="upload-zone" id="briefUploadZone"
-                        style="border: 2px dashed var(--border); border-radius: 12px; padding: 40px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: var(--bg-main);"
-                        ondragover="event.preventDefault(); this.style.borderColor='var(--primary)'; this.style.background='rgba(99, 102, 241, 0.05)';"
-                        ondragleave="this.style.borderColor='var(--border)'; this.style.background='var(--bg-main)';"
-                        ondrop="handleBriefImageDrop(event)"
-                        onclick="document.getElementById('briefImageInput').click()">
-                        <div style="font-size: 48px; margin-bottom: 16px;">🖼️</div>
-                        <p style="font-size: 16px; font-weight: 500; margin-bottom: 8px;">Drop an image here or click to
-                            upload</p>
-                        <p style="font-size: 13px; color: var(--text-secondary);">This image will be used as additional
-                            reference for generation</p>
-                        <input type="file" id="briefImageInput" accept="image/*" style="display: none;"
-                            onchange="handleBriefImageSelect(event)">
-                    </div>
-
-                    <!-- Preview area for uploaded brief image -->
-                    <div id="briefImagePreview" class="hidden"
-                        style="margin-top: 16px; display: flex; align-items: center; gap: 16px; padding: 16px; background: var(--bg-main); border-radius: 8px;">
-                        <img id="briefImageThumb" src="" alt="Preview"
-                            style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
-                        <div style="flex: 1;">
-                            <strong id="briefImageName">filename.jpg</strong>
-                            <p style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;"
-                                id="briefImageSize">0 MB</p>
-                        </div>
-                        <button class="btn btn-secondary" onclick="removeBriefImage()" style="padding: 8px 16px;">✕
-                            Remove</button>
                     </div>
                 </div>
 
@@ -2004,66 +1970,220 @@
 
                     <!-- IMAGE REVIEW -->
                     <div class="type-specific" data-show-for="image">
-                        <h3>Generated Image</h3>
+                        <h3>🖼️ Image Variants</h3>
                         <div class="variant-gallery">
-                            <div id="generatedImageContainer" class="variant-card selected">
-                                <div class="variant-preview" style="padding: 0; overflow: hidden;">
-                                    <img id="generatedImage" src="" alt="Generated Image"
-                                        style="width: 100%; height: 100%; object-fit: cover; display: none;">
-                                    <span id="generatedImagePlaceholder">Image will appear here after generation</span>
+                            <div class="variant-card selected"
+                                onclick="event.currentTarget.classList.toggle('selected')">
+                                <div class="variant-preview">Variant A</div>
+                                <div class="variant-scores">
+                                    <div class="score-row">
+                                        <span>Brand Fit:</span>
+                                        <span class="score-value">96%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>Style Match:</span>
+                                        <span class="score-value">94%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>Legibility:</span>
+                                        <span class="score-value">98%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="variant-card" onclick="event.currentTarget.classList.toggle('selected')">
+                                <div class="variant-preview"
+                                    style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Variant B
+                                </div>
+                                <div class="variant-scores">
+                                    <div class="score-row">
+                                        <span>Brand Fit:</span>
+                                        <span class="score-value">93%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>Style Match:</span>
+                                        <span class="score-value">91%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>Legibility:</span>
+                                        <span class="score-value">95%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="variant-card" onclick="event.currentTarget.classList.toggle('selected')">
+                                <div class="variant-preview"
+                                    style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Variant C
+                                </div>
+                                <div class="variant-scores">
+                                    <div class="score-row">
+                                        <span>Brand Fit:</span>
+                                        <span class="score-value">95%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>Style Match:</span>
+                                        <span class="score-value">97%</span>
+                                    </div>
+                                    <div class="score-row">
+                                        <span>Legibility:</span>
+                                        <span class="score-value">96%</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="content-card mt-4">
-                            <h4>Generation Details</h4>
-                            <div class="form-group full-width" style="margin-bottom: 12px;">
-                                <label>Prompt Used</label>
-                                <p id="generatedImagePrompt"
-                                    style="color: var(--text-secondary); font-size: 13px; line-height: 1.5;">—</p>
+                            <h4>Edit Selected Variant</h4>
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label>Headline</label>
+                                    <input type="text" value="Speed, Unleashed." onchange="showToast('Image updated!')">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Subheadline</label>
+                                    <input type="text" value="Carbon plate technology for elite performance">
+                                </div>
+                                <button class="btn btn-secondary">Re-generate Variant</button>
                             </div>
-                            <button class="btn btn-secondary" onclick="generateCreative()">Re-generate Image</button>
                         </div>
                     </div>
 
                     <!-- CAROUSEL REVIEW -->
                     <div class="type-specific" data-show-for="carousel">
-                        <h3 style="margin-bottom: 16px;">📱 Generated Carousel Panels</h3>
-                        <div id="carouselPanelsContainer" class="panel-matrix">
-                            <!-- Panels will be dynamically inserted here by showCarouselResult() -->
-                            <div style="padding: 40px; text-align: center; color: var(--text-secondary);">
-                                <p>Carousel panels will appear here after generation</p>
+                        <h3 style="margin-bottom: 16px;">📱 Panel Matrix - All Screens at Once</h3>
+                        <div class="panel-matrix">
+                            <div class="matrix-panel selected" onclick="selectMatrixPanel(1)">
+                                <div class="matrix-preview">Panel 1<br>Hook</div>
+                                <div class="matrix-info">
+                                    <div class="panel-num">Panel 1</div>
+                                    <span class="role-badge hook">Hook</span>
+                                    <div style="margin-top: 8px; font-size: 11px;">Speed, Unleashed</div>
+                                    <div class="consistency-markers">
+                                        <div class="marker good" title="Brand Fit: 95%">🎨</div>
+                                        <div class="marker good" title="Layout: 92%">📐</div>
+                                        <div class="marker good" title="Legibility: 96%">🔤</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="matrix-panel" onclick="selectMatrixPanel(2)">
+                                <div class="matrix-preview"
+                                    style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Panel
+                                    2<br>Feature</div>
+                                <div class="matrix-info">
+                                    <div class="panel-num">Panel 2</div>
+                                    <span class="role-badge feature">Feature</span>
+                                    <div style="margin-top: 8px; font-size: 11px;">Carbon Fiber Technology</div>
+                                    <div class="consistency-markers">
+                                        <div class="marker good" title="Brand Fit: 94%">🎨</div>
+                                        <div class="marker good" title="Layout: 90%">📐</div>
+                                        <div class="marker warning" title="Legibility: 88%">🔤</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="matrix-panel" onclick="selectMatrixPanel(3)">
+                                <div class="matrix-preview"
+                                    style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Panel
+                                    3<br>Feature</div>
+                                <div class="matrix-info">
+                                    <div class="panel-num">Panel 3</div>
+                                    <span class="role-badge feature">Feature</span>
+                                    <div style="margin-top: 8px; font-size: 11px;">Built for Distance</div>
+                                    <div class="consistency-markers">
+                                        <div class="marker good" title="Brand Fit: 96%">🎨</div>
+                                        <div class="marker good" title="Layout: 94%">📐</div>
+                                        <div class="marker good" title="Legibility: 95%">🔤</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="matrix-panel" onclick="selectMatrixPanel(4)">
+                                <div class="matrix-preview"
+                                    style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">Panel
+                                    4<br>Proof</div>
+                                <div class="matrix-info">
+                                    <div class="panel-num">Panel 4</div>
+                                    <span class="role-badge proof">Proof</span>
+                                    <div style="margin-top: 8px; font-size: 11px;">Trusted by Champions</div>
+                                    <div class="consistency-markers">
+                                        <div class="marker good" title="Brand Fit: 93%">🎨</div>
+                                        <div class="marker good" title="Layout: 91%">📐</div>
+                                        <div class="marker good" title="Legibility: 94%">🔤</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="matrix-panel" onclick="selectMatrixPanel(5)">
+                                <div class="matrix-preview"
+                                    style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">Panel
+                                    5<br>CTA</div>
+                                <div class="matrix-info">
+                                    <div class="panel-num">Panel 5</div>
+                                    <span class="role-badge cta">CTA</span>
+                                    <div style="margin-top: 8px; font-size: 11px;">Run Further. Run Faster.</div>
+                                    <div class="consistency-markers">
+                                        <div class="marker good" title="Brand Fit: 97%">🎨</div>
+                                        <div class="marker good" title="Layout: 95%">📐</div>
+                                        <div class="marker good" title="Legibility: 98%">🔤</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="content-card mt-4">
-                            <h3>Panel Details</h3>
-                            <p class="subtitle" id="carouselCurrentPanel">Select a panel above to view details</p>
+                            <h3>Panel Detail Editor</h3>
+                            <p class="subtitle">Currently editing: Panel 1</p>
 
-                            <div id="carouselPanelDetail" style="display: none; margin-top: 24px;">
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-                                    <div>
-                                        <div id="carouselPanelPreview"
-                                            style="width: 100%; height: 300px; background: var(--bg-secondary); border-radius: 12px; overflow: hidden;">
-                                            <img id="carouselSelectedImage" src="" alt="Selected Panel"
-                                                style="width: 100%; height: 100%; object-fit: cover;">
-                                        </div>
-                                        <div style="margin-top: 16px;">
-                                            <button class="btn btn-secondary" onclick="regenerateCarouselPanel()">Re-generate
-                                                This Panel</button>
-                                        </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
+                                <div>
+                                    <div
+                                        style="width: 100%; height: 300px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: 600;">
+                                        Panel 1 Preview<br>
+                                        <small style="font-size: 14px; font-weight: 400;">Speed, Unleashed</small>
                                     </div>
-                                    <div>
-                                        <div class="form-group">
-                                            <label>Prompt Used</label>
-                                            <p id="carouselSelectedPrompt"
-                                                style="color: var(--text-secondary); font-size: 13px; line-height: 1.5; padding: 12px; background: var(--bg-secondary); border-radius: 8px;">
-                                                —
-                                            </p>
+                                    <div style="margin-top: 16px;">
+                                        <button class="btn btn-secondary" onclick="reRenderPanel()">Re-render
+                                            Panel</button>
+                                        <button class="btn btn-secondary" onclick="lockPanel()">🔒 Lock Panel</button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="form-group">
+                                        <label>Headline</label>
+                                        <input type="text" value="Speed, Unleashed."
+                                            onchange="showToast('Panel updated!')">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Body Copy</label>
+                                        <textarea>Carbon plate power for every stride.</textarea>
+                                    </div>
+                                    <div style="margin-top: 16px;">
+                                        <strong>Score Breakdown:</strong>
+                                        <div class="score-row">
+                                            <span>Brand Fit:</span>
+                                            <span class="score-value">95%</span>
+                                        </div>
+                                        <div class="score-row">
+                                            <span>Layout:</span>
+                                            <span class="score-value">92%</span>
+                                        </div>
+                                        <div class="score-row">
+                                            <span>Legibility:</span>
+                                            <span class="score-value">96%</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="content-card mt-4">
+                            <h3>🎯 Consistency Score</h3>
+                            <div
+                                style="font-size: 48px; font-weight: 700; color: var(--success); text-align: center; margin: 24px 0;">
+                                94
+                            </div>
+                            <p style="text-align: center; color: var(--text-secondary);">
+                                Excellent consistency across all panels. Ready to approve!
+                            </p>
                         </div>
                     </div>
 
@@ -2149,29 +2269,7 @@
 
                     <!-- REEL REVIEW -->
                     <div class="type-specific" data-show-for="reel">
-                        <!-- Video Result Container -->
-                        <div id="videoResultContainer" class="hidden" style="margin-bottom: 24px;">
-                            <div class="content-card">
-                                <h3>🎬 Generated Video</h3>
-                                <div class="video-wrapper"
-                                    style="position: relative; padding-bottom: 177.78%; height: 0; overflow: hidden; max-width: 320px; margin: 0 auto; background: #000; border-radius: 12px;">
-                                    <video id="generatedVideo" controls
-                                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; background-color: #000;">
-                                        Your browser does not support the video tag.
-                                    </video>
-                                </div>
-                                <div class="form-group mt-4" style="margin-top: 16px;">
-                                    <label>Modification Instructions</label>
-                                    <textarea id="video-modification"
-                                        placeholder="E.g., Make the music faster, change the caption..."></textarea>
-                                    <button class="btn btn-secondary mt-2" onclick="regenerateVideo()"
-                                        style="margin-top: 8px; width: 100%;">Re-generate Video</button>
-                                </div>
-                            </div>
-                        </div>
-
                         <h3>🎬 Reel Variants</h3>
-
                         <div class="variant-gallery">
                             <div class="variant-card selected"
                                 onclick="event.currentTarget.classList.toggle('selected')">
@@ -2371,40 +2469,6 @@
         <span id="toastMessage"></span>
     </div>
 
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden"
-        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-        <div class="bg-white p-8 rounded-lg shadow-xl text-center"
-            style="background: white; padding: 2rem; border-radius: 1rem; max-width: 400px; width: 90%;">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"
-                style="width: 48px; height: 48px; border: 4px solid #f3f3f3; border-top: 4px solid #5046e5; border-radius: 50%; animation: spin 1s linear infinite;">
-            </div>
-            <p class="text-lg font-semibold text-gray-800 mb-2">Analyzing content...</p>
-            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4"
-                style="width: 100%; height: 10px; background: #e5e7eb; border-radius: 5px; margin-top: 10px; overflow: hidden;">
-                <div class="progress-fill bg-indigo-600 h-2.5 rounded-full"
-                    style="width: 0%; height: 100%; background: #5046e5; transition: width 0.3s ease;"></div>
-            </div>
-            <p class="text-sm text-gray-500">Please wait while we extract the Creative DNA</p>
-        </div>
-    </div>
-
-    <style>
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        .hidden {
-            display: none !important;
-        }
-    </style>
-
     <script>
         // Submenu toggle function
         function toggleSubmenu(element) {
@@ -2430,16 +2494,6 @@
         document.addEventListener('DOMContentLoaded', function () {
             updateStepperUI();
             setupFileUpload();
-
-            // Attach Analyze Button Listener
-            const analyzeBtn = document.getElementById('analyzeBtn');
-            if (analyzeBtn) {
-                analyzeBtn.addEventListener('click', startAnalysis);
-                console.log("Analyze button listener attached");
-            } else {
-                console.error("Analyze button not found!");
-            }
-
             // Set initial type
             document.body.setAttribute('data-creative-type', selectedType);
             updateExportContent();
@@ -2540,125 +2594,39 @@
             displayUploadedFiles();
 
             if (uploadedFiles.length > 0) {
-                const textarea = document.querySelector('textarea[placeholder*="E.g., The bold colors"]');
-                // The original code had a syntax error here with an unclosed try block and undefined 'data'.
-                // This part is commented out as it seems to be incomplete or incorrect in the original context.
-                // if (textarea && data.prompt_reconstruction) {
-                //     textarea.value = data.prompt_reconstruction;
-                // }
-            } else {
-                console.error('Analysis failed');
-                showToast('Analysis failed');
-            }
-        }
+                // Upload and analyze
+                const formData = new FormData();
+                formData.append('file', uploadedFiles[0]);
 
-        async function startAnalysis() {
-            console.log("startAnalysis() called");
+                showToast('Analyzing image...');
 
-            // Use the global uploadedFiles array which handles both drag-drop and click-upload
-            const file = uploadedFiles.length > 0 ? uploadedFiles[0] : null;
-            console.log("File found:", file);
-
-            if (!file) {
-                alert('Please upload an inspiration file first.');
-                return;
-            }
-
-            const selectedTypeElement = document.querySelector('.type-option.selected');
-            const selectedType = selectedTypeElement ? selectedTypeElement.dataset.value : 'image';
-            const transformationInstructions = document.getElementById('transformation-instructions').value;
-
-            // Show loading state
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            const loadingText = loadingOverlay.querySelector('p');
-            const progressBar = loadingOverlay.querySelector('.progress-fill');
-
-            loadingOverlay.classList.remove('hidden');
-            loadingText.textContent = 'Initializing AI Analysis...';
-            progressBar.style.width = '10%';
-
-            try {
-                // Check if we need to do Image Analysis or Video Generation
-                if (selectedType === 'reel' || selectedType === 'gif') {
-                    // --- VIDEO GENERATION FLOW ---
-                    loadingText.textContent = 'Analyzing content & Generating Video (this may take 1-2 mins)...';
-                    progressBar.style.width = '30%';
-
-                    const formData = new FormData();
-                    formData.append('file', file);
-                    formData.append('instructions', transformationInstructions);
-                    formData.append('creative_type', selectedType);
-
-                    const response = await fetch('/api/generate-video', {
+                try {
+                    const response = await fetch('/api/analyze-image', {
                         method: 'POST',
                         body: formData
                     });
 
-                    progressBar.style.width = '80%';
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.description) {
+                            window.imageDescription = data.description;
+                            console.log("Image Description Saved:", window.imageDescription);
+                            showToast('Image analyzed successfully! Description saved.');
 
-                    if (!response.ok) {
-                        const errData = await response.json();
-                        throw new Error(errData.detail || 'Video generation failed');
+                            // Also try to update the textarea if it exists
+                            const textarea = document.querySelector('textarea[placeholder*="E.g., The bold colors"]');
+                            if (textarea) {
+                                textarea.value = data.description;
+                            }
+                        }
+                    } else {
+                        console.error('Analysis failed');
+                        showToast('Analysis failed');
                     }
-
-                    const result = await response.json();
-
-                    // Handle Success
-                    progressBar.style.width = '100%';
-                    setTimeout(() => {
-                        loadingOverlay.classList.add('hidden');
-
-                        // Show visual results
-                        showVideoResult(result.video_url, result.analysis, result.prompt);
-                        nextStep(1); // Move to analysis view (step 2)
-                        // The requirement says "Generate & Review" is Step 4.
-                        // For now, let's fast forward to Step 4 for video results
-                        goToStep(4);
-                    }, 500);
-
-                } else {
-                    // --- ANALYSIS FLOW ---
-                    loadingText.textContent = 'Extracting Visual DNA...';
-                    progressBar.style.width = '40%';
-
-                    const formData = new FormData();
-                    formData.append('file', file);
-
-                    // Determine which endpoint to call based on file type
-                    let endpoint = '/api/analyze-image';
-                    const videoExtensions = ['.mp4', '.mov', '.avi', '.mkv', '.webm'];
-                    const isVideo = videoExtensions.some(ext => file.name.toLowerCase().endsWith(ext));
-
-                    if (isVideo) {
-                        endpoint = '/api/analyze-video';
-                        loadingText.textContent = 'Analyzing Video Content...';
-                    }
-
-                    const response = await fetch(endpoint, {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    if (!response.ok) throw new Error('Analysis failed');
-
-                    const data = await response.json();
-                    window.currentAnalysis = data; // Store globally
-                    window.imageAnalysis = data; // Also store for populateStep2DNA()
-
-                    // Update UI with analysis data
-                    updateAnalysisUI(data);
-
-                    progressBar.style.width = '100%';
-                    setTimeout(() => {
-                        loadingOverlay.classList.add('hidden');
-                        nextStep(1);
-                    }, 500);
+                } catch (e) {
+                    console.error('Error analyzing image:', e);
+                    showToast('Error analyzing image');
                 }
-
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error processing request: ' + error.message);
-                loadingOverlay.classList.add('hidden');
             }
         }
 
@@ -2786,435 +2754,53 @@
             showToast(`${count}-panel narrative selected`);
         }
 
-        // Populate Step 2 DNA page from analysis data
-        function populateStep2DNA() {
-            const analysis = window.imageAnalysis;
-            if (!analysis) {
-                console.log("No image analysis data available");
-                return;
-            }
-
-            console.log("Populating Step 2 DNA with:", analysis);
-
-            // Visual DNA
-            if (analysis.visual_dna) {
-                const vd = analysis.visual_dna;
-                if (vd.composition) document.getElementById('dna-composition').textContent = vd.composition;
-                if (vd.palette) document.getElementById('dna-palette').textContent = vd.palette;
-                if (vd.lighting) document.getElementById('dna-lighting').textContent = vd.lighting;
-                if (vd.style) document.getElementById('dna-style').textContent = vd.style;
-            }
-
-            // Strategic Analysis
-            if (analysis.strategic_analysis) {
-                const sa = analysis.strategic_analysis;
-                if (sa.tone) document.getElementById('strategy-tone').textContent = sa.tone;
-                if (sa.cta_style) document.getElementById('strategy-cta').textContent = sa.cta_style;
-                if (sa.emotional_angle) document.getElementById('strategy-emotion').textContent = sa.emotional_angle;
-                if (sa.audience) document.getElementById('strategy-audience').textContent = sa.audience;
-            }
-
-            // Image Composition Analysis
-            if (analysis.image_composition_analysis) {
-                const ica = analysis.image_composition_analysis;
-                if (ica.focal_points) document.getElementById('image-focal-points').textContent = ica.focal_points;
-                if (ica.typography_style) document.getElementById('image-typography').textContent = ica.typography_style;
-            }
-
-            // Prompt Reconstruction
-            if (analysis.prompt_reconstruction) {
-                document.getElementById('image-prompt-reconstruction').textContent = '"' + analysis.prompt_reconstruction + '"';
-            }
-        }
-
-        // Collect brief data from Step 3 form
-        function collectBriefData() {
-            const brief = {
-                creative_type: selectedType,
-                timestamp: Date.now(),
-                source_analysis: window.imageAnalysis || null,
-                transformation_instructions: document.getElementById('transformation-instructions')?.value || '',
-                common: {
-                    objective: document.getElementById('brief-objective')?.value || '',
-                    product: document.getElementById('brief-product')?.value || '',
-                    platform: document.getElementById('brief-platform')?.value || '',
-                    aspect_ratio: document.getElementById('brief-aspect-ratio')?.value || ''
-                }
-            };
-
-            // Add type-specific settings based on selected creative type
-            if (selectedType === 'image') {
-                brief.image_settings = {
-                    style_emphasis: document.getElementById('image-style')?.value || '',
-                    background_mood: document.getElementById('image-background')?.value || '',
-                    headline: document.getElementById('image-headline')?.value || '',
-                    subheadline: document.getElementById('image-subheadline')?.value || '',
-                    cta_text: document.getElementById('image-cta')?.value || ''
-                };
-            } else if (selectedType === 'carousel') {
-                // Collect carousel panel data
-                const panels = [];
-                const panelCards = document.querySelectorAll('#panelsList .panel-card');
-                panelCards.forEach((panel, index) => {
-                    const selects = panel.querySelectorAll('select');
-                    const inputs = panel.querySelectorAll('input, textarea');
-                    panels.push({
-                        panel_number: index + 1,
-                        role: selects[0]?.value || '',
-                        visual_intent: selects[1]?.value || '',
-                        headline: inputs[0]?.value || '',
-                        body_copy: inputs[1]?.value || ''
-                    });
-                });
-                brief.carousel_settings = { panels };
-            } else if (selectedType === 'gif') {
-                brief.gif_settings = {
-                    loop_type: document.getElementById('gif-loop')?.value || '',
-                    frame_rate: document.getElementById('gif-fps')?.value || '',
-                    duration: document.getElementById('gif-duration')?.value || '',
-                    animation_style: document.getElementById('gif-animation')?.value || '',
-                    text_overlay: document.getElementById('gif-text')?.value || ''
-                };
-            } else if (selectedType === 'reel') {
-                brief.reel_settings = {
-                    scene_count: document.getElementById('reel-scenes')?.value || '',
-                    total_duration: document.getElementById('reel-duration')?.value || '',
-                    hook_length: document.getElementById('reel-hook')?.value || '',
-                    music_style: document.getElementById('reel-music')?.value || '',
-                    voiceover: document.getElementById('reel-voiceover')?.value || '',
-                    captions: document.getElementById('reel-captions')?.value || ''
-                };
-            }
-
-            return brief;
-        }
-
-        // Save brief data to backend
-        async function saveBrief(briefData) {
-            try {
-                const response = await fetch('/api/save-brief', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(briefData)
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log("Brief saved:", data);
-                    return data;
-                } else {
-                    console.error('Failed to save brief');
-                    return null;
-                }
-            } catch (e) {
-                console.error('Error saving brief:', e);
-                return null;
-            }
-        }
-
-        // Brief image upload handlers (placeholder functionality)
-        window.briefImage = null;
-
-        function handleBriefImageDrop(event) {
-            event.preventDefault();
-            const zone = document.getElementById('briefUploadZone');
-            zone.style.borderColor = 'var(--border)';
-            zone.style.background = 'var(--bg-main)';
-
-            const files = event.dataTransfer.files;
-            if (files.length > 0 && files[0].type.startsWith('image/')) {
-                processBriefImage(files[0]);
-            }
-        }
-
-        function handleBriefImageSelect(event) {
-            const files = event.target.files;
-            if (files.length > 0) {
-                processBriefImage(files[0]);
-            }
-        }
-
-        function processBriefImage(file) {
-            window.briefImage = file;
-
-            // Update preview
-            const preview = document.getElementById('briefImagePreview');
-            const thumb = document.getElementById('briefImageThumb');
-            const name = document.getElementById('briefImageName');
-            const size = document.getElementById('briefImageSize');
-
-            thumb.src = URL.createObjectURL(file);
-            name.textContent = file.name;
-            size.textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
-
-            preview.classList.remove('hidden');
-            preview.style.display = 'flex';
-
-            showToast('📎 Reference image added');
-            console.log('Brief image stored:', file.name);
-        }
-
-        function removeBriefImage() {
-            window.briefImage = null;
-
-            const preview = document.getElementById('briefImagePreview');
-            preview.classList.add('hidden');
-            preview.style.display = 'none';
-
-            // Reset file input
-            document.getElementById('briefImageInput').value = '';
-
-            showToast('Reference image removed');
-        }
-
-        // Generate creative handler (called when Generate Variants button is clicked)
-        async function generateCreative() {
-            console.log(">>> generateCreative() CALLED, type:", selectedType);
-
-            // Collect brief data from form
-            const briefData = collectBriefData();
-            window.creativeBrief = briefData;
-
-            // Save brief to backend
-            showToast('Saving your creative brief...');
-            const saveResult = await saveBrief(briefData);
-            if (saveResult && saveResult.success) {
-                window.briefFilename = saveResult.filename;
-            }
-
-            if (selectedType === 'image') {
-                // --- IMAGE GENERATION FLOW via DALL-E ---
-                const analysis = window.imageAnalysis;
-                const promptReconstruction = analysis ? analysis.prompt_reconstruction : '';
-                const userInstructions = briefData.transformation_instructions || '';
-
-                // Build final prompt
-                let finalPrompt;
-                if (userInstructions && promptReconstruction) {
-                    finalPrompt = userInstructions + '. Style and visual reference: ' + promptReconstruction;
-                } else if (promptReconstruction) {
-                    finalPrompt = promptReconstruction;
-                } else if (userInstructions) {
-                    finalPrompt = userInstructions;
-                } else {
-                    showToast('No prompt available. Please analyze an image first.');
-                    return;
-                }
-
-                // Show loading overlay
-                const loadingOverlay = document.getElementById('loadingOverlay');
-                const loadingText = loadingOverlay.querySelector('p');
-                const progressBar = loadingOverlay.querySelector('.progress-fill');
-                loadingOverlay.classList.remove('hidden');
-                loadingText.textContent = 'Generating image with DALL-E...';
-                progressBar.style.width = '30%';
-
-                try {
-                    const response = await fetch('/api/generate-creative', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ prompt: finalPrompt, type: 'image' })
-                    });
-
-                    progressBar.style.width = '80%';
-
-                    if (!response.ok) {
-                        const errData = await response.json();
-                        throw new Error(errData.detail || 'Image generation failed');
-                    }
-
-                    const result = await response.json();
-                    progressBar.style.width = '100%';
-
-                    if (result.success) {
-                        // Store the generated image URL
-                        window.generatedImageUrl = result.image_url || result.local_path;
-                        window.generatedImagePrompt = finalPrompt;
-
-                        // Update Step 4 variant card with the generated image
-                        const genImg = document.getElementById('generatedImage');
-                        if (genImg) {
-                            genImg.src = window.generatedImageUrl;
-                            genImg.style.display = 'block';
-                        }
-                        const placeholder = document.getElementById('generatedImagePlaceholder');
-                        if (placeholder) placeholder.style.display = 'none';
-                        const promptEl = document.getElementById('generatedImagePrompt');
-                        if (promptEl) {
-                            promptEl.textContent = finalPrompt;
-                        }
-
-                        showToast('Image generated successfully!');
-                    } else {
-                        throw new Error(result.error || 'Unknown error');
-                    }
-
-                    setTimeout(() => {
-                        loadingOverlay.classList.add('hidden');
-                        goToStep(4);
-                    }, 500);
-
-                } catch (error) {
-                    console.error('Image generation error:', error);
-                    alert('Error generating image: ' + error.message);
-                    loadingOverlay.classList.add('hidden');
-                }
-
-            } else if (selectedType === 'reel' || selectedType === 'gif') {
-                // --- VIDEO/GIF GENERATION FLOW ---
-                if (uploadedFiles.length === 0) {
-                    showToast('No file uploaded!');
-                    return;
-                }
-
-                const file = uploadedFiles[0];
-                const instruction = briefData.transformation_instructions || 'Create a high converting social media video';
-
-                const loadingOverlay = document.getElementById('loadingOverlay');
-                loadingOverlay.classList.remove('hidden');
-                const loadingText = loadingOverlay.querySelector('p');
-                loadingText.textContent = 'Generating your ' + selectedType + '... This may take a minute.';
-
-                const formData = new FormData();
-                formData.append('file', file);
-                formData.append('instructions', instruction);
-                formData.append('creative_type', selectedType);
-
-                try {
-                    const response = await fetch('/api/generate-video', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    const result = await response.json();
-
-                    if (result.success) {
-                        showVideoResult(result.video_url, result.analysis, result.prompt);
-                    } else {
-                        alert('Generation failed: ' + (result.detail || 'Unknown error'));
-                    }
-                } catch (error) {
-                    console.error('Error generating video:', error);
-                    alert('Error generating video. Check console.');
-                } finally {
-                    loadingOverlay.classList.add('hidden');
-                }
-
-            } else if (selectedType === 'carousel') {
-                // --- CAROUSEL GENERATION FLOW ---
-                if (uploadedFiles.length === 0) {
-                    showToast('No file uploaded!');
-                    return;
-                }
-
-                const file = uploadedFiles[0];
-                const instruction = briefData.transformation_instructions || 'Create a high converting carousel';
-
-                const loadingOverlay = document.getElementById('loadingOverlay');
-                loadingOverlay.classList.remove('hidden');
-                const loadingText = loadingOverlay.querySelector('p');
-                const progressBar = loadingOverlay.querySelector('.progress-fill');
-                loadingText.textContent = 'Generating carousel panels...';
-                progressBar.style.width = '30%';
-
-                const formData = new FormData();
-                formData.append('file', file);
-                formData.append('instructions', instruction);
-                formData.append('creative_type', selectedType);
-                formData.append('panel_count', 3);
-
-                try {
-                    const response = await fetch('/api/generate-carousel', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    progressBar.style.width = '80%';
-
-                    if (!response.ok) {
-                        const err = await response.json();
-                        throw new Error(err.detail || 'Carousel generation failed');
-                    }
-
-                    const result = await response.json();
-                    progressBar.style.width = '100%';
-
-                    if (result.success && result.image_urls) {
-                        showCarouselResult(result.image_urls, result.prompts);
-                        showToast('Carousel generated successfully!');
-                    } else {
-                        throw new Error(result.detail || 'Unknown error');
-                    }
-
-                    loadingOverlay.classList.add('hidden');
-
-                } catch (error) {
-                    console.error('Carousel generation error:', error);
-                    alert('Error generating carousel: ' + error.message);
-                    loadingOverlay.classList.add('hidden');
-                }
-
-            } else {
-                // --- OTHER TYPES: save brief and navigate ---
-                showToast('Brief saved! Navigate to review.');
-                goToStep(4);
-            }
-        }
-
-        // Transform image with reference using gpt-image-1
-        async function transformImageWithReference(briefData) {
-            // Need to re-upload the base image from stored path
-            const baseImageUrl = window.imageAnalysis?.stored_image_url;
-            const referenceImage = window.briefImage;
-            const transformationInstructions = briefData.transformation_instructions || '';
-
-            if (!baseImageUrl || !referenceImage) {
-                console.error('Missing base image or reference image');
-                return { success: false, error: 'Missing images' };
-            }
-
-            try {
-                // Fetch the base image from stored URL
-                const baseImageResponse = await fetch(baseImageUrl);
-                const baseImageBlob = await baseImageResponse.blob();
-                const baseImageFile = new File([baseImageBlob], 'base_image.jpg', { type: baseImageBlob.type });
-
-                // Create FormData with both images
-                const formData = new FormData();
-                formData.append('base_image', baseImageFile);
-                formData.append('reference_image', referenceImage);
-                formData.append('analysis_json', JSON.stringify(window.imageAnalysis));
-
-                if (transformationInstructions) {
-                    formData.append('custom_instructions', transformationInstructions);
-                }
-
-                const response = await fetch('/api/transform-image', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log('Transform result:', data);
-                    return data;
-                } else {
-                    const errorData = await response.json();
-                    return { success: false, error: errorData.detail || 'Transform failed' };
-                }
-            } catch (e) {
-                console.error('Error during transformation:', e);
-                return { success: false, error: e.message };
-            }
-        }
-
         // Step Navigation
         async function nextStep(current) {
             if (current === 1 && uploadedFiles.length === 0) {
                 showToast('Please upload at least one file');
                 return;
+            }
+
+            // TRIGGER GENERATION IF STEP 1 AND IMAGE TYPE
+            if (current === 1 && selectedType === 'image') {
+                const textarea = document.querySelector('textarea[placeholder*="E.g., The bold colors"]');
+                let promptToUse = window.imageDescription || "";
+
+                if (textarea && textarea.value.trim() !== "") {
+                    promptToUse = textarea.value.trim();
+                }
+
+                if (promptToUse) {
+                    showToast('🎨 Generating DALL-E image from your brief...');
+
+                    try {
+                        const response = await fetch('/api/generate-creative', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ prompt: promptToUse, type: 'image' })
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.success) {
+                                showToast('✨ Image Generated Successfully!');
+                                console.log("Generated Image:", data.local_path);
+                                // Optionally show it somewhere or just notify as requested
+                            } else {
+                                showToast('Generation failed: ' + (data.error || 'Unknown error'));
+                            }
+                        } else {
+                            showToast('Generation request failed');
+                        }
+                    } catch (e) {
+                        console.error("Generation error:", e);
+                        showToast('Error generating image');
+                    }
+                } else {
+                    console.log("No prompt available for generation");
+                }
             }
 
             currentStep = current + 1;
@@ -3224,11 +2810,6 @@
 
             // Update dynamic content based on creative type
             updateJourneyForType(selectedType);
-
-            // Populate Step 2 DNA with analysis data when coming from Step 1
-            if (current === 1) {
-                populateStep2DNA();
-            }
 
             if (current === 3) {
                 const generationMessages = {
@@ -3254,14 +2835,6 @@
             currentStep = current - 1;
             updateStepperUI();
             updateStepContent();
-            window.scrollTo(0, 0);
-        }
-
-        function goToStep(step) {
-            currentStep = step;
-            updateStepperUI();
-            updateStepContent();
-            updateJourneyForType(selectedType);
             window.scrollTo(0, 0);
         }
 
@@ -3300,46 +2873,11 @@
         }
 
         function selectMatrixPanel(num) {
-            // Update visual selection
             document.querySelectorAll('.matrix-panel').forEach(panel => {
                 panel.classList.remove('selected');
             });
-            // Find the clicked panel by index (num is 1-based)
-            const panels = document.querySelectorAll('.matrix-panel');
-            if (panels[num - 1]) {
-                panels[num - 1].classList.add('selected');
-            }
-
-            // Update panel detail view
-            const detailSection = document.getElementById('carouselPanelDetail');
-            const currentPanelText = document.getElementById('carouselCurrentPanel');
-            const selectedImage = document.getElementById('carouselSelectedImage');
-            const selectedPrompt = document.getElementById('carouselSelectedPrompt');
-
-            if (window.carouselImages && window.carouselImages[num - 1]) {
-                // Show the detail section
-                if (detailSection) detailSection.style.display = 'block';
-                if (currentPanelText) currentPanelText.textContent = `Currently viewing: Panel ${num}`;
-
-                // Load the selected image
-                if (selectedImage) {
-                    selectedImage.src = window.carouselImages[num - 1];
-                }
-
-                // Show the prompt
-                if (selectedPrompt && window.carouselPrompts && window.carouselPrompts[num - 1]) {
-                    selectedPrompt.textContent = window.carouselPrompts[num - 1];
-                } else if (selectedPrompt) {
-                    selectedPrompt.textContent = `Panel ${num} - No prompt available`;
-                }
-
-                showToast(`Viewing Panel ${num}`);
-            }
-        }
-
-        function regenerateCarouselPanel() {
-            showToast('Re-generating selected panel...');
-            // TODO: Implement panel re-generation
+            event.currentTarget.classList.add('selected');
+            showToast(`Editing Panel ${num}`);
         }
 
         function selectVariant(variant) {
@@ -3381,152 +2919,18 @@
             showToast(scheduleMessages[selectedType]);
         }
 
-        // Store analysis string for regeneration
-        let lastAnalysis = "";
-        let lastPrompt = "";
-
-        function updateAnalysisUI(data) {
-            console.log("updateAnalysisUI called with:", data);
-
-            // Unhide validation overlay
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            if (loadingOverlay) loadingOverlay.classList.add('hidden');
-
-            // Support both nested (video: data.analysis.visual_dna) and flat (image: data.visual_dna) formats
-            const analysis = data.analysis || data;
-
-            // Map Visual DNA
-            if (analysis.visual_dna) {
-                setText('dna-composition', analysis.visual_dna.composition);
-                setText('dna-palette', analysis.visual_dna.palette);
-                setText('dna-lighting', analysis.visual_dna.lighting);
-                setText('dna-style', analysis.visual_dna.style);
-            }
-
-            // Map Strategic Analysis
-            if (analysis.strategic_analysis) {
-                setText('strategy-tone', analysis.strategic_analysis.tone);
-                setText('strategy-cta', analysis.strategic_analysis.cta_style);
-                setText('strategy-emotion', analysis.strategic_analysis.emotional_angle);
-                setText('strategy-audience', analysis.strategic_analysis.audience);
-            }
-
-            // Map Image Specific
-            if (analysis.image_composition_analysis) {
-                setText('image-focal-points', analysis.image_composition_analysis.focal_points);
-                setText('image-typography', analysis.image_composition_analysis.typography_style);
-            }
-
-            if (analysis.prompt_reconstruction) {
-                setText('image-prompt-reconstruction', analysis.prompt_reconstruction);
-                lastPrompt = analysis.prompt_reconstruction;
-            }
-
-            // Store full analysis just in case
-            lastAnalysis = JSON.stringify(analysis);
+        function generateCreative() {
+            const generationMessages = {
+                image: '🎨 Generating image variants...',
+                carousel: '🎨 Generating carousel variants...',
+                gif: '🎞️ Generating GIF variants...',
+                reel: '🎬 Generating reel variants...'
+            };
+            showToast(generationMessages[selectedType]);
+            setTimeout(() => {
+                nextStep(3);
+            }, 1000);
         }
-
-        function setText(id, text) {
-            const el = document.getElementById(id);
-            if (el) el.innerText = text || 'N/A';
-        }
-
-        function showCarouselResult(imageUrls, prompts) {
-            console.log("Showing carousel result:", imageUrls);
-            console.log("Prompts:", prompts);
-
-            // Store for potential re-generation
-            window.carouselImages = imageUrls;
-            window.carouselPrompts = prompts;
-
-            const container = document.getElementById('carouselPanelsContainer');
-            if (!container) {
-                console.error('carouselPanelsContainer not found!');
-                return;
-            }
-
-            // Clear existing content
-            container.innerHTML = '';
-
-            // Create panel cards for each generated image
-            imageUrls.forEach((url, index) => {
-                const panelDiv = document.createElement('div');
-                panelDiv.className = 'matrix-panel';
-                panelDiv.onclick = () => selectMatrixPanel(index + 1);
-
-                const prompt = prompts && prompts[index] ? prompts[index] : `Panel ${index + 1}`;
-                const promptPreview = prompt.length > 50 ? prompt.substring(0, 50) + '...' : prompt;
-
-                panelDiv.innerHTML = `
-                    <div class="matrix-preview" style="padding: 0; overflow: hidden;">
-                        <img src="${url}" alt="Panel ${index + 1}"
-                             style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <div class="matrix-info">
-                        <div class="panel-num">Panel ${index + 1}</div>
-                        <div style="margin-top: 8px; font-size: 11px; color: var(--text-secondary);">
-                            ${promptPreview}
-                        </div>
-                    </div>
-                `;
-
-                container.appendChild(panelDiv);
-            });
-
-            // Navigate to Step 4 to show the results
-            nextStep(3, true);
-        }
-
-        function showVideoResult(url) {
-            console.log("Showing video result:", url);
-            const videoContainer = document.getElementById('videoResultContainer');
-            const video = document.getElementById('generatedVideo');
-
-            if (video && videoContainer) {
-                video.src = url;
-                videoContainer.classList.remove('hidden');
-
-                // Ensure the container is visible in the current step
-                // It should be placed in the DOM where it can be seen
-            } else {
-                console.error("Video container elements not found!");
-                alert("Video generated at " + url + " but player element missing.");
-            }
-
-            // Force next step without triggering generation again
-            nextStep(3, true);
-        }
-
-        // Override nextStep to trigger generation on step 3 -> 4
-        const originalNextStep = window.nextStep || nextStep;
-        window.nextStep = async function (current, force = false) {
-            console.log("Custom nextStep called for step:", current, "Type:", selectedType, "Force:", force);
-
-            // If we are on Step 3 (Brief) and clicking Next, we go to Step 4 (Result)
-            // This is where we trigger generation for Image/Video/GIF
-            // If we are on Step 3 (Brief) and clicking Next, we go to Step 4 (Result)
-            // This is where we trigger generation for Image/Video/GIF
-            // If we are on Step 3 (Brief) and clicking Next, we go to Step 4 (Result)
-            // This is where we trigger generation for Image/Video/GIF
-            if (!force && current === 3 && (selectedType === 'image' || selectedType === 'reel' || selectedType === 'gif' || selectedType === 'carousel')) {
-                await generateCreative();
-                return;
-            }
-
-            // Standard navigation for other steps
-            if (current === 1 && uploadedFiles.length === 0) {
-                showToast('Please upload at least one file');
-                return;
-            }
-
-            currentStep = current + 1;
-            updateStepperUI();
-            updateStepContent();
-            window.scrollTo(0, 0);
-            updateJourneyForType(selectedType);
-
-            if (current === 1) populateStep2DNA();
-        };
 
         function finishProject() {
             const finishMessages = {

@@ -1,0 +1,43 @@
+{
+  "source_filename": "free-photo-of-sleek-red-ferrari-supercar-in-indoor-garage.jpeg",
+  "analysis": {
+    "visual_dna": {
+      "composition": "Top-down angled view with geometric lines",
+      "palette": "Vibrant red (#FF2800) 70%, Black (#000000) 20%, White (#FFFFFF) 10%",
+      "lighting": "Soft ambient garage lighting",
+      "style": "Sleek, luxurious, modern"
+    },
+    "strategic_analysis": {
+      "tone": "Sophisticated, powerful, exclusive",
+      "cta_style": "Subtle luxury appeal",
+      "emotional_angle": "Speed & exclusivity",
+      "audience": "Car enthusiasts, luxury market, 30-55, status-driven"
+    },
+    "image_composition_analysis": {
+      "focal_points": "Primary focus on car with ~80% saliency; secondary background emphasizes setting",
+      "typography_style": "N/A"
+    },
+    "prompt_reconstruction": "Top-down view of a luxury sports car in a minimalistic parking garage, soft ambient lighting, vibrant red and black color scheme, sleek and modern composition, automotive photography style --ar 16:9 --style raw",
+    "video_prompt_json": {
+      "scene": "modern parking garage setup",
+      "subjects": [
+        {
+          "type": "luxury sports car",
+          "description": "sleek red sports car with a black roof",
+          "position": "center"
+        }
+      ],
+      "style": "automotive advertising, cinematic product showcase",
+      "color_palette": [
+        "vibrant red #FF2800",
+        "black #000000",
+        "white #FFFFFF"
+      ],
+      "lighting": "soft ambient lighting with slight reflections",
+      "mood": "sophisticated, powerful, exclusive",
+      "camera": "smooth top-down crane shot",
+      "movement": "slow reveal with dynamic pans",
+      "duration_suggestion": "10-15 seconds"
+    }
+  }
+}
