@@ -1546,28 +1546,19 @@
                 settingsTab: 'personas',
                 isGenerating: false,  // Add loading state
 
-                personas: [
-                    { id: 'persona-1', name: 'Tech Enthusiasts', type: 'AI', summary: 'Age 28-38, High engagement with innovation content' },
-                    { id: 'persona-2', name: 'Budget Millennials', type: 'AI', summary: 'Age 25-35, Value-driven purchasing' },
-                    { id: 'persona-3', name: 'Gen Z Adopters', type: 'Custom', summary: 'Age 18-25, Mobile-first, sustainability-focused' }
-                ],
-
+                personas: [],
                 brands: [
+                    { id: 'brand-001', name: 'TechBrand', description: 'Main Brand', voice: 'Professional' },
                     { id: 'brand-techflow-solutions', name: 'TechFlow Solutions', description: 'Leading innovation company', voice: 'Professional' },
                     { id: 'brand-creative-studio', name: 'Creative Studio', description: 'Design & Marketing partner', voice: 'Casual & Friendly' }
                 ],
-
-                products: [
-                    { id: 1, name: 'Product A', sku: 'SKU-001', category: 'Electronics' },
-                    { id: 2, name: 'Product B', sku: 'SKU-002', category: 'Accessories' },
-                    { id: 3, name: 'Product C', sku: 'SKU-003', category: 'Software' }
-                ],
+                products: [],
 
                 workflow: {
                     currentStep: 1,
                     selectedPersonaIds: [],
-                    selectedBrandId: '',
-                    campaignId: '',  // Add campaign ID storage
+                    selectedBrandId: 'brand-001',
+                    campaignId: '',
                     name: '',
                     objective: 'awareness',
                     audience: '',
@@ -1589,6 +1580,35 @@
                         link: { count: 0, split: { educational: 0, entertaining: 0, promotional: 0, ugc: 0, seasonal: 0, reactive: 0 } }
                     },
                     generatedItems: []
+                },
+
+                async init() {
+                    console.log('Campaign Workflow initialized');
+                    await this.loadAll();
+                },
+
+                async loadAll() {
+                    try {
+                        const brandId = this.workflow.selectedBrandId || 'brand-001';
+                        // Load Products
+                        const prodResp = await fetch(`/api/v1/settings/products/${brandId}`);
+                        if (prodResp.ok) {
+                            const data = await prodResp.json();
+                            this.products = data.products;
+                        }
+
+                        // Load Personas
+                        const persResp = await fetch(`/api/v1/settings/personas/${brandId}`);
+                        if (persResp.ok) {
+                            const data = await persResp.json();
+                            this.personas = data.personas.map(p => ({
+                                ...p,
+                                summary: `${p.age_range}, ${p.gender || 'Any'}, ${p.location || 'Global'}`
+                            }));
+                        }
+                    } catch (e) {
+                        console.error('Failed to load data:', e);
+                    }
                 },
 
                 calendar: {
@@ -1619,6 +1639,7 @@
                     const brand = this.brands.find(b => b.id == this.workflow.selectedBrandId);
                     if (brand) {
                         this.workflow.brandVoice = brand.voice;
+                        this.loadAll(); // Reload personas/products for this brand
                     }
                 },
 
@@ -1714,13 +1735,13 @@
                             this.isGenerating = false;
                             console.error('❌ Error creating campaign:', error);
                             console.error('❌ Error details:', error.message);
-                            
+
                             // Try to get more details from the response
                             if (error.response) {
                                 console.error('❌ Response status:', error.response.status);
                                 console.error('❌ Response data:', error.response.data);
                             }
-                            
+
                             alert(`Failed to create campaign: ${error.message}`);
 
                             // Fallback logic removed to ensure user knows it failed
@@ -1781,32 +1802,53 @@
                     this.isGenerating = true;
 
                     // Prepare post mix data for backend
+                    const totalCount = this.totalPlannedCount();
                     const postMixData = {
                         campaign_id: this.workflow.campaignId || 'temp-campaign-id',
                         content_types: Object.keys(this.workflow.types).filter(key => this.workflow.types[key].count > 0),
                         post_distribution: {
                             educational: 0,
+                            entertaining: 0,
                             promotional: 0,
-                            behind_scenes: 0,
-                            user_generated: 0,
+                            ugc: 0,
                             seasonal: 0,
-                            trending: 0
+                            reactive: 0
                         }
                     };
 
-                    // Calculate distribution from the existing split data
-                    Object.keys(this.workflow.types).forEach(typeKey => {
-                        const type = this.workflow.types[typeKey];
-                        if (type.count > 0) {
-                            const split = type.split;
-                            postMixData.post_distribution.educational += split.educational || 0;
-                            postMixData.post_distribution.promotional += split.promotional || 0;
-                            postMixData.post_distribution.behind_scenes += split.entertaining || 0;
-                            postMixData.post_distribution.user_generated += split.ugc || 0;
-                            postMixData.post_distribution.seasonal += split.seasonal || 0;
-                            postMixData.post_distribution.trending += split.reactive || 0;
+                    if (totalCount > 0) {
+                        // Calculate distribution from the existing split data
+                        Object.keys(this.workflow.types).forEach(typeKey => {
+                            const type = this.workflow.types[typeKey];
+                            if (type.count > 0) {
+                                const split = type.split;
+                                postMixData.post_distribution.educational += split.educational || 0;
+                                postMixData.post_distribution.entertaining += split.entertaining || 0;
+                                postMixData.post_distribution.promotional += split.promotional || 0;
+                                postMixData.post_distribution.ugc += split.ugc || 0;
+                                postMixData.post_distribution.seasonal += split.seasonal || 0;
+                                postMixData.post_distribution.reactive += split.reactive || 0;
+                            }
+                        });
+
+                        // Convert counts to percentages that sum to 100
+                        const keys = Object.keys(postMixData.post_distribution);
+                        let sum = 0;
+                        keys.forEach(k => {
+                            postMixData.post_distribution[k] = Math.round((postMixData.post_distribution[k] / totalCount) * 100);
+                            sum += postMixData.post_distribution[k];
+                        });
+
+                        // Adjust for rounding errors to ensure exactly 100%
+                        if (sum !== 100 && sum > 0) {
+                            const diff = 100 - sum;
+                            const maxKey = keys.reduce((a, b) => postMixData.post_distribution[a] > postMixData.post_distribution[b] ? a : b);
+                            postMixData.post_distribution[maxKey] += diff;
                         }
-                    });
+                    } else {
+                        // Default distribution if count is 0
+                        postMixData.post_distribution.educational = 100;
+                    }
 
                     // Call backend API for post mix configuration
                     fetch('/api/v1/campaigns/post-mix', {
@@ -1816,7 +1858,14 @@
                         },
                         body: JSON.stringify(postMixData)
                     })
-                        .then(response => response.json())
+                        .then(async response => {
+                            const data = await response.json();
+                            if (!response.ok) {
+                                console.error('❌ Post mix error details:', data);
+                                throw new Error(data.detail?.[0]?.msg || 'Validation failed');
+                            }
+                            return data;
+                        })
                         .then(data => {
                             console.log('Post mix configured:', data);
 

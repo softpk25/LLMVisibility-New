@@ -18,7 +18,7 @@ from schemas.campaign import (
     PostUpdateRequest,
     CampaignStatus
 )
-from services.storage import campaign_storage, brand_storage
+from services.storage import campaign_storage, brand_storage, persona_storage, product_storage
 from services.llm_orchestrator import orchestrator
 from core.logging_config import get_logger
 from core.exceptions import NotFoundError, ValidationError
@@ -30,16 +30,20 @@ router = APIRouter()
 @router.post("/create", response_model=CampaignResponse)
 async def create_campaign(request: CampaignCreateRequest):
     """Create a new campaign"""
+    logger.info(f"🚀 Campaign creation request received: {request.campaign_name} for brand {request.selected_brand_id}")
     try:
         # Validate brand exists
         try:
             brand_data = await brand_storage.get_brand(request.selected_brand_id)
+            logger.info(f"✅ Found brand: {brand_data.get('brand_name', 'Unnamed')}")
         except NotFoundError:
-            raise HTTPException(status_code=404, detail="Brand not found")
+            logger.error(f"❌ Brand not found: {request.selected_brand_id}")
+            raise HTTPException(status_code=404, detail=f"Brand '{request.selected_brand_id}' not found in storage")
         
         # Create campaign metadata
         campaign_id = str(uuid.uuid4())
         now = datetime.utcnow()
+        logger.debug(f"📋 Generated campaign ID: {campaign_id}")
         
         campaign_metadata = CampaignMetadata(
             id=campaign_id,
@@ -63,29 +67,37 @@ async def create_campaign(request: CampaignCreateRequest):
             "guidelines": brand_data.get("brand_guidelines", {})
         }
         
-        # Mock personas and products (in real implementation, fetch from storage)
-        personas = [
-            {
-                "id": persona_id,
-                "name": f"Persona {persona_id}",
-                "age_range": "25-35",
-                "interests": ["technology", "lifestyle"],
-                "demographics": {},
-                "behavior_patterns": []
-            }
-            for persona_id in request.selected_personas
-        ]
+        # Fetch personas from storage
+        personas = []
+        for persona_id in request.selected_personas:
+            try:
+                persona_data = await persona_storage.get_persona(persona_id)
+                personas.append(persona_data)
+            except NotFoundError:
+                logger.warning(f"Persona {persona_id} not found, using name only")
+                personas.append({
+                    "id": persona_id, 
+                    "name": persona_id,
+                    "age_range": "Unknown",
+                    "interests": [],
+                    "demographics": {},
+                    "behavior_patterns": []
+                })
         
-        products = [
-            {
-                "id": product_id,
-                "name": f"Product {product_id}",
-                "category": "general",
-                "description": f"Product description for {product_id}",
-                "features": []
-            }
-            for product_id in request.selected_products
-        ] if request.product_integration_enabled else []
+        # Fetch products from storage
+        products = []
+        if request.product_integration_enabled:
+            for product_id in request.selected_products:
+                try:
+                    product_data = await product_storage.get_product(product_id)
+                    products.append(product_data)
+                except NotFoundError:
+                    logger.warning(f"Product {product_id} not found, using name only")
+                    products.append({
+                        "id": product_id, 
+                        "name": product_id,
+                        "category": "Uncategorized"
+                    })
         
         # Create complete campaign data
         campaign_data = CampaignData(
@@ -143,7 +155,11 @@ async def create_campaign(request: CampaignCreateRequest):
         }
         
         logger.info(f"Triggering AI strategy generation for campaign {campaign_id}")
-        llm_result = await orchestrator.generate(llm_payload)
+        try:
+            llm_result = await orchestrator.generate(llm_payload)
+        except Exception as e:
+            logger.error(f"🚨 Critical failure in orchestrator for campaign {campaign_id}: {str(e)}")
+            llm_result = {"success": False, "error": str(e)}
         
         if llm_result.get("success"):
             # Add content plan to campaign data
@@ -152,19 +168,24 @@ async def create_campaign(request: CampaignCreateRequest):
                 "generated_at": datetime.utcnow().isoformat(),
                 "llm_metadata": llm_result.get("orchestrator_metadata", {})
             }
-            
-            # Update stored campaign with AI generated strategy
+
+            # Persist updated campaign to storage
             updates = {
                 "content_plan": content_plan,
                 "updated_at": datetime.utcnow().isoformat()
             }
-            updated_data = await campaign_storage.update_campaign(campaign_id, updates)
+            await campaign_storage.update_campaign(campaign_id, updates)
+
+            # Update the CampaignData model directly for the response
+            campaign_data.content_plan = content_plan
             
+            logger.info(f"✅ Campaign {campaign_id} created successfully with AI strategy")
+
             return CampaignResponse(
                 campaign_id=campaign_id,
                 status="success",
                 message="Campaign created with AI strategy",
-                data=updated_data
+                data=campaign_data
             )
         
         logger.info(f"Created campaign {campaign_id} (without AI strategy due to generation error or skip)")
@@ -354,6 +375,49 @@ async def update_post(
                 generated_content = llm_result.get("content", "")
                 # In real implementation, parse structured response
                 request.caption = generated_content[:500]  # Truncate for example
+
+        # Handle content enhancement if requested
+        if request.enhance_content:
+            llm_payload = {
+                "task_type": "text_generation",
+                "prompt": f"""
+                Enhance the following social media caption for better engagement and brand alignment.
+                Keep it professional yet engaging.
+                
+                Current Caption: {request.caption or post_data.get('caption', 'None')}
+                Brand: {campaign_data['brand_context']['brand_name']}
+                """,
+                "parameters": {
+                    "max_tokens": 500,
+                    "temperature": 0.7
+                },
+                "request_id": f"post_enhance_{campaign_id}_{request.post_id}"
+            }
+            
+            llm_result = await orchestrator.generate(llm_payload)
+            if llm_result.get("success"):
+                request.caption = llm_result.get("content", "")
+
+        # Handle translation if requested
+        if request.translate_to:
+            llm_payload = {
+                "task_type": "text_generation",
+                "prompt": f"""
+                Translate the following social media caption to {request.translate_to}.
+                Ensure the tone remains consistent.
+                
+                Caption: {request.caption or post_data.get('caption', 'None')}
+                """,
+                "parameters": {
+                    "max_tokens": 800,
+                    "temperature": 0.3
+                },
+                "request_id": f"post_translate_{campaign_id}_{request.post_id}"
+            }
+            
+            llm_result = await orchestrator.generate(llm_payload)
+            if llm_result.get("success"):
+                request.caption = llm_result.get("content", "")
         
         # Update post in campaign data
         posts = campaign_data.setdefault("posts", {})
@@ -363,6 +427,8 @@ async def update_post(
             post_data["caption"] = request.caption
         if request.hashtags is not None:
             post_data["hashtags"] = request.hashtags
+        if request.status is not None:
+            post_data["status"] = request.status
         if request.scheduled_time is not None:
             post_data["scheduled_time"] = request.scheduled_time.isoformat()
         

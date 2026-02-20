@@ -62,7 +62,10 @@ def setup_environment():
         "python-magic==0.4.27",
         "Pillow==10.1.0",
         "pytest==7.4.3",
-        "pytest-asyncio==0.21.1"
+        "pytest-asyncio==0.21.1",
+        "sqlalchemy",
+        "redis",
+        "cryptography"
     ]
     
     for dep in remaining_deps:

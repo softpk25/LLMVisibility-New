@@ -1,43 +1,144 @@
 import os
+import sys
 import json
 import uvicorn
-from fastapi import FastAPI, UploadFile, File, HTTPException, Form
+from contextlib import asynccontextmanager
+from fastapi import FastAPI, UploadFile, File, HTTPException, Form, Request, Depends
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 import shutil
 from pathlib import Path
 from dotenv import load_dotenv
+from typing import Optional, List
 
-# Import the ImageRater from the inspire me/newimg.py
-# We need to add the directory to sys.path to import it
-import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), 'inspire me'))
-from newimg import ImageRater
+# Get base directory
+BASE_DIR = Path(__file__).resolve().parent
 
-# Load environment variables from root .env
-load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
-# Import brand registration API
-sys.path.append(os.path.join(os.path.dirname(__file__), 'brand registration'))
-from brand_registration_api import router as brand_router
+# Add all module paths to sys.path
+backend_path = os.path.join(BASE_DIR, 'backend')
+if backend_path not in sys.path:
+    sys.path.insert(0, backend_path)
+
+inspire_path = os.path.join(BASE_DIR, 'inspire me')
+if inspire_path not in sys.path:
+    sys.path.append(inspire_path)
+
+brand_reg_path = os.path.join(BASE_DIR, 'brand registration')
+if brand_reg_path not in sys.path:
+    sys.path.append(brand_reg_path)
 
 # Load environment variables
-load_dotenv(os.path.join(os.path.dirname(__file__), 'inspire me', '.env'))
+load_dotenv(os.path.join(BASE_DIR, '.env'))
+load_dotenv(os.path.join(inspire_path, '.env'))
 
-app = FastAPI()
+# Initialize logging early (if available)
+try:
+    from core.logging_config import setup_logging
+    setup_logging()
+except (ImportError, Exception) as e:
+    # Logging config not available or has errors, continue without it
+    print(f"Warning: Could not initialize logging config: {e}")
+
+# Now perform imports that might depend on environment or sys.path
+try:
+    from app.database import init_db as brand_init_db
+except ImportError:
+    brand_init_db = lambda: print("Warning: brand_init_db not found")
+
+try:
+    from core.db import init_db as settings_init_db, get_db
+except ImportError:
+    settings_init_db = lambda: print("Warning: settings_init_db not found")
+    get_db = None
+
+from newimg import ImageRater
+from brand_registration_api import router as brand_router
+
+try:
+    from app.main import blueprint_router
+except ImportError:
+    from fastapi import APIRouter
+    blueprint_router = APIRouter()
+    print("Warning: blueprint_router (app.main) not found. Using empty router.")
+
+try:
+    from api.v1.router import api_router as campaign_api_router
+except ImportError:
+    from fastapi import APIRouter
+    campaign_api_router = APIRouter()
+    print("Warning: campaign_api_router not found. Using empty router.")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    try:
+        # Startup
+        print("Initializing brand blueprint database...")
+        brand_init_db()
+        print("Brand blueprint database initialized.")
+        
+        print("Initializing settings database (SQLite)...")
+        settings_init_db()
+        print("Settings database initialized.")
+        
+        # Create necessary directories for Campaign module
+        data_dir_path = os.environ.get("DATA_DIR", "data")
+        data_dir = Path(data_dir_path)
+        (data_dir / "campaigns").mkdir(parents=True, exist_ok=True)
+        (data_dir / "brands").mkdir(parents=True, exist_ok=True)
+        (data_dir / "settings").mkdir(parents=True, exist_ok=True)
+        (data_dir / "inspire").mkdir(parents=True, exist_ok=True)
+        (data_dir / "engage").mkdir(parents=True, exist_ok=True)
+        
+        # Ensure uploads directory exists
+        upload_dir_path = os.environ.get("UPLOAD_DIR", "uploads")
+        uploads_dir = Path(upload_dir_path)
+        uploads_dir.mkdir(parents=True, exist_ok=True)
+        (uploads_dir / "guidelines").mkdir(parents=True, exist_ok=True)
+        
+        print(f"Ensured campaign module data directories exist in {data_dir}")
+        
+        yield
+        
+        # Shutdown (if needed in future)
+        print("Shutting down...")
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise e
+
+app = FastAPI(lifespan=lifespan)
 
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-# Include brand registration router
+# Include routers
 app.include_router(brand_router)
+app.include_router(blueprint_router)
+app.include_router(campaign_api_router, prefix="/api/v1")
 
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    import logging
+    logger = logging.getLogger("uvicorn")
+    logger.error(f"❌ Validation error at {request.url.path}: {exc.errors()}")
+    try:
+        body = await request.json()
+        logger.error(f"📦 Request body: {json.dumps(body, indent=2)}")
+    except:
+        logger.error("📦 Could not parse request body as JSON")
+    
+    return JSONResponse(
+        status_code=422,
+        content={"detail": exc.errors()}
+    )
 # Initialize ImageRater
 api_key = os.getenv('OPENAI_API_KEY')
 if not api_key:
@@ -54,6 +155,23 @@ if api_key:
 app.mount("/templates", StaticFiles(directory="templates"), name="templates")
 app.mount("/inspire me", StaticFiles(directory="inspire me"), name="inspire_me")
 
+# Mount app/static for brand blueprint assets
+app.mount("/brand-static", StaticFiles(directory="app/static"), name="brand_static")
+
+@app.get("/facebook/callback")
+async def facebook_callback_shortcut(
+    request: Request,
+    code: str, 
+    state: str,
+    conn=Depends(get_db)
+):
+    from api.v1.integrations import facebook_callback
+    return await facebook_callback(request, code, state, conn)
+
+@app.get("/routes")
+async def get_routes():
+    return [{"path": route.path, "name": route.name, "methods": route.methods} for route in app.routes]
+
 @app.get("/")
 async def root():
     return {"message": "Server is running"}
@@ -67,6 +185,29 @@ async def read_item():
 async def read_brand_registration():
     with open("templates/FACEBOOK-BRAND-REGISTRATION.html", "r", encoding="utf-8") as f:
         return f.read()
+
+@app.get("/FACEBOOK-CREATE-CAMPAIGN.html", response_class=HTMLResponse)
+async def read_create_campaign():
+    with open("templates/FACEBOOK-CREATE-CAMPAIGN.html", "r", encoding="utf-8") as f:
+        return f.read()
+
+@app.get("/FACEBOOK-SETTINGS.html", response_class=HTMLResponse)
+async def read_settings():
+    with open("templates/FACEBOOK-SETTINGS.html", "r", encoding="utf-8") as f:
+        return f.read()
+
+@app.get("/FACEBOOK-ENGAGE-BOOST.html", response_class=HTMLResponse)
+async def serve_engage_boost():
+    with open("templates/FACEBOOK-ENGAGE-BOOST.html", "r", encoding="utf-8") as f:
+        return f.read()
+
+@app.get("/api/engage-boost/replies")
+async def get_engage_boost_replies():
+    replies_path = Path("RAG/replies.json")
+    if not replies_path.exists():
+        raise HTTPException(status_code=404, detail="replies.json not found in RAG/")
+    with open(replies_path, "r", encoding="utf-8") as f:
+        return json.load(f)
 
 from pydantic import BaseModel
 import time
@@ -253,6 +394,8 @@ Path("transformed").mkdir(exist_ok=True)
 app.mount("/transformed", StaticFiles(directory="transformed"), name="transformed")
 
 
+from fastapi.concurrency import run_in_threadpool
+
 @app.post("/api/analyze-image")
 async def analyze_image(file: UploadFile = File(...)):
     if not rater:
@@ -267,9 +410,10 @@ async def analyze_image(file: UploadFile = File(...)):
         with open(temp_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
             
-        # Get description
-        result = rater.get_image_description(temp_path)
-        
+        # Get description for image
+        # Run rater in threadpool as it uses OpenAI sync client
+        result = await run_in_threadpool(rater.get_image_description, temp_path)
+            
         # Persist analysis JSON for later reuse / auditing
         try:
             analysis_dir = Path("image_analysis")
@@ -318,12 +462,234 @@ async def analyze_image(file: UploadFile = File(...)):
         
     except Exception as e:
         if temp_path.exists():
-            os.remove(temp_path)
+            try:
+                os.remove(temp_path)
+            except:
+                pass
+        # Log the full error for debugging
+        print(f"Error in analyze_image: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/analyze-video")
+async def analyze_video_endpoint(file: UploadFile = File(...)):
+    """
+    Endpoint specifically for analyzing video files.
+    """
+    # Save uploaded file temporarily
+    temp_dir = Path("temp_uploads")
+    temp_dir.mkdir(exist_ok=True)
+    temp_path = temp_dir / file.filename
+    
+    try:
+        with open(temp_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+            
+        file_ext = Path(file.filename).suffix.lower()
+        if file_ext not in ['.mp4', '.mov', '.avi', '.mkv', '.webm']:
+             raise HTTPException(status_code=400, detail="Invalid video file format")
+
+        # Import on demand to avoid circular imports or startup issues if not used
+        try:
+            sys.path.append(os.path.join(os.path.dirname(__file__), 'inspire me', 'video gen'))
+            from videounderstand import analyze_video
+        except ImportError as e:
+            raise HTTPException(status_code=500, detail=f"Could not import videounderstand: {e}")
+
+        # Analyze video in threadpool to avoid blocking event loop
+        video_prompt = await run_in_threadpool(analyze_video, str(temp_path))
+        
+        # Construct a response that mimics the image analysis structure so frontend doesn't break
+        result = {
+            "analysis": {
+                "visual_dna": {
+                    "composition": "Video content",
+                    "palette": "Dynamic video palette",
+                    "lighting": "Video lighting",
+                    "style": "Video style"
+                },
+                "strategic_analysis": {
+                    "tone": "Video tone",
+                    "cta_style": "Video CTA",
+                    "emotional_angle": "Video emotion",
+                    "audience": "Video audience"
+                },
+                "image_composition_analysis": {
+                    "focal_points": "Video subjects",
+                    "typography_style": "N/A"
+                },
+                "prompt_reconstruction": video_prompt
+            }
+        }
+        
+        # Clean up temp file
+        os.remove(temp_path)
+        
+        return result
+
+    except Exception as e:
+        if temp_path.exists():
+             try:
+                os.remove(temp_path)
+             except:
+                pass
+        print(f"Error in analyze_video_endpoint: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 # Mount analyzed_images directory
 Path("analyzed_images").mkdir(exist_ok=True)
 app.mount("/analyzed_images", StaticFiles(directory="analyzed_images"), name="analyzed_images")
+
+
+
+# Import video processor
+try:
+    sys.path.append(os.path.join(os.path.dirname(__file__), 'inspire me', 'video gen'))
+    from video_processor import process_creative_request
+except ImportError as e:
+    print(f"Warning: Could not import video_processor: {e}")
+
+@app.post("/api/generate-video")
+async def generate_video_endpoint(
+    file: UploadFile = File(...),
+    instructions: str = Form(None),
+    creative_type: str = Form("reel") # 'reel' or 'gif'
+):
+    """
+    Endpoint to generate video from uploaded image or video. yay
+    """
+    # Create temp directory for uploads
+    temp_dir = Path("temp_uploads")
+    temp_dir.mkdir(exist_ok=True)
+    
+    # Save uploaded file
+    file_ext = Path(file.filename).suffix
+    temp_filename = f"upload_{int(time.time())}{file_ext}"
+    temp_path = temp_dir / temp_filename
+    
+    try:
+        with open(temp_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+            
+        # Determine file type
+        file_type = "image"
+        if file_ext.lower() in ['.mp4', '.mov', '.avi']:
+            file_type = "video"
+            
+        # Define output path
+        generated_dir = Path("generated")
+        generated_dir.mkdir(exist_ok=True)
+        output_filename = f"gen_video_{int(time.time())}.mp4"
+        output_path = generated_dir / output_filename
+        
+        # Process request
+        # Run in threadpool to avoid blocking
+        result = await run_in_threadpool(
+            process_creative_request,
+            file_path=str(temp_path),
+            file_type=file_type,
+            instructions=instructions or "",
+            output_path=str(output_path)
+        )
+        
+        # Clean up temp input
+        if temp_path.exists():
+            os.remove(temp_path)
+            
+        if result.get("success"):
+            return {
+                "success": True,
+                "video_url": f"/generated/{output_filename}",
+                "analysis": result.get("analysis_text"),
+                "prompt": result.get("final_prompt"),
+                "prompt_json": result.get("prompt_json"),
+                "analysis_data": result.get("analysis_data")
+            }
+        else:
+            raise HTTPException(status_code=500, detail=result.get("error"))
+            
+    except Exception as e:
+        if temp_path.exists():
+            os.remove(temp_path)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/generate-carousel")
+async def generate_carousel_endpoint(
+    file: Optional[UploadFile] = File(None),
+    instructions: str = Form(...),
+    panel_count: int = Form(3)
+):
+    """
+    Endpoint to generate a carousel (sequence of images)
+    """
+    if not rater:
+          raise HTTPException(status_code=500, detail="Server not configured")
+    
+    # Save uploaded file temporarily (optional)
+    temp_path = None
+    if file:
+        temp_dir = Path("temp_uploads")
+        temp_dir.mkdir(exist_ok=True)
+        temp_path = temp_dir / file.filename
+        try:
+            with open(temp_path, "wb") as buffer:
+                shutil.copyfileobj(file.file, buffer)
+        except Exception as e:
+            print(f"Error saving temp file: {e}")
+            temp_path = None
+            
+    try:
+        # 1. Generate prompts
+        # Run in threadpool
+        prompts = await run_in_threadpool(
+            rater.generate_carousel_prompts,
+            base_image_path=str(temp_path) if temp_path else None,
+            instructions=instructions,
+            count=panel_count
+        )
+        
+        if not prompts:
+             raise HTTPException(status_code=500, detail="Failed to generate storyboard prompts")
+             
+        # 2. Generate images for each prompt
+        image_urls = []
+        generated_dir = Path("generated")
+        generated_dir.mkdir(exist_ok=True)
+        
+        for i, prompt in enumerate(prompts):
+            output_filename = f"carousel_{int(time.time())}_{i+1}.png"
+            output_path = generated_dir / output_filename
+            
+            # Call DALL-E (in threadpool for concurrency if possible, but serial here is safer for rate limits)
+            # Actually, DALL-E 3 has simple rate limits, serial is fine
+            result = await run_in_threadpool(
+                rater.generate_image_dalle,
+                prompt=prompt,
+                output_path=str(output_path)
+            )
+            
+            if result.get("success"):
+                image_urls.append(f"/generated/{output_filename}")
+            else:
+                print(f"Failed to generate panel {i+1}: {result.get('error')}")
+                # We optionally continue or fail? Let's continue and return what we have
+                
+        if not image_urls:
+            raise HTTPException(status_code=500, detail="Failed to generate any images")
+            
+        return {
+            "success": True,
+            "image_urls": image_urls,
+            "prompts": prompts
+        }
+        
+    finally:
+        if temp_path and temp_path.exists():
+            try:
+                os.remove(temp_path)
+            except:
+                pass
+
 
 if __name__ == "__main__":
     import logging

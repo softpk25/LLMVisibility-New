@@ -1,1 +1,1 @@
-# API layer for Prometrix backend
+# API package

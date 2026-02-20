@@ -39,6 +39,16 @@ class ImageRater:
                 new_size = tuple(int(dim * ratio) for dim in img.size)
                 img = img.resize(new_size, Image.Resampling.LANCZOS)
             
+            # Convert to RGB if necessary (e.g. for PNGs with transparency)
+            if img.mode in ('RGBA', 'LA') or (img.mode == 'P' and 'transparency' in img.info):
+                bg = Image.new('RGB', img.size, (255, 255, 255))
+                if img.mode == 'P':
+                     img = img.convert('RGBA')
+                bg.paste(img, mask=img.split()[3])
+                img = bg
+            elif img.mode != 'RGB':
+                img = img.convert('RGB')
+            
             # Convert to base64
             buffer = io.BytesIO()
             img.save(buffer, format="JPEG")
@@ -314,11 +324,11 @@ class ImageRater:
         prompt = """
         You are an expert creative strategist and visual analyst for performance
         marketing. Analyze this image and return a JSON object that captures its
-        \"visual DNA\", strategic role, and a reconstruction prompt.
-        
+        \"visual DNA\", strategic role, reconstruction prompt, and video generation prompt.
+
         Use this exact JSON schema (keys must match exactly; values are examples,
         not templates to reuse):
-        
+
         {
             "visual_dna": {
                 "composition": "Hero-centered with dynamic diagonal lines",
@@ -336,14 +346,32 @@ class ImageRater:
                 "focal_points": "Primary focus on product with ~60% saliency; secondary background elements create depth",
                 "typography_style": "Bold sans-serif headlines, minimal copy, high contrast for legibility"
             },
-            "prompt_reconstruction": "Professional product photography, athletic shoe on gradient background, dramatic studio lighting, high contrast, bold orange and navy color scheme, modern minimalist composition, commercial advertising style --ar 1:1 --style raw"
+            "prompt_reconstruction": "Professional product photography, athletic shoe on gradient background, dramatic studio lighting, high contrast, bold orange and navy color scheme, modern minimalist composition, commercial advertising style --ar 1:1 --style raw",
+            "video_prompt_json": {
+                "scene": "modern minimalist studio setup",
+                "subjects": [
+                    {
+                        "type": "athletic shoe",
+                        "description": "premium running shoe with visible carbon plate technology",
+                        "position": "center"
+                    }
+                ],
+                "style": "commercial advertising, cinematic product reveal",
+                "color_palette": ["bold orange #FF6B35", "navy #004E89", "neutral gray"],
+                "lighting": "dramatic studio lighting with high contrast",
+                "mood": "aspirational, energetic, premium",
+                "camera": "slow rotating dolly shot around product",
+                "movement": "subtle rotation of product, dynamic light shifts",
+                "duration_suggestion": "5-8 seconds"
+            }
         }
-        
+
         Instructions:
         - Keep the same structure and keys.
         - Replace all example values with descriptions that accurately reflect THIS image.
         - Use concise but information-dense language.
         - Make "prompt_reconstruction" directly usable as an image generation prompt.
+        - Make "video_prompt_json" structured for video generation from this static image.
         - Respond with VALID JSON only (no markdown code fences or extra text).
         """
         
@@ -664,6 +692,71 @@ Visual DNA to preserve from base:
             size=size,
             transformation_instructions=transformation_instructions
         )
+
+    def generate_carousel_prompts(self, base_image_path: Optional[Union[str, Path]], instructions: str, count: int = 3) -> List[str]:
+        """
+        Generate a sequence of prompts for a carousel/story based on an image and instructions.
+        """
+        base64_image = None
+        if base_image_path:
+            base64_image = self.resize_image_if_needed(base_image_path)
+            
+        prompt = f"""
+        Create a {count}-panel social media carousel story based on the provided instructions and image (if any).
+
+        Instructions: {instructions}
+
+        Return a JSON object with a list of {count} image generation prompts.
+        Each prompt should describe a distinct panel in the sequential story.
+        Ensure consistency in style and character across panels.
+
+        JSON Format:
+        {{
+            "prompts": [
+                "Panel 1: ... detailed prompt ...",
+                "Panel 2: ... detailed prompt ...",
+                "Panel 3: ... detailed prompt ..."
+            ]
+        }}
+        """
+        
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.api_key}"
+        }
+        
+        content_payload = [{"type": "text", "text": prompt}]
+        if base64_image:
+             content_payload.append({
+                "type": "image_url",
+                "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}
+             })
+        
+        payload = {
+            "model": self.model,
+            "messages": [{"role": "user", "content": content_payload}],
+            "max_tokens": 1000
+        }
+        
+        try:
+            response = requests.post(self.base_url, headers=headers, json=payload)
+            response.raise_for_status()
+            result = response.json()
+            content = result['choices'][0]['message']['content']
+            
+            # Parse JSON
+            try:
+                cleaned_content = content.replace("```json", "").replace("```", "").strip()
+                parsed = json.loads(cleaned_content)
+                return parsed.get("prompts", [])
+            except Exception as parse_error:
+                print(f"Failed to parse prompts: {content}")
+                print(f"Parse error: {parse_error}")
+                return []
+
+        except Exception as e:
+            print(f"Error generating carousel prompts: {e}")
+            return []
 
 
 # Example usage

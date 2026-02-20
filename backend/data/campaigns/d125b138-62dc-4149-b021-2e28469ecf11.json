@@ -1,0 +1,124 @@
+{
+  "id": "d125b138-62dc-4149-b021-2e28469ecf11",
+  "campaign_metadata": {
+    "id": "047ba007-1ccd-410c-8fc6-1872471682c8",
+    "name": "M",
+    "objective": "awareness",
+    "target_audience": "General audience",
+    "start_date": "2026-02-12",
+    "end_date": "2026-03-14",
+    "frequency": 1,
+    "status": "draft",
+    "created_at": "2026-02-12 07:18:51.184146",
+    "updated_at": "2026-02-12 07:18:51.184146"
+  },
+  "brand_context": {
+    "brand_id": "brand-creative-studio",
+    "brand_name": "Creative Studio Pro",
+    "voice_profile": {
+      "formality": "neutral",
+      "humor": "subtle",
+      "tone": "friendly",
+      "personality_traits": [
+        "creative",
+        "professional",
+        "inspiring"
+      ],
+      "do_phrases": [
+        "Let's create",
+        "Imagine",
+        "Bring to life"
+      ],
+      "dont_phrases": [
+        "Boring",
+        "Generic",
+        "Standard"
+      ]
+    },
+    "content_pillars": [
+      {
+        "id": "pillar-inspiration",
+        "name": "Design Inspiration",
+        "type": "inspirational",
+        "description": "Showcasing creative design work",
+        "keywords": [
+          "design",
+          "creativity",
+          "inspiration"
+        ],
+        "percentage": 50
+      },
+      {
+        "id": "pillar-process",
+        "name": "Behind the Process",
+        "type": "behind_scenes",
+        "description": "Design process and methodology",
+        "keywords": [
+          "process",
+          "methodology",
+          "workflow"
+        ],
+        "percentage": 30
+      },
+      {
+        "id": "pillar-services",
+        "name": "Our Services",
+        "type": "promotional",
+        "description": "Design services and capabilities",
+        "keywords": [
+          "services",
+          "branding",
+          "digital"
+        ],
+        "percentage": 20
+      }
+    ],
+    "guidelines": {
+      "color_palette": [
+        "#ff6b6b",
+        "#4ecdc4",
+        "#45b7d1",
+        "#f9ca24"
+      ],
+      "typography": {
+        "primary": "Montserrat",
+        "secondary": "Open Sans"
+      }
+    }
+  },
+  "personas": [
+    {
+      "id": "persona-3",
+      "name": "persona-3",
+      "age_range": "Unknown",
+      "interests": [],
+      "demographics": {},
+      "behavior_patterns": []
+    }
+  ],
+  "products": [],
+  "language_config": {
+    "primary_language": "en",
+    "multilingual_enabled": false,
+    "additional_languages": []
+  },
+  "post_mix": null,
+  "content_types": [],
+  "content_plan": {
+    "generated_plan": "1. Strategic Summary:\nThe M campaign aims to elevate brand awareness of Creative Studio Pro across a general audience. The campaign will leverage a friendly and creative voice, showcasing design inspiration, behind-the-process insights, and services in a balanced mix. The campaign will run for a month, with daily posts designed to engage and inspire the target audience.\n\n2. Key Messaging Themes:\n    - Theme 1: \"Let's create\": Highlight the joy and fulfillment that comes from creating unique designs. Encourage audience participation and interaction.\n    - Theme 2: \"Imagine\": Showcase the limitless possibilities of design. Inspire the audience with examples of creative design work.\n    - Theme 3: \"Bring to life\": Provide behind-the-scenes glimpses into the design process, demonstrating how ideas are transformed into reality.\n    - Theme 4: \"Our Services\": Promote the range and quality of design services offered by Creative Studio Pro. \n\n3. Content Distribution Strategy:\n    - Design Inspiration (50%): Showcase creative works, innovative design ideas, and inspirational content. Use platforms like Instagram for visually appealing posts, and LinkedIn for thought-leadership content.\n    - Behind the Process (30%): Share insights into the design process, including methodology and workflow. Use platforms like YouTube for video content showing the process, and Twitter for short updates.\n    - Our Services (20%): Highlight the design services and capabilities of Creative Studio Pro. Use LinkedIn for professional outreach, and Facebook for wider audience reach. Promote special offers or discounts on Instagram Stories.",
+    "generated_at": "2026-02-12T07:19:01.411943",
+    "llm_metadata": {
+      "provider_used": "openai",
+      "available_providers": [
+        "openai",
+        "mock"
+      ],
+      "processing_time": 10.20299999999952
+    }
+  },
+  "posts": {},
+  "status": "draft",
+  "created_at": null,
+  "updated_at": "2026-02-12T07:19:01.412998",
+  "version": "v1"
+}

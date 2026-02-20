@@ -1,0 +1,61 @@
+{
+  "creative_type": "reel",
+  "timestamp": 1770712597091,
+  "source_analysis": {
+    "visual_dna": {
+      "composition": "Silhouette-centered with expansive sky",
+      "palette": "Warm pink (#FF6B88) 60%, Deep purple (#4B0082) 30%, muted dusk tones",
+      "lighting": "Low light with natural twilight ambiance",
+      "style": "Dreamy, contemplative, serene minimalism"
+    },
+    "strategic_analysis": {
+      "tone": "Reflective, calming, introspective",
+      "cta_style": "Subtle encouragement for mindfulness",
+      "emotional_angle": "Solitude and contemplation",
+      "audience": "Mindfulness seekers, 18-35, introspective"
+    },
+    "image_composition_analysis": {
+      "focal_points": "Silhouette with ~70% saliency; expansive sky creates a backdrop",
+      "typography_style": "Absent or minimal, focuses entirely on visual storytelling"
+    },
+    "prompt_reconstruction": "Silhouette of a person at sunset against a dramatic pink and purple sky, low light, dreamy composition, serene atmosphere, photographic style --ar 1:1 --style raw",
+    "video_prompt_json": {
+      "scene": "natural outdoor sunset landscape",
+      "subjects": [
+        {
+          "type": "silhouette",
+          "description": "person in meditation pose, contemplative",
+          "position": "center"
+        }
+      ],
+      "style": "cinematic meditative sequence",
+      "color_palette": [
+        "warm pink #FF6B88",
+        "deep purple #4B0082",
+        "muted grays"
+      ],
+      "lighting": "soft natural twilight lighting",
+      "mood": "calm, introspective, serene",
+      "camera": "slow pan across horizon",
+      "movement": "subtle cloud movements, gentle fading light",
+      "duration_suggestion": "10-15 seconds"
+    },
+    "stored_image_path": "analyzed_images\\Screenshot 2025-07-22 030155_1770712586.png",
+    "stored_image_url": "/analyzed_images/Screenshot 2025-07-22 030155_1770712586.png"
+  },
+  "transformation_instructions": "use this image as an advertisment for my travel agency \"Travel kings\" with the slogan :we are gonna be everywhere ",
+  "common": {
+    "objective": "Product Launch",
+    "product": "UltraRun Pro Shoes",
+    "platform": "Instagram",
+    "aspect_ratio": "1:1 (Square)"
+  },
+  "reel_settings": {
+    "scene_count": "4 Scenes (Standard)",
+    "total_duration": "15 seconds",
+    "hook_length": "3 seconds",
+    "music_style": "Upbeat/Energetic",
+    "voiceover": "No",
+    "captions": "Yes - Auto-highlight keywords"
+  }
+}

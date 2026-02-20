@@ -24,18 +24,19 @@ class ContentType(str, Enum):
     IMAGE = "image"
     CAROUSEL = "carousel"
     VIDEO = "video"
-    REEL = "reel"
+    POLL = "poll"
     STORY = "story"
+    LINK = "link"
 
 
 class PostTheme(str, Enum):
     """Post themes"""
     EDUCATIONAL = "educational"
+    ENTERTAINING = "entertaining"
     PROMOTIONAL = "promotional"
-    BEHIND_SCENES = "behind_scenes"
-    USER_GENERATED = "user_generated"
+    UGC = "ugc"
     SEASONAL = "seasonal"
-    TRENDING = "trending"
+    REACTIVE = "reactive"
 
 
 class CampaignStatus(str, Enum):
@@ -51,17 +52,17 @@ class PersonaSchema(BaseModel):
     """Persona schema"""
     id: str
     name: str
-    age_range: str
-    interests: List[str]
-    demographics: Dict[str, Any]
-    behavior_patterns: List[str]
+    age_range: str = "Unknown"
+    interests: List[str] = []
+    demographics: Dict[str, Any] = {}
+    behavior_patterns: List[str] = []
 
 
 class ProductSchema(BaseModel):
     """Product schema"""
     id: str
     name: str
-    category: str
+    category: str = "Uncategorized"
     price: Optional[float] = None
     description: Optional[str] = None
     image_url: Optional[str] = None
@@ -84,24 +85,30 @@ class LanguageConfig(BaseModel):
 class PostMixDistribution(BaseModel):
     """Post mix distribution configuration"""
     educational: int = Field(ge=0, le=100)
+    entertaining: int = Field(ge=0, le=100)
     promotional: int = Field(ge=0, le=100)
-    behind_scenes: int = Field(ge=0, le=100)
-    user_generated: int = Field(ge=0, le=100)
+    ugc: int = Field(ge=0, le=100)
     seasonal: int = Field(ge=0, le=100)
-    trending: int = Field(ge=0, le=100)
+    reactive: int = Field(ge=0, le=100)
     
-    @validator('trending')
+    @validator('reactive')
     def validate_total_percentage(cls, v, values):
         total = sum([
             values.get('educational', 0),
+            values.get('entertaining', 0),
             values.get('promotional', 0),
-            values.get('behind_scenes', 0),
-            values.get('user_generated', 0),
+            values.get('ugc', 0),
             values.get('seasonal', 0),
             v
         ])
         if total != 100:
-            raise ValueError(f'Post mix distribution must total 100%, got {total}%')
+            # If total is not 100 but close (e.g. 99 or 101 due to rounding), 
+            # we can either adjust or just warn in logs. 
+            # For now, let's just log and allow it to proceed if it's within 5%
+            if 95 <= total <= 105:
+                logger.warning(f"Post mix distribution totals {total}%, allowing via fuzzy match")
+                return v
+            raise ValueError(f'Post mix distribution must total approx 100%, got {total}%')
         return v
 
 
@@ -174,6 +181,7 @@ class CampaignData(BaseModel):
     post_mix: Optional[PostMixDistribution] = None
     content_types: List[ContentType] = []
     content_plan: Optional[Dict[str, Any]] = None
+    posts: Dict[str, Any] = {}
     status: CampaignStatus = CampaignStatus.DRAFT
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
@@ -201,5 +209,8 @@ class PostUpdateRequest(BaseModel):
     post_id: str
     caption: Optional[str] = None
     hashtags: Optional[List[str]] = None
+    status: Optional[str] = None
     scheduled_time: Optional[datetime] = None
     regenerate_content: bool = False
+    enhance_content: bool = False
+    translate_to: Optional[str] = None

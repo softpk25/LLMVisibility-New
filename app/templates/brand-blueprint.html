@@ -1,0 +1,2141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Content Management - Prometrix</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.2/cdn.min.js" defer></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --primary: #5046e5;
+            --primary-dark: #4039c0;
+            --secondary: #00c4cc;
+            --text-dark: #1a202c;
+            --text-light: #718096;
+            --bg-light: #f7fafc;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: var(--primary);
+            border: 1px solid #e2e8f0;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(80, 70, 229, 0.05);
+            border-color: var(--primary);
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            border-right: 1px solid #e2e8f0;
+            padding: 1.5rem 0;
+            transition: all 0.3s ease;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .prometrix-wordmark {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #5046e5 0%, #00c4cc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .primary-text { color: #5046e5; }
+        .dark-text { color: #1a202c; }
+        
+        .analytics-bars {
+            display: flex;
+            align-items: end;
+            gap: 2px;
+            margin-left: 8px;
+            margin-right: 4px;
+        }
+        
+        .bar {
+            border-radius: 2px;
+            background: linear-gradient(135deg, #00c4cc 0%, #5046e5 100%);
+            width: 3px;
+        }
+        
+        .bar1 { height: 10px; opacity: 0.7; }
+        .bar2 { height: 14px; opacity: 0.8; }
+        .bar3 { height: 18px; opacity: 0.9; }
+        .bar4 { height: 22px; }
+        
+        .tagline-small {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #718096;
+        }
+        
+        .menu {
+            margin-top: 1.5rem;
+            list-style: none;
+        }
+        
+        .menu-item {
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-light);
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+        
+        .menu-item:hover {
+            background-color: rgba(80, 70, 229, 0.05);
+            color: var(--primary);
+        }
+        
+        .menu-item.active {
+            color: var(--primary);
+            background-color: rgba(80, 70, 229, 0.1);
+            border-left: 3px solid var(--primary);
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+            max-width: calc(100vw - 280px);
+            transition: all 0.3s ease;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .title-section h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+        
+        .subtitle {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+        
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8fafc;
+        }
+        
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(80, 70, 229, 0.1);
+        }
+        
+        .duration-buttons {
+            display: flex;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .duration-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .duration-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .duration-btn:hover:not(.active) {
+            background-color: #f8fafc;
+        }
+        
+        .plan-grid {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .day-column {
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            background: white;
+        }
+        
+        .day-header {
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .slot {
+            padding: 1rem;
+            border-bottom: 1px solid #f1f5f9;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .slot:hover {
+            background-color: #f8fafc;
+        }
+        
+        .slot:last-child {
+            border-bottom: none;
+        }
+        
+        .slot-pillar {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .slot-topic {
+            font-size: 0.875rem;
+            color: var(--text-dark);
+            margin-top: 0.25rem;
+        }
+        
+        .slot-format {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+        
+        .post-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            background: white;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        
+        .post-header {
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .post-body {
+            padding: 1.5rem;
+        }
+        
+        .approval-bar {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .policy-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .policy-ok {
+            background-color: #dcfce7;
+            color: #059669;
+        }
+        
+        .policy-warning {
+            background-color: #fef3c7;
+            color: #d97706;
+        }
+        
+        .format-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background-color: #e0e7ff;
+            color: #3730a3;
+        }
+        
+        .product-toggle {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        
+        .product-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+        
+        .upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary);
+            background-color: rgba(80, 70, 229, 0.02);
+        }
+        
+        .blueprint-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .voice-slider {
+            margin-bottom: 1rem;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .range-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+        }
+        
+        .pillar-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            background-color: #f1f5f9;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .chip-remove {
+            cursor: pointer;
+            color: #6b7280;
+            font-weight: bold;
+        }
+        
+        .chip-remove:hover {
+            color: #ef4444;
+        }
+        
+        .version-badge {
+            padding: 0.25rem 0.5rem;
+            background-color: #fef3c7;
+            color: #d97706;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body x-data="brandContentSystem()" x-init="init()">
+    <!-- Sidebar: Global Navigation (shared with Inspire Me) -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div style="text-align: left;">
+                <div class="prometrix-wordmark">
+                    <span class="dark-text">Pro</span>
+                    <span class="primary-text">me</span>
+                    <span class="gradient-text">t</span>
+                    <div class="analytics-bars">
+                        <div class="bar bar1"></div>
+                        <div class="bar bar2"></div>
+                        <div class="bar bar3"></div>
+                        <div class="bar bar4"></div>
+                    </div>
+                    <span class="gradient-text">rix</span>
+                </div>
+                <div class="tagline-small">AI-POWERED MARKETING</div>
+            </div>
+        </div>
+        <nav style="margin-top: 1.5rem; overflow-y: auto; max-height: calc(100vh - 100px);">
+            <ul style="list-style: none;">
+                <!-- Create Campaign -->
+                <li>
+                    <a class="menu-item" href="FACEBOOK-CREATE-CAMPAIGN.html" style="text-decoration: none;">
+                        <span>🚀</span>
+                        <span>Create Campaign</span>
+                    </a>
+                </li>
+
+                <!-- Brand Registration (active for Brand Blueprint) -->
+                <li>
+                    <a class="menu-item active" href="FACEBOOK-BRAND-REGISTRATION.html" style="text-decoration: none;">
+                        <span>🏢</span>
+                        <span>Brand Registration</span>
+                    </a>
+                </li>
+
+                <!-- Inspire Me -->
+                <li>
+                    <a class="menu-item" href="FACEBOOK-INSPIRE-ME.html" style="text-decoration: none;">
+                        <span>💡</span>
+                        <span>Inspire Me</span>
+                    </a>
+                </li>
+
+                <!-- Engage Boost with Submenu -->
+                <li x-data="{ engageOpen: false }">
+                    <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html"
+                        style="text-decoration: none; justify-content: space-between;">
+                        <span style="display: flex; align-items: center; gap: 0.75rem;">
+                            <span>💬</span>
+                            <span>Engage Boost</span>
+                        </span>
+                        <span x-text="engageOpen ? '▼' : '▶'" style="font-size: 0.7rem;"></span>
+                    </a>
+                    <ul x-show="engageOpen" x-transition
+                        style="list-style: none; background: #f8fafc; margin: 0; padding: 0;">
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#pending"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>⏳</span>
+                                <span>Pending Reviews</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#all"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>💭</span>
+                                <span>All Comments</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#approved"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>✅</span>
+                                <span>Approved</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#rejected"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>❌</span>
+                                <span>Rejected</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#knowledge"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>📚</span>
+                                <span>Knowledge Base</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#analytics"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>📊</span>
+                                <span>Analytics</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-ENGAGE-BOOST.html#settings"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>⚙️</span>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- Insights -->
+                <li>
+                    <a class="menu-item" href="#" style="text-decoration: none;">
+                        <span>📈</span>
+                        <span>Insights</span>
+                    </a>
+                </li>
+
+                <!-- Settings with Submenu -->
+                <li x-data="{ settingsOpen: false }">
+                    <a class="menu-item" href="FACEBOOK-SETTINGS.html"
+                        style="text-decoration: none; justify-content: space-between;">
+                        <span style="display: flex; align-items: center; gap: 0.75rem;">
+                            <span>⚙️</span>
+                            <span>Settings</span>
+                        </span>
+                        <span x-text="settingsOpen ? '▼' : '▶'" style="font-size: 0.7rem;"></span>
+                    </a>
+                    <ul x-show="settingsOpen" x-transition
+                        style="list-style: none; background: #f8fafc; margin: 0; padding: 0;">
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-SETTINGS.html#language"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>🌐</span>
+                                <span>Language</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-SETTINGS.html#llm"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>🤖</span>
+                                <span>LLM Settings</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-SETTINGS.html#guardrails"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>🛡️</span>
+                                <span>Guardrails</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-SETTINGS.html#integrations"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>🔗</span>
+                                <span>Integrations</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="menu-item" href="FACEBOOK-SETTINGS.html#products"
+                                style="padding-left: 3rem; font-size: 0.9rem; text-decoration: none;">
+                                <span>📦</span>
+                                <span>Products</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Internal Brand Blueprint Navigation -->
+        <nav style="margin-bottom: 1.5rem;">
+            <ul class="menu">
+                <li>
+                    <div class="menu-item" 
+                         :class="{ 'active': activeTab === 'onboarding' }"
+                         @click="activeTab = 'onboarding'">
+                        <span>📥</span>
+                        <span>Onboarding</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="menu-item"
+                         :class="{ 'active': activeTab === 'blueprint' }"
+                         @click="activeTab = 'blueprint'">
+                        <span>🧬</span>
+                        <span>Brand Blueprint</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="menu-item"
+                         :class="{ 'active': activeTab === 'planner' }"
+                         @click="activeTab = 'planner'">
+                        <span>🗓️</span>
+                        <span>Planner</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="menu-item"
+                         :class="{ 'active': activeTab === 'creator' }"
+                         @click="activeTab = 'creator'">
+                        <span>✍️</span>
+                        <span>Creator & Review</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="menu-item"
+                         :class="{ 'active': activeTab === 'calendar' }"
+                         @click="activeTab = 'calendar'">
+                        <span>📅</span>
+                        <span>Calendar / Export</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="menu-item"
+                         :class="{ 'active': activeTab === 'insights' }"
+                         @click="activeTab = 'insights'">
+                        <span>📊</span>
+                        <span>Insights</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="menu-item"
+                         :class="{ 'active': activeTab === 'settings' }"
+                         @click="activeTab = 'settings'">
+                        <span>⚙️</span>
+                        <span>Settings</span>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        
+        <!-- Header -->
+        <div class="header">
+        <!-- Header -->
+        <div class="header">
+            <div class="title-section">
+                <h1>🎨 Brand Content Management</h1>
+                <p class="subtitle">AI-powered content creation with brand guidelines and HITL controls</p>
+            </div>
+            <div style="display: flex; gap: 0.75rem;">
+                <button class="btn-secondary">
+                    <span>📤</span>
+                    Export Package
+                </button>
+                <button class="btn-primary" @click="generateBrandBlueprint()">
+                    <span>✨</span>
+                    Generate Blueprint
+                </button>
+            </div>
+        </div>
+
+        <!-- Onboarding Tab -->
+        <div x-show="activeTab === 'onboarding'">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">🚀 Welcome to Brand Content Management</h2>
+                </div>
+                <div class="card-body">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <!-- Brand Guideline Upload -->
+                        <div>
+                            <h3 style="font-weight: 600; margin-bottom: 1rem;">Upload Brand Guideline</h3>
+                            <p style="color: var(--text-light); margin-bottom: 1rem;">
+                                PDF/DOCX up to 50 MB. We'll extract your voice, pillars, and policies.
+                            </p>
+                            
+                            <div class="upload-area" @click="$refs.guidelineUpload.click()">
+                                <div style="font-size: 2rem; margin-bottom: 1rem;">📤</div>
+                                <p style="font-weight: 500; margin-bottom: 0.5rem;">Upload Document</p>
+                                <p style="font-size: 0.875rem; color: var(--text-light);">Scanned? We'll OCR it automatically.</p>
+                                <input x-ref="guidelineUpload" type="file" style="display: none;" accept=".pdf,.docx" @change="handleGuidelineUpload($event)">
+                            </div>
+                            
+                            <div x-show="guidelineDoc.name" class="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                                <div class="flex items-center gap-2">
+                                    <span>✅</span>
+                                    <span x-text="guidelineDoc.name"></span>
+                                    <span class="text-sm text-green-600" x-text="guidelineDoc.status"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Defaults -->
+                        <div>
+                            <h3 style="font-weight: 600; margin-bottom: 1rem;">Set Defaults</h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Choose default content language</label>
+                                <select x-model="settings.defaultLanguage" class="form-control">
+                                    <option value="en">English</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="hi">Hindi</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Choose default model (change anytime)</label>
+                                <select x-model="settings.defaultLLM" class="form-control">
+                                    <option value="gpt-4.1">GPT-4.1 (Recommended)</option>
+                                    <option value="claude-3.5">Claude 3.5 Sonnet</option>
+                                    <option value="gemini-pro">Gemini Pro</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">What share of posts should include the product?</label>
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <input type="range" x-model="brand.blueprint.productDefaultPct" min="0" max="100" class="range-slider" style="flex: 1;">
+                                    <span x-text="brand.blueprint.productDefaultPct + '%'" style="font-weight: 600; color: var(--primary);"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <button class="btn-primary" @click="generateBrandBlueprint()" style="padding: 1rem 2rem; font-size: 1.1rem;">
+                            Generate Brand Content Blueprint
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Brand Blueprint Tab -->
+        <div x-show="activeTab === 'blueprint'">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <h2 class="card-title">Brand Content Blueprint</h2>
+                        <p style="color: var(--text-light); margin-top: 0.25rem;">Edit once. All content uses this as source of truth.</p>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <span class="version-badge" x-text="'v' + brand.blueprint.version + ' ' + brand.blueprint.status"></span>
+                        <button class="btn-secondary" @click="downloadBlueprintJSON()">
+                            <span>💾</span>
+                            Save JSON
+                        </button>
+                        <button class="btn-success" :disabled="brand.blueprint.status === 'approved'" @click="approveBlueprint()">Approve Blueprint</button>
+                        <button class="btn-secondary" @click="regenerateFromDoc()">Re-generate from Doc</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="blueprint-panel">
+                        <!-- Left Column: Blueprint Panels -->
+                        <div>
+                            <!-- Voice Profile -->
+                            <div style="margin-bottom: 2rem;">
+                                <h3 style="font-weight: 600; margin-bottom: 1rem;">🎭 Voice Profile</h3>
+                                
+                                <div class="voice-slider">
+                                    <div class="slider-label">
+                                        <span>Formality</span>
+                                        <span>Casual ← → Formal</span>
+                                    </div>
+                                    <input type="range" x-model="brand.blueprint.voice.formality" min="0" max="100" class="range-slider">
+                                </div>
+                                
+                                <div class="voice-slider">
+                                    <div class="slider-label">
+                                        <span>Humor</span>
+                                        <span>Serious ← → Playful</span>
+                                    </div>
+                                    <input type="range" x-model="brand.blueprint.voice.humor" min="0" max="100" class="range-slider">
+                                </div>
+                                
+                                <div class="voice-slider">
+                                    <div class="slider-label">
+                                        <span>Warmth</span>
+                                        <span>Direct ← → Warm</span>
+                                    </div>
+                                    <input type="range" x-model="brand.blueprint.voice.warmth" min="0" max="100" class="range-slider">
+                                </div>
+                                
+                                <div style="margin-top: 1rem;">
+                                    <label class="form-label">Emoji Policy</label>
+                                    <select x-model="brand.blueprint.voice.emojiPolicy" class="form-control">
+                                        <option value="none">None</option>
+                                        <option value="light">Light</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="rich">Rich</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Content Pillars -->
+                            <div style="margin-bottom: 2rem;">
+                                <h3 style="font-weight: 600; margin-bottom: 1rem;">🏛️ Content Pillars</h3>
+                                
+                                <template x-for="(pillar, index) in brand.blueprint.pillars" :key="index">
+                                    <div class="pillar-item">
+                                        <div style="flex: 1;">
+                                            <input x-model="pillar.name" placeholder="Pillar name" class="form-control" style="margin-bottom: 0.5rem;">
+                                            <input x-model="pillar.description" placeholder="Description" class="form-control">
+                                        </div>
+                                        <div style="width: 80px;">
+                                            <input x-model="pillar.weight" type="number" min="0" max="100" class="form-control" placeholder="%" style="text-align: center;">
+                                        </div>
+                                        <button @click="removePillar(index)" style="color: var(--danger); border: none; background: none; cursor: pointer;">×</button>
+                                    </div>
+                                </template>
+                                
+                                <button @click="addPillar()" class="btn-secondary" style="width: 100%;">+ Add Pillar</button>
+                            </div>
+                            
+                            <!-- Policies -->
+                            <div>
+                                <h3 style="font-weight: 600; margin-bottom: 1rem;">📋 Policies</h3>
+                                
+                                <div style="margin-bottom: 1rem;">
+                                    <label class="form-label">Forbidden Phrases</label>
+                                    <div style="margin-bottom: 0.5rem;">
+                                        <template x-for="(phrase, index) in brand.blueprint.policies.forbiddenPhrases" :key="index">
+                                            <span class="chip">
+                                                <span x-text="phrase"></span>
+                                                <span class="chip-remove" @click="brand.blueprint.policies.forbiddenPhrases.splice(index, 1)">×</span>
+                                            </span>
+                                        </template>
+                                    </div>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <input x-model="newForbiddenPhrase" placeholder="Add phrase" class="form-control" style="flex: 1;" @keyup.enter="addForbiddenPhrase()">
+                                        <button @click="addForbiddenPhrase()" class="btn-secondary">Add</button>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 1rem;">
+                                    <label class="form-label">Max Hashtags</label>
+                                    <input x-model="brand.blueprint.policies.maxHashtags" type="number" min="1" max="30" class="form-control">
+                                </div>
+                                
+                                <div>
+                                    <label class="form-label">Brand Hashtags</label>
+                                    <div style="margin-bottom: 0.5rem;">
+                                        <template x-for="(tag, index) in brand.blueprint.policies.brandHashtags" :key="index">
+                                            <span class="chip">
+                                                <span x-text="tag"></span>
+                                                <span class="chip-remove" @click="brand.blueprint.policies.brandHashtags.splice(index, 1)">×</span>
+                                            </span>
+                                        </template>
+                                    </div>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <input x-model="newBrandHashtag" placeholder="Add hashtag" class="form-control" style="flex: 1;" @keyup.enter="addBrandHashtag()">
+                                        <button @click="addBrandHashtag()" class="btn-secondary">Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Column: Live Preview -->
+                        <div>
+                            <h3 style="font-weight: 600; margin-bottom: 1rem;">👁️ Live Blueprint Preview</h3>
+                            
+                            <div class="card" style="margin-bottom: 1rem;">
+                                <div class="card-header">
+                                    <h4 style="font-size: 1rem; margin: 0;">✅ Do / ❌ Don't</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div style="margin-bottom: 1rem;">
+                                        <strong style="color: var(--success);">✅ DO:</strong>
+                                        <ul style="margin-left: 1rem; margin-top: 0.5rem;">
+                                            <li>Use warm, approachable language</li>
+                                            <li>Include relevant hashtags</li>
+                                            <li>Focus on customer value</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <strong style="color: var(--danger);">❌ DON'T:</strong>
+                                        <ul style="margin-left: 1rem; margin-top: 0.5rem;">
+                                            <li>Use overly technical jargon</li>
+                                            <li>Make unsubstantiated claims</li>
+                                            <li>Exceed hashtag limits</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card" style="margin-bottom: 1rem;">
+                                <div class="card-header">
+                                    <h4 style="font-size: 1rem; margin: 0;">✨ Good Examples</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div style="font-style: italic; color: var(--text-light); margin-bottom: 0.5rem;">
+                                        "Excited to share our latest innovation! 🚀 This new feature helps teams collaborate 40% more effectively."
+                                    </div>
+                                    <div style="font-style: italic; color: var(--text-light);">
+                                        "Monday motivation: Small steps lead to big breakthroughs. What's your goal this week? 💪"
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 style="font-size: 1rem; margin: 0;">⚠️ Bad Examples</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div style="font-style: italic; color: var(--text-light); margin-bottom: 0.5rem;">
+                                        "Revolutionary AI-powered enterprise solution leveraging cutting-edge algorithms..."
+                                    </div>
+                                    <div style="font-style: italic; color: var(--text-light);">
+                                        "BUY NOW! LIMITED TIME OFFER!!! DON'T MISS OUT!!!"
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Planner Tab -->
+        <div x-show="activeTab === 'planner'">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">📅 Plan Your Content</h2>
+                    <button class="btn-primary" @click="generatePlan()" :disabled="!campaign.objective">
+                        <span x-show="!isGeneratingPlan">Generate Plan</span>
+                        <span x-show="isGeneratingPlan">🔄 Generating...</span>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <!-- Controls -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                        <div class="form-group">
+                            <label class="form-label">Objective</label>
+                            <input x-model="campaign.objective" placeholder="e.g., Grow community engagement by 20%" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Target Language</label>
+                            <select x-model="campaign.language" class="form-control">
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                                <option value="de">German</option>
+                                <option value="hi">Hindi</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Start Date</label>
+                            <input x-model="campaign.startDate" type="date" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                        <div>
+                            <label class="form-label">Choose Duration</label>
+                            <div class="duration-buttons">
+                                <button 
+                                    class="duration-btn" 
+                                    :class="{ 'active': campaign.duration === 1 }"
+                                    @click="campaign.duration = 1"
+                                >
+                                    1 Day
+                                </button>
+                                <button 
+                                    class="duration-btn" 
+                                    :class="{ 'active': campaign.duration === 7 }"
+                                    @click="campaign.duration = 7"
+                                >
+                                    7 Days (default)
+                                </button>
+                                <button 
+                                    class="duration-btn" 
+                                    :class="{ 'active': campaign.duration === 30 }"
+                                    @click="campaign.duration = 30"
+                                >
+                                    30 Days (max)
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="form-label">Product Inclusion Target: <span x-text="campaign.productPct + '%'"></span> of posts should mention a product</label>
+                            <input type="range" x-model="campaign.productPct" min="0" max="100" class="range-slider">
+                        </div>
+                    </div>
+                    
+                    <!-- Plan Grid -->
+                    <div x-show="campaign.plan.days.length > 0">
+                        <h3 style="font-weight: 600; margin-bottom: 1rem;">📋 Content Plan</h3>
+                        <div class="plan-grid" :style="'grid-template-columns: repeat(' + Math.min(campaign.duration, 7) + ', 1fr);'">
+                            <template x-for="(day, dayIndex) in campaign.plan.days.slice(0, Math.min(campaign.duration, 7))" :key="dayIndex">
+                                <div class="day-column">
+                                    <div class="day-header" x-text="'Day ' + (dayIndex + 1)"></div>
+                                    <template x-for="(slot, slotIndex) in day.slots" :key="slotIndex">
+                                        <div class="slot" @click="editSlot(dayIndex, slotIndex)">
+                                            <div class="slot-pillar" x-text="slot.pillar"></div>
+                                            <div class="slot-topic" x-text="slot.topic"></div>
+                                            <div class="slot-format">
+                                                <span class="format-badge" x-text="slot.format"></span>
+                                                <span x-show="slot.productIncluded" style="margin-left: 0.5rem; color: var(--success);">📦 Product</span>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                        
+                        <!-- Summary -->
+                        <div style="margin-top: 2rem; padding: 1rem; background-color: #f8fafc; border-radius: 0.5rem;">
+                            <h4 style="font-weight: 600; margin-bottom: 0.5rem;">📊 Plan Summary</h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div>
+                                    <span style="font-weight: 500;">Pillar Distribution:</span>
+                                    <template x-for="(weight, pillar) in campaign.plan.mixSummary.pillarWeights" :key="pillar">
+                                        <div style="margin-left: 1rem;" x-text="pillar + ': ' + weight + '%'"></div>
+                                    </template>
+                                </div>
+                                <div>
+                                    <span style="font-weight: 500;">Product Inclusion:</span>
+                                    <span style="margin-left: 0.5rem; color: var(--primary);" x-text="campaign.plan.mixSummary.productInclusionActualPct + '% actual'"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center;">
+                            <button class="btn-success" @click="approvePlan()" :disabled="campaign.plan.status === 'approved'">
+                                <span x-show="campaign.plan.status !== 'approved'">Approve Plan</span>
+                                <span x-show="campaign.plan.status === 'approved'">✅ Plan Approved</span>
+                            </button>
+                            <button class="btn-secondary" @click="editPlanMix()">Edit Mix</button>
+                            <button class="btn-secondary" @click="generatePlan()">Re-generate Plan</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Creator & Review Tab -->
+        <div x-show="activeTab === 'creator'">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">✍️ Creator & Review</h2>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <select x-model="creatorSettings.language" class="form-control" style="width: auto;">
+                            <option value="en">English</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                        </select>
+                        <select x-model="creatorSettings.llm" class="form-control" style="width: auto;">
+                            <option value="gpt-4.1">GPT-4.1</option>
+                            <option value="claude-3.5">Claude 3.5</option>
+                            <option value="gemini-pro">Gemini Pro</option>
+                        </select>
+                        <button class="btn-primary" @click="generateAllDrafts()" :disabled="campaign.plan.status !== 'approved'">
+                            Generate All Drafts
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div x-show="campaign.plan.status !== 'approved'" class="text-center py-8 text-gray-500">
+                        <p>📋 Please approve your content plan first to generate drafts</p>
+                    </div>
+                    
+                    <div x-show="campaign.plan.status === 'approved'">
+                        <template x-for="(post, index) in campaign.posts" :key="index">
+                            <div class="post-card">
+                                <div class="post-header">
+                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                        <span class="format-badge" x-text="post.format"></span>
+                                        <span style="font-weight: 600;" x-text="post.pillar + ' - ' + post.topic"></span>
+                                        <div class="product-toggle">
+                                            <input type="checkbox" x-model="post.productIncluded" :id="'product-' + index">
+                                            <span class="toggle-slider"></span>
+                                        </div>
+                                        <label :for="'product-' + index" style="font-size: 0.875rem;">Include Product</label>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <span class="policy-badge" :class="post.policyStatus === 'ok' ? 'policy-ok' : 'policy-warning'" x-text="post.policyStatus === 'ok' ? 'Policy OK' : post.policyIssues + ' issues'"></span>
+                                        <span class="version-badge" x-text="'v' + post.version"></span>
+                                    </div>
+                                </div>
+                                <div class="post-body">
+                                    <div class="form-group">
+                                        <label class="form-label">Caption</label>
+                                        <textarea x-model="post.content.caption" class="form-control" rows="4"></textarea>
+                                    </div>
+                                    
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                        <div class="form-group">
+                                            <label class="form-label">Hooks</label>
+                                            <input x-model="post.content.hooks" class="form-control" placeholder="Attention-grabbing hooks">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Hashtags</label>
+                                            <input x-model="post.content.hashtags" class="form-control" placeholder="Add 3-5 brand-safe hashtags">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="approval-bar">
+                                        <button class="btn-secondary" @click="editPost(index)">Edit</button>
+                                        <button class="btn-secondary" @click="regeneratePost(index)">Regenerate</button>
+                                        <button class="btn-secondary" @click="changePostLanguage(index)">Change Language</button>
+                                        <button class="btn-secondary" @click="changePostLLM(index)">Change LLM</button>
+                                        <button class="btn-secondary" @click="createVariant(index)">+ Variant</button>
+                                        <div style="flex: 1;"></div>
+                                        <button class="btn-secondary" @click="rejectPost(index)">Reject</button>
+                                        <button class="btn-success" @click="approvePost(index)" :disabled="post.status === 'approved'">
+                                            <span x-show="post.status !== 'approved'">Approve</span>
+                                            <span x-show="post.status === 'approved'">✅ Approved</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                        
+                        <div x-show="campaign.posts.length === 0" class="text-center py-8 text-gray-500">
+                            <p>✨ Click "Generate All Drafts" to create content from your approved plan</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar / Export Tab -->
+        <div x-show="activeTab === 'calendar'">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">📅 Calendar</h2>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn-secondary">This Week</button>
+                        <button class="btn-secondary">Next 30 Days</button>
+                        <button class="btn-secondary">List View</button>
+                        <button class="btn-primary" @click="exportPackage()">Export Package (CSV/JSON)</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div x-show="!flags.connectedToFacebook" class="p-4 bg-blue-50 border border-blue-200 rounded-lg mb-4">
+                        <p class="text-blue-800">📘 No Facebook connection — Export package instead to schedule manually</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <p style="color: var(--text-light); margin-bottom: 1rem;">Only approved posts can be scheduled</p>
+                        
+                        <!-- Simple Calendar View -->
+                        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background-color: #e2e8f0; border-radius: 0.5rem; overflow: hidden;">
+                            <!-- Calendar Headers -->
+                            <template x-for="day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']" :key="day">
+                                <div style="background-color: #f1f5f9; padding: 0.75rem; text-align: center; font-weight: 600; color: var(--text-light);" x-text="day"></div>
+                            </template>
+                            
+                            <!-- Calendar Days -->
+                            <template x-for="(day, index) in calendarDays" :key="index">
+                                <div style="background-color: white; padding: 0.75rem; min-height: 120px; border: 1px solid #f1f5f9;" :class="day.isToday ? 'bg-purple-50' : ''">
+                                    <div style="font-weight: 600; margin-bottom: 0.5rem;" x-text="day.day"></div>
+                                    <template x-for="post in day.approvedPosts" :key="post.id">
+                                        <div style="font-size: 0.75rem; background-color: var(--primary); color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; margin-bottom: 0.25rem;" x-text="post.format + ' - ' + post.pillar"></div>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <!-- Summary -->
+                    <div style="background-color: #f8fafc; padding: 1.5rem; border-radius: 0.5rem;">
+                        <h3 style="font-weight: 600; margin-bottom: 1rem;">📊 Scheduling Summary</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                            <div>
+                                <span style="font-weight: 500;">Total Approved Posts:</span>
+                                <span style="margin-left: 0.5rem; color: var(--primary);" x-text="approvedPostsCount"></span>
+                            </div>
+                            <div>
+                                <span style="font-weight: 500;">Ready to Schedule:</span>
+                                <span style="margin-left: 0.5rem; color: var(--success);" x-text="approvedPostsCount"></span>
+                            </div>
+                            <div>
+                                <span style="font-weight: 500;">Organic Only:</span>
+                                <span style="margin-left: 0.5rem; color: var(--primary);">✅ No paid promotions</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Insights Tab -->
+        <div x-show="activeTab === 'insights'">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                <div class="card" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white;">
+                    <div class="card-body">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <p style="opacity: 0.9; margin-bottom: 0.5rem;">Impressions</p>
+                                <p style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem;">124.5K</p>
+                                <p style="opacity: 0.8; font-size: 0.875rem;">+15% from last week</p>
+                            </div>
+                            <span style="font-size: 2rem;">👁️</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem;">89.2K</div>
+                        <div style="color: var(--text-light); margin-bottom: 0.25rem;">Reach</div>
+                        <div style="color: var(--success); font-size: 0.875rem;">+8% from last week</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem;">4.2%</div>
+                        <div style="color: var(--text-light); margin-bottom: 0.25rem;">Engagement Rate</div>
+                        <div style="color: var(--success); font-size: 0.875rem;">+21% from last week</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem;">+347</div>
+                        <div style="color: var(--text-light); margin-bottom: 0.25rem;">Follower Growth</div>
+                        <div style="color: var(--success); font-size: 0.875rem;">+12% from last week</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">📈 Performance Insights</h2>
+                </div>
+                <div class="card-body">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <div>
+                            <h3 style="font-weight: 600; margin-bottom: 1rem;">🏆 Winner Formats</h3>
+                            <div style="space-y: 0.5rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <span>Reels</span>
+                                    <span style="color: var(--success); font-weight: 600;">+21% engagement</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <span>Carousels</span>
+                                    <span style="color: var(--success); font-weight: 600;">+15% engagement</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <span>Text Posts</span>
+                                    <span style="color: var(--warning); font-weight: 600;">-5% engagement</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 style="font-weight: 600; margin-bottom: 1rem;">💡 Next-cycle Recommendations</h3>
+                            <div style="background-color: #f0f9ff; border-left: 4px solid var(--primary); padding: 1rem; margin-bottom: 1rem;">
+                                <p style="font-weight: 500; color: var(--primary);">Increase Reel frequency</p>
+                                <p style="font-size: 0.875rem; color: var(--text-light);">Reels are performing 40% above average</p>
+                            </div>
+                            <div style="background-color: #f0fdf4; border-left: 4px solid var(--success); padding: 1rem;">
+                                <p style="font-weight: 500; color: var(--success);">Maintain carousel strategy</p>
+                                <p style="font-size: 0.875rem; color: var(--text-light);">Consistent high engagement rates</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div x-show="activeTab === 'settings'">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <!-- Language & LLM Defaults -->
+                <div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">🌐 Language Defaults</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label">Default Language</label>
+                                <select x-model="settings.defaultLanguage" class="form-control">
+                                    <option value="en">English</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="hi">Hindi</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Allowed Locales</label>
+                                <div style="display: flex; flex-wrap: gap: 0.5rem;">
+                                    <span class="chip">English <span class="chip-remove">×</span></span>
+                                    <span class="chip">Spanish <span class="chip-remove">×</span></span>
+                                    <span class="chip">+ Add Locale</span>
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" checked>
+                                <label style="margin: 0;">RTL Support</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">🤖 LLM Catalog</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label">Default Model</label>
+                                <select x-model="settings.defaultLLM" class="form-control">
+                                    <option value="gpt-4.1">GPT-4.1 (Recommended)</option>
+                                    <option value="claude-3.5">Claude 3.5 Sonnet</option>
+                                    <option value="gemini-pro">Gemini Pro</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Budget Guard (Monthly)</label>
+                                <input type="number" placeholder="$100" class="form-control">
+                            </div>
+                            
+                            <div style="font-size: 0.875rem; color: var(--text-light);">
+                                <p>Per-format model selection available in advanced settings</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Guardrails & Integrations -->
+                <div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">🛡️ Guardrails</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label">Sector Presets</label>
+                                <select class="form-control">
+                                    <option value="general">General Business</option>
+                                    <option value="health">Health & Wellness</option>
+                                    <option value="finance">Finance & Investment</option>
+                                    <option value="education">Education</option>
+                                    <option value="technology">Technology</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Product Inclusion Default %</label>
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <input type="range" x-model="settings.productDefaultPct" min="0" max="100" class="range-slider" style="flex: 1;">
+                                    <span x-text="settings.productDefaultPct + '%'" style="font-weight: 600; color: var(--primary);"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Emoji Policy</label>
+                                <select class="form-control">
+                                    <option value="none">None</option>
+                                    <option value="light">Light</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="rich">Rich</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">🔗 Integrations</h2>
+                        </div>
+                        <div class="card-body">
+                            <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background-color: #f8fafc; border-radius: 0.5rem; margin-bottom: 1rem;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <div style="width: 40px; height: 40px; background-color: #1877f2; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
+                                        <span style="color: white; font-weight: bold;">f</span>
+                                    </div>
+                                    <div>
+                                        <p style="font-weight: 600; margin: 0;">Facebook Page</p>
+                                        <p style="font-size: 0.875rem; color: var(--text-light); margin: 0;">TechBrand Connected</p>
+                                    </div>
+                                </div>
+                                <span class="policy-badge policy-ok">Connected</span>
+                            </div>
+                            
+                            <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background-color: #f8fafc; border-radius: 0.5rem;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <div style="width: 40px; height: 40px; background-color: #6b7280; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
+                                        <span style="color: white; font-weight: bold;">📊</span>
+                                    </div>
+                                    <div>
+                                        <p style="font-weight: 600; margin: 0;">Insights</p>
+                                        <p style="font-size: 0.875rem; color: var(--text-light); margin: 0;">Analytics & Reporting</p>
+                                    </div>
+                                </div>
+                                <button class="btn-secondary">Connect</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function brandContentSystem() {
+            return {
+                activeTab: 'onboarding',
+                isGeneratingPlan: false,
+                isGeneratingBlueprint: false,
+                
+                // Brand data
+                brand: {
+                    id: 'brand-001',
+                    name: 'TechBrand',
+                    guidelineDoc: { name: '', size: 0, status: 'none' },
+                    blueprint: {
+                        version: '1.0.0',
+                        status: 'draft',
+                        voice: {
+                            formality: 30,
+                            humor: 60,
+                            warmth: 70,
+                            emojiPolicy: 'medium'
+                        },
+                        pillars: [
+                            { name: 'Innovation', description: 'Latest tech trends and breakthroughs', weight: 30 },
+                            { name: 'Education', description: 'Teaching and learning content', weight: 25 },
+                            { name: 'Community', description: 'Building connections and engagement', weight: 25 },
+                            { name: 'Product', description: 'Product features and benefits', weight: 20 }
+                        ],
+                        policies: {
+                            forbiddenPhrases: ['buy now', 'limited time', 'act fast'],
+                            maxHashtags: 5,
+                            brandHashtags: ['#TechBrand', '#Innovation', '#AI']
+                        },
+                        productDefaultPct: 30
+                    }
+                },
+                
+                // Campaign data
+                campaign: {
+                    id: 'campaign-001',
+                    objective: '',
+                    duration: 7,
+                    startDate: new Date().toISOString().split('T')[0],
+                    language: 'en',
+                    llm: 'gpt-4.1',
+                    productPct: 30,
+                    plan: {
+                        days: [],
+                        mixSummary: { pillarWeights: {}, productInclusionActualPct: 0 },
+                        status: 'draft'
+                    },
+                    posts: []
+                },
+                
+                // Settings
+                settings: {
+                    defaultLanguage: 'en',
+                    defaultLLM: 'gpt-4.1',
+                    productDefaultPct: 30
+                },
+                
+                // Creator settings
+                creatorSettings: {
+                    language: 'en',
+                    llm: 'gpt-4.1'
+                },
+                
+                // UI state
+                flags: { connectedToFacebook: true },
+                newForbiddenPhrase: '',
+                newBrandHashtag: '',
+                guidelineDoc: { name: '', status: 'none' },
+                
+                // Calendar data
+                calendarDays: [],
+                
+                init() {
+                    this.generateCalendarDays();
+                    this.loadBrandBlueprint();
+                },
+                
+                loadBrandBlueprint() {
+                    // Load existing blueprint from API
+                    fetch(`/api/brand/blueprint?brand_id=${this.brand.id}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.brandName) {
+                                this.brand.name = data.brandName;
+                            }
+                            if (data.blueprint) {
+                                this.brand.blueprint = data.blueprint;
+                            }
+                            if (data.guidelineDoc) {
+                                this.guidelineDoc = data.guidelineDoc;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error loading blueprint:', error);
+                        });
+                },
+                
+                generateCalendarDays() {
+                    const today = new Date();
+                    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+                    const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+                    
+                    this.calendarDays = [];
+                    for (let i = 1; i <= daysInMonth; i++) {
+                        this.calendarDays.push({
+                            day: i,
+                            isToday: i === today.getDate(),
+                            approvedPosts: i === today.getDate() + 1 ? [
+                                { id: 1, format: 'Reel', pillar: 'Innovation' },
+                                { id: 2, format: 'Post', pillar: 'Education' }
+                            ] : []
+                        });
+                    }
+                },
+                
+                get approvedPostsCount() {
+                    return this.campaign.posts.filter(post => post.status === 'approved').length;
+                },
+                
+                handleGuidelineUpload(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        this.guidelineDoc = {
+                            name: file.name,
+                            size: file.size,
+                            status: 'uploading'
+                        };
+                        
+                        // Upload and process the file
+                        const formData = new FormData();
+                        formData.append('file', file);
+                        
+                        fetch(`/api/brand/upload-guideline?brand_id=${this.brand.id}`, {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                this.guidelineDoc.status = 'processed';
+                                
+                                // Update brand data with extracted information
+                                const brandData = data.brandData;
+                                
+                                // Update brand name
+                                if (brandData.brandName) {
+                                    this.brand.name = brandData.brandName;
+                                }
+                                
+                                // Update voice profile
+                                if (brandData.voice) {
+                                    this.brand.blueprint.voice = {
+                                        formality: brandData.voice.formality || 50,
+                                        humor: brandData.voice.humor || 50,
+                                        warmth: brandData.voice.warmth || 50,
+                                        emojiPolicy: brandData.voice.emojiPolicy || 'medium'
+                                    };
+                                }
+                                
+                                // Update content pillars
+                                if (brandData.pillars && brandData.pillars.length > 0) {
+                                    this.brand.blueprint.pillars = brandData.pillars;
+                                }
+                                
+                                // Update forbidden phrases
+                                if (brandData.forbiddenPhrases && brandData.forbiddenPhrases.length > 0) {
+                                    this.brand.blueprint.policies.forbiddenPhrases = brandData.forbiddenPhrases;
+                                }
+                                
+                                // Update brand hashtags
+                                if (brandData.brandHashtags && brandData.brandHashtags.length > 0) {
+                                    this.brand.blueprint.policies.brandHashtags = brandData.brandHashtags;
+                                }
+                                
+                                // Update blueprint status
+                                this.brand.blueprint.status = 'generated';
+                                
+                                // Show success message
+                                alert(`✅ Brand guideline processed successfully!\n\nExtracted:\n- ${brandData.pillars?.length || 0} content pillars\n- ${brandData.forbiddenPhrases?.length || 0} forbidden phrases\n- ${brandData.brandHashtags?.length || 0} brand hashtags`);
+                                
+                                // Switch to blueprint tab to review
+                                this.activeTab = 'blueprint';
+                            } else {
+                                this.guidelineDoc.status = 'error';
+                                alert('❌ Failed to process guideline file. Please try again.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error uploading guideline:', error);
+                            this.guidelineDoc.status = 'error';
+                            alert('❌ Error uploading file. Please check the file format and try again.');
+                        });
+                    }
+                },
+                
+                generateBrandBlueprint() {
+                    this.isGeneratingBlueprint = true;
+                    setTimeout(() => {
+                        this.brand.blueprint.status = 'generated';
+                        this.isGeneratingBlueprint = false;
+                        this.activeTab = 'blueprint';
+                    }, 3000);
+                },
+                
+                addPillar() {
+                    this.brand.blueprint.pillars.push({
+                        name: '',
+                        description: '',
+                        weight: 0
+                    });
+                },
+                
+                removePillar(index) {
+                    this.brand.blueprint.pillars.splice(index, 1);
+                },
+                
+                addForbiddenPhrase() {
+                    if (this.newForbiddenPhrase.trim()) {
+                        this.brand.blueprint.policies.forbiddenPhrases.push(this.newForbiddenPhrase.trim());
+                        this.newForbiddenPhrase = '';
+                    }
+                },
+                
+                addBrandHashtag() {
+                    if (this.newBrandHashtag.trim()) {
+                        const hashtag = this.newBrandHashtag.startsWith('#') ? this.newBrandHashtag : '#' + this.newBrandHashtag;
+                        this.brand.blueprint.policies.brandHashtags.push(hashtag);
+                        this.newBrandHashtag = '';
+                    }
+                },
+                
+                downloadBlueprintJSON() {
+                    // Create the blueprint JSON object
+                    const blueprintData = {
+                        brandId: this.brand.id,
+                        brandName: this.brand.name,
+                        version: this.brand.blueprint.version,
+                        status: this.brand.blueprint.status,
+                        exportedAt: new Date().toISOString(),
+                        voice: {
+                            formality: this.brand.blueprint.voice.formality,
+                            humor: this.brand.blueprint.voice.humor,
+                            warmth: this.brand.blueprint.voice.warmth,
+                            emojiPolicy: this.brand.blueprint.voice.emojiPolicy
+                        },
+                        contentPillars: this.brand.blueprint.pillars.map(p => ({
+                            name: p.name,
+                            description: p.description,
+                            weight: p.weight
+                        })),
+                        policies: {
+                            forbiddenPhrases: this.brand.blueprint.policies.forbiddenPhrases,
+                            maxHashtags: this.brand.blueprint.policies.maxHashtags,
+                            brandHashtags: this.brand.blueprint.policies.brandHashtags
+                        },
+                        productDefaultPct: this.brand.blueprint.productDefaultPct,
+                        guidelineDocument: {
+                            name: this.guidelineDoc.name || '',
+                            status: this.guidelineDoc.status || 'none'
+                        }
+                    };
+                    
+                    // Convert to JSON string with pretty formatting
+                    const jsonString = JSON.stringify(blueprintData, null, 2);
+                    
+                    // Create a blob and download link
+                    const blob = new Blob([jsonString], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    
+                    // Generate filename with brand name and timestamp
+                    const timestamp = new Date().toISOString().split('T')[0];
+                    const filename = `${this.brand.name.replace(/\s+/g, '_')}_blueprint_${timestamp}.json`;
+                    
+                    link.href = url;
+                    link.download = filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    
+                    // Cleanup
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                    
+                    // Show success message
+                    alert(`✅ Blueprint JSON downloaded successfully!\n\nFile: ${filename}`);
+                },
+                
+                approveBlueprint() {
+                    if (confirm('Are you sure you want to approve this blueprint? This will lock the current version.')) {
+                        this.brand.blueprint.status = 'approved';
+                        
+                        // Save to backend
+                        fetch('/api/brand/blueprint', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                brandId: this.brand.id,
+                                brandName: this.brand.name,
+                                blueprint: this.brand.blueprint
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                alert('✅ Blueprint approved and saved!');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error approving blueprint:', error);
+                            alert('❌ Failed to save approved blueprint');
+                        });
+                    }
+                },
+                
+                regenerateFromDoc() {
+                    if (!this.guidelineDoc.name) {
+                        alert('⚠️ Please upload a brand guideline document first.');
+                        return;
+                    }
+                    
+                    if (confirm('This will regenerate the blueprint from the uploaded document. Any manual changes will be overwritten. Continue?')) {
+                        alert('🔄 Re-generation from document is not yet implemented. Please re-upload the document to regenerate.');
+                    }
+                },
+                
+                generatePlan() {
+                    if (!this.campaign.objective) return;
+                    
+                    this.isGeneratingPlan = true;
+                    
+                    setTimeout(() => {
+                        // Generate mock plan
+                        this.campaign.plan.days = [];
+                        for (let i = 0; i < this.campaign.duration; i++) {
+                            const day = {
+                                dayIndex: i + 1,
+                                slots: []
+                            };
+                            
+                            // Add 1-3 slots per day
+                            const slotsCount = Math.floor(Math.random() * 3) + 1;
+                            for (let j = 0; j < slotsCount; j++) {
+                                const pillars = this.brand.blueprint.pillars;
+                                const randomPillar = pillars[Math.floor(Math.random() * pillars.length)];
+                                const formats = ['Text', 'Carousel', 'Story', 'Reel', 'Long-form'];
+                                const randomFormat = formats[Math.floor(Math.random() * formats.length)];
+                                
+                                day.slots.push({
+                                    pillar: randomPillar.name,
+                                    topic: this.generateTopic(randomPillar.name),
+                                    format: randomFormat,
+                                    productIncluded: Math.random() < (this.campaign.productPct / 100)
+                                });
+                            }
+                            
+                            this.campaign.plan.days.push(day);
+                        }
+                        
+                        // Calculate summary
+                        this.calculatePlanSummary();
+                        this.isGeneratingPlan = false;
+                    }, 2000);
+                },
+                
+                generateTopic(pillar) {
+                    const topics = {
+                        'Innovation': ['AI Breakthroughs', 'Future Tech Trends', 'Disruptive Technologies'],
+                        'Education': ['Tech Tips', 'How-to Guides', 'Industry Insights'],
+                        'Community': ['User Stories', 'Team Highlights', 'Customer Success'],
+                        'Product': ['Feature Spotlight', 'Use Cases', 'Product Updates']
+                    };
+                    const pillarTopics = topics[pillar] || ['General Topic'];
+                    return pillarTopics[Math.floor(Math.random() * pillarTopics.length)];
+                },
+                
+                calculatePlanSummary() {
+                    const pillarCounts = {};
+                    let totalSlots = 0;
+                    let productSlots = 0;
+                    
+                    this.campaign.plan.days.forEach(day => {
+                        day.slots.forEach(slot => {
+                            pillarCounts[slot.pillar] = (pillarCounts[slot.pillar] || 0) + 1;
+                            totalSlots++;
+                            if (slot.productIncluded) productSlots++;
+                        });
+                    });
+                    
+                    // Convert to percentages
+                    const pillarWeights = {};
+                    Object.keys(pillarCounts).forEach(pillar => {
+                        pillarWeights[pillar] = Math.round((pillarCounts[pillar] / totalSlots) * 100);
+                    });
+                    
+                    this.campaign.plan.mixSummary = {
+                        pillarWeights: pillarWeights,
+                        productInclusionActualPct: Math.round((productSlots / totalSlots) * 100)
+                    };
+                },
+                
+                approvePlan() {
+                    this.campaign.plan.status = 'approved';
+                },
+                
+                editPlanMix() {
+                    alert('Plan mix editor would open here');
+                },
+                
+                editSlot(dayIndex, slotIndex) {
+                    alert(`Edit slot ${slotIndex + 1} of day ${dayIndex + 1}`);
+                },
+                
+                generateAllDrafts() {
+                    if (this.campaign.plan.status !== 'approved') return;
+                    
+                    this.campaign.posts = [];
+                    let postId = 1;
+                    
+                    this.campaign.plan.days.forEach((day, dayIndex) => {
+                        day.slots.forEach((slot, slotIndex) => {
+                            this.campaign.posts.push({
+                                id: postId++,
+                                dayIndex: dayIndex,
+                                slotIndex: slotIndex,
+                                pillar: slot.pillar,
+                                topic: slot.topic,
+                                format: slot.format,
+                                productIncluded: slot.productIncluded,
+                                content: {
+                                    caption: this.generateMockCaption(slot.topic, slot.pillar),
+                                    hooks: this.generateMockHooks(slot.topic),
+                                    hashtags: this.generateMockHashtags(slot.pillar)
+                                },
+                                version: '1.0',
+                                status: 'draft',
+                                policyStatus: Math.random() > 0.8 ? 'warning' : 'ok',
+                                policyIssues: Math.random() > 0.8 ? Math.floor(Math.random() * 3) + 1 : 0
+                            });
+                        });
+                    });
+                },
+                
+                generateMockCaption(topic, pillar) {
+                    const captions = {
+                        'AI Breakthroughs': 'Exciting developments in AI are reshaping how we work and live! 🚀 The latest breakthrough in machine learning shows unprecedented accuracy in...',
+                        'Tech Tips': '💡 Pro tip: Did you know you can boost your productivity by 40% with this simple workflow hack? Here\'s how to implement it...',
+                        'User Stories': '🌟 Customer spotlight: Meet Sarah, who transformed her business using our platform. Her journey from startup to success is truly inspiring...'
+                    };
+                    return captions[topic] || `Discover the latest insights about ${topic} and how it impacts ${pillar.toLowerCase()}. Join the conversation and share your thoughts! 💭`;
+                },
+                
+                generateMockHooks(topic) {
+                    return `"Did you know ${topic.toLowerCase()} can change everything?"`;
+                },
+                
+                generateMockHashtags(pillar) {
+                    const hashtags = {
+                        'Innovation': '#Innovation #TechBrand #AI #Future',
+                        'Education': '#TechTips #Learning #Education #TechBrand',
+                        'Community': '#Community #TechBrand #Together #Growth',
+                        'Product': '#Product #TechBrand #Solutions #Innovation'
+                    };
+                    return hashtags[pillar] || '#TechBrand #Technology';
+                },
+                
+                editPost(index) {
+                    alert(`Edit post ${index + 1}`);
+                },
+                
+                regeneratePost(index) {
+                    const post = this.campaign.posts[index];
+                    post.content.caption = this.generateMockCaption(post.topic, post.pillar);
+                    post.version = (parseFloat(post.version) + 0.1).toFixed(1);
+                },
+                
+                changePostLanguage(index) {
+                    alert('Language selector would open here');
+                },
+                
+                changePostLLM(index) {
+                    alert('LLM selector would open here');
+                },
+                
+                createVariant(index) {
+                    const originalPost = this.campaign.posts[index];
+                    const variant = { ...originalPost };
+                    variant.id = Date.now();
+                    variant.version = originalPost.version + 'v2';
+                    variant.content.caption = this.generateMockCaption(variant.topic, variant.pillar);
+                    this.campaign.posts.splice(index + 1, 0, variant);
+                },
+                
+                approvePost(index) {
+                    this.campaign.posts[index].status = 'approved';
+                },
+                
+                rejectPost(index) {
+                    this.campaign.posts[index].status = 'rejected';
+                },
+                
+                exportPackage() {
+                    const approvedPosts = this.campaign.posts.filter(post => post.status === 'approved');
+                    
+                    if (approvedPosts.length === 0) {
+                        alert('⚠️ No approved posts to export. Please approve some posts first.');
+                        return;
+                    }
+                    
+                    // Prepare export data
+                    const exportData = {
+                        campaign: {
+                            id: this.campaign.id,
+                            objective: this.campaign.objective,
+                            duration: this.campaign.duration,
+                            startDate: this.campaign.startDate,
+                            language: this.campaign.language
+                        },
+                        brand: {
+                            id: this.brand.id,
+                            name: this.brand.name
+                        },
+                        exportedAt: new Date().toISOString(),
+                        totalPosts: approvedPosts.length,
+                        posts: approvedPosts.map(post => ({
+                            postId: post.id,
+                            day: post.dayIndex + 1,
+                            pillar: post.pillar,
+                            topic: post.topic,
+                            format: post.format,
+                            productIncluded: post.productIncluded,
+                            caption: post.content.caption,
+                            hooks: post.content.hooks,
+                            hashtags: post.content.hashtags,
+                            version: post.version,
+                            scheduledDate: post.scheduledDate || '',
+                            scheduledTime: post.scheduledTime || ''
+                        }))
+                    };
+                    
+                    // Create JSON file
+                    const jsonString = JSON.stringify(exportData, null, 2);
+                    const jsonBlob = new Blob([jsonString], { type: 'application/json' });
+                    const jsonUrl = URL.createObjectURL(jsonBlob);
+                    const jsonLink = document.createElement('a');
+                    
+                    const timestamp = new Date().toISOString().split('T')[0];
+                    const jsonFilename = `${this.brand.name.replace(/\s+/g, '_')}_content_package_${timestamp}.json`;
+                    
+                    jsonLink.href = jsonUrl;
+                    jsonLink.download = jsonFilename;
+                    document.body.appendChild(jsonLink);
+                    jsonLink.click();
+                    document.body.removeChild(jsonLink);
+                    URL.revokeObjectURL(jsonUrl);
+                    
+                    // Create CSV file
+                    const csvHeaders = ['Day', 'Pillar', 'Topic', 'Format', 'Product Included', 'Caption', 'Hashtags', 'Scheduled Date', 'Scheduled Time'];
+                    const csvRows = approvedPosts.map(post => [
+                        post.dayIndex + 1,
+                        post.pillar,
+                        post.topic,
+                        post.format,
+                        post.productIncluded ? 'Yes' : 'No',
+                        `"${post.content.caption.replace(/"/g, '""')}"`,
+                        post.content.hashtags,
+                        post.scheduledDate || '',
+                        post.scheduledTime || ''
+                    ]);
+                    
+                    const csvContent = [
+                        csvHeaders.join(','),
+                        ...csvRows.map(row => row.join(','))
+                    ].join('\n');
+                    
+                    const csvBlob = new Blob([csvContent], { type: 'text/csv' });
+                    const csvUrl = URL.createObjectURL(csvBlob);
+                    const csvLink = document.createElement('a');
+                    
+                    const csvFilename = `${this.brand.name.replace(/\s+/g, '_')}_content_package_${timestamp}.csv`;
+                    
+                    csvLink.href = csvUrl;
+                    csvLink.download = csvFilename;
+                    document.body.appendChild(csvLink);
+                    csvLink.click();
+                    document.body.removeChild(csvLink);
+                    URL.revokeObjectURL(csvUrl);
+                    
+                    alert(`✅ Content package exported successfully!\n\n📦 Files downloaded:\n- ${jsonFilename}\n- ${csvFilename}\n\n${approvedPosts.length} approved posts exported.`);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+{
+  "id": "1ebb24f4-e3e2-4825-a015-1c1277cdb582",
+  "campaign_metadata": {
+    "id": "e139c377-5f91-4261-b69c-3c801992f375",
+    "name": "M",
+    "objective": "awareness",
+    "target_audience": "General audience",
+    "start_date": "2026-02-12",
+    "end_date": "2026-03-14",
+    "frequency": 1,
+    "status": "draft",
+    "created_at": "2026-02-12 05:41:45.024727",
+    "updated_at": "2026-02-12 05:41:45.024727"
+  },
+  "brand_context": {
+    "brand_id": "brand-creative-studio",
+    "brand_name": "Brand Creative Studio",
+    "voice_profile": {},
+    "content_pillars": [],
+    "guidelines": {}
+  },
+  "personas": [
+    {
+      "id": "persona-3",
+      "name": "Persona persona-3",
+      "age_range": "25-35",
+      "interests": [
+        "technology",
+        "lifestyle"
+      ],
+      "demographics": {},
+      "behavior_patterns": []
+    }
+  ],
+  "products": [],
+  "language_config": {
+    "primary_language": "en",
+    "multilingual_enabled": false,
+    "additional_languages": []
+  },
+  "post_mix": null,
+  "content_types": [],
+  "content_plan": {
+    "generated_plan": "1. Strategic Summary:\nThe M campaign will be a month-long initiative by Brand Creative Studio to increase brand awareness and visibility among the general audience. With the use of engaging daily posts, the campaign aims to strengthen our digital footprint and captivate potential customers.\n\n2. Key Messaging Themes:\n   - Brand Introduction: Highlight the core values, mission, and vision of Brand Creative Studio.\n   - Behind-The-Scenes: Share the creative process and everyday happenings at Brand Creative Studio.\n   - Testimonials and Success Stories: Showcase previous successful projects and satisfied clients.\n   - Interactive Posts: Engage with the audience through quizzes, polls, Q&A sessions, etc.\n   - Calls to Action: Encourage audience participation, comments, shares, and likes.\n\n3. Suggested Content Distribution Strategy:\n   - Facebook: Use Facebook to share blog posts, behind-the-scenes content, and success stories. Utilize Facebook's live feature for Q&A sessions.\n   - Instagram: Share visually appealing images of your work, behind-the-scenes photos, and short video clips. Use Instagram stories for polls and quizzes.\n   - Twitter: Share short, engaging posts about the brand, and use it as a platform for customer interaction.\n   - LinkedIn: Share professional content related to the brand, such as blog posts, industry news, and company updates.\n   - YouTube: Share longer video content such as tutorials, in-depth looks at the creative process, and interviews with team members.\n   \nRemember, consistency in posting and engagement is key. Each post should reflect the brand's voice and align with the key messaging themes. Utilize social media analytics to monitor the campaign's progress and make adjustments as necessary.",
+    "generated_at": "2026-02-12T05:41:59.119329",
+    "llm_metadata": {
+      "provider_used": "openai",
+      "available_providers": [
+        "openai",
+        "mock"
+      ],
+      "processing_time": 14.094000000000051
+    }
+  },
+  "status": "draft",
+  "created_at": null,
+  "updated_at": "2026-02-12T05:41:59.120329",
+  "version": "v1"
+}

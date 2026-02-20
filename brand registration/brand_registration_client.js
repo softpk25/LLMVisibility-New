@@ -130,32 +130,33 @@ class BrandRegistrationClient {
             throw error;
         }
     }
-}
+
     /**
      * Update brand data
      */
     async updateBrand(brandId, updates) {
-    try {
-        const response = await fetch(`${this.apiBase}/update-brand/${brandId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updates)
-        });
+        try {
+            const response = await fetch(`${this.apiBase}/update-brand/${brandId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updates)
+            });
 
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Failed to update brand');
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.detail || 'Failed to update brand');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Update brand error:', error);
+            throw error;
         }
-
-        return await response.json();
-    } catch (error) {
-        console.error('Update brand error:', error);
-        throw error;
     }
 }
-}
+
 
 /**
  * Enhanced Brand Content System with Backend Integration
@@ -259,27 +260,6 @@ function enhancedBrandContentSystem() {
                     status: 'uploaded'
                 };
 
-                // Update brand data with file details
-                this.brand.guidelineDoc = {
-                    ...this.guidelineDoc,
-                    path: result.path,
-                    uploadTime: result.upload_time
-                };
-
-                // If the backend managed to generate a draft blueprint from
-                // the document, immediately hydrate the Blueprint tab with it
-                // so the user sees auto-filled sliders, pillars, and policies.
-                if (result.blueprint) {
-                    this.brand.blueprint = {
-                        ...this.brand.blueprint,
-                        ...result.blueprint
-                    };
-
-                    // Keep the onboarding product slider in sync when possible
-                    if (typeof result.blueprint.productDefaultPct === 'number') {
-                        this.settings.productDefaultPct = result.blueprint.productDefaultPct;
-                    }
-
                 // Update brand data
                 this.brand.guidelineDoc = this.guidelineDoc;
 
@@ -287,13 +267,7 @@ function enhancedBrandContentSystem() {
                 setTimeout(() => {
                     this.guidelineDoc.status = 'parsed';
                     this.brand.guidelineDoc.status = 'parsed';
-                } else {
-                    // Fallback: keep the existing "processing" behaviour
-                    setTimeout(() => {
-                        this.guidelineDoc.status = 'parsed';
-                        this.brand.guidelineDoc.status = 'parsed';
-                    }, 2000);
-                }
+                }, 2000);
 
             } catch (error) {
                 console.error('Upload failed:', error);
