@@ -1,0 +1,290 @@
+{
+  "data": [
+    {
+      "comment_id": "987654321_3001",
+      "commenter_name": "Neha Kapoor",
+      "commenter_id": "u2001",
+      "original_message": "What is the price of this shoe in India?",
+      "created_time": "2026-02-18T09:01:12+0000",
+      "intent": "question",
+      "reply_message": "Hi Neha! The Nike Air X1 for men's UK size 9 retails at INR 8,999 in India. It’s great to hear you’re interested in our high-performance shoe that offers comfort and style on the go!",
+      "faq_chunks_used": [
+        {
+          "score": 0.6216,
+          "page": 0,
+          "preview": "Nike Air X1 - Premium Performance Running Shoe\nProduct Overview\nThe Nike Air X1 is a high-performance running shoe desig"
+        },
+        {
+          "score": 0.5652,
+          "page": 0,
+          "preview": "return. Outsole: Durable rubber with waffle-inspired traction pattern for multi-surface grip. Insole:\nRemovable cushione"
+        },
+        {
+          "score": 0.5527,
+          "page": 1,
+          "preview": "5\nGrey / Orange Accent\nPricing & Availability\nRegion\nRetail Price\nDiscounted Price (Seasonal)\nCurrency\nIndia\n■8,999\n■7,4"
+        }
+      ],
+      "generation_model": "phi3:mini",
+      "status": "pending"
+    },
+    {
+      "comment_id": "987654321_3002",
+      "commenter_name": "Rohit Jain",
+      "commenter_id": "u2002",
+      "original_message": "Does this come in all white color?",
+      "created_time": "2026-02-18T09:02:44+0000",
+      "intent": "question",
+      "reply_message": "Hi Rohit! Yes, the Nike Air X1 is available in an All White variant as well as Grey/Orange Accent and Black /White. If you're looking for that sleek minimal look to match your wardrobe or casual outings, this could be a great fit for both training days and relaxed runs!",
+      "faq_chunks_used": [
+        {
+          "score": 0.4711,
+          "page": 0,
+          "preview": "return. Outsole: Durable rubber with waffle-inspired traction pattern for multi-surface grip. Insole:\nRemovable cushione"
+        },
+        {
+          "score": 0.418,
+          "page": 0,
+          "preview": "Nike Air X1 - Premium Performance Running Shoe\nProduct Overview\nThe Nike Air X1 is a high-performance running shoe desig"
+        },
+        {
+          "score": 0.407,
+          "page": 1,
+          "preview": "5\nGrey / Orange Accent\nPricing & Availability\nRegion\nRetail Price\nDiscounted Price (Seasonal)\nCurrency\nIndia\n■8,999\n■7,4"
+        }
+      ],
+      "generation_model": "phi3:mini",
+      "status": "pending"
+    },
+    {
+      "comment_id": "987654321_3003",
+      "commenter_name": "Simran Kaur",
+      "commenter_id": "u2003",
+      "original_message": "What is the weight of the Nike Air X1?",
+      "created_time": "2026-02-18T09:04:10+0000",
+      "intent": "question",
+      "reply_message": "Hi Simran! The Men's UK 9 size for the Nike Air X1 weighs in at a comfortable 285 grams. Enjoy your runs and feel free to ask if you need anything else about our shoe or other gear from us!",
+      "faq_chunks_used": [
+        {
+          "score": 0.5448,
+          "page": 0,
+          "preview": "Nike Air X1 - Premium Performance Running Shoe\nProduct Overview\nThe Nike Air X1 is a high-performance running shoe desig"
+        },
+        {
+          "score": 0.4712,
+          "page": 0,
+          "preview": "return. Outsole: Durable rubber with waffle-inspired traction pattern for multi-surface grip. Insole:\nRemovable cushione"
+        },
+        {
+          "score": 0.4575,
+          "page": 1,
+          "preview": "5\nGrey / Orange Accent\nPricing & Availability\nRegion\nRetail Price\nDiscounted Price (Seasonal)\nCurrency\nIndia\n■8,999\n■7,4"
+        }
+      ],
+      "generation_model": "phi3:mini",
+      "status": "pending"
+    },
+    {
+      "comment_id": "987654321_3004",
+      "commenter_name": "Arjun Malhotra",
+      "commenter_id": "u2004",
+      "original_message": "Is this shoe suitable for treadmill running?",
+      "created_time": "2026-02-18T09:05:32+0000",
+      "intent": "question",
+      "reply_message": "Hi Arjun! Yes, the Nike Air X1 is great for both treadmill and road running due to its cushioning technology. It's also versatile enough for light gym workouts too! Remember not to machine wash it though - just a soft brush with mild detergent works best.",
+      "faq_chunks_used": [
+        {
+          "score": 0.7489,
+          "page": 0,
+          "preview": "Nike Air X1 - Premium Performance Running Shoe\nProduct Overview\nThe Nike Air X1 is a high-performance running shoe desig"
+        },
+        {
+          "score": 0.6274,
+          "page": 0,
+          "preview": "return. Outsole: Durable rubber with waffle-inspired traction pattern for multi-surface grip. Insole:\nRemovable cushione"
+        },
+        {
+          "score": 0.617,
+          "page": 1,
+          "preview": "5\nGrey / Orange Accent\nPricing & Availability\nRegion\nRetail Price\nDiscounted Price (Seasonal)\nCurrency\nIndia\n■8,999\n■7,4"
+        }
+      ],
+      "generation_model": "phi3:mini",
+      "status": "pending"
+    },
+    {
+      "comment_id": "987654321_3005",
+      "commenter_name": "Kavya Nair",
+      "commenter_id": "u2005",
+      "original_message": "What kind of cushioning technology is used in this model?",
+      "created_time": "2026-02-18T09:06:51+0000",
+      "intent": "question",
+      "reply_message": "Hi Kavya! The Nike Air X1 uses the innovative Nike Air Responsive Cushioning system, which provides that unique combination of comfort and responsiveness for your runs. If you have more questions or need further information on care instructions, feel free to ask. Happy running!",
+      "faq_chunks_used": [
+        {
+          "score": 0.6817,
+          "page": 0,
+          "preview": "Nike Air X1 - Premium Performance Running Shoe\nProduct Overview\nThe Nike Air X1 is a high-performance running shoe desig"
+        },
+        {
+          "score": 0.6729,
+          "page": 0,
+          "preview": "return. Outsole: Durable rubber with waffle-inspired traction pattern for multi-surface grip. Insole:\nRemovable cushione"
+        },
+        {
+          "score": 0.5998,
+          "page": 1,
+          "preview": "5\nGrey / Orange Accent\nPricing & Availability\nRegion\nRetail Price\nDiscounted Price (Seasonal)\nCurrency\nIndia\n■8,999\n■7,4"
+        }
+      ],
+      "generation_model": "phi3:mini",
+      "status": "pending"
+    },
+    {
+      "comment_id": "987654321_3006",
+      "commenter_name": "Manish Gupta",
+      "commenter_id": "u2006",
+      "original_message": "Is there any warranty provided with this product?",
+      "created_time": "2026-02-18T09:08:17+0000",
+      "intent": "question",
+      "reply_message": "Hi Manish! Yes, the Nike Air X1 comes with a 6-month manufacturer's warranty against defects. You can take care of them by not machine washing and letting them air dry only - avoid direct sunlight too. If you have any more questions or need further assistance, feel free to DM me!",
+      "faq_chunks_used": [
+        {
+          "score": 0.5565,
+          "page": 1,
+          "preview": "5\nGrey / Orange Accent\nPricing & Availability\nRegion\nRetail Price\nDiscounted Price (Seasonal)\nCurrency\nIndia\n■8,999\n■7,4"
+        },
+        {
+          "score": 0.5131,
+          "page": 0,
+          "preview": "Nike Air X1 - Premium Performance Running Shoe\nProduct Overview\nThe Nike Air X1 is a high-performance running shoe desig"
+        },
+        {
+          "score": 0.5105,
+          "page": 0,
+          "preview": "return. Outsole: Durable rubber with waffle-inspired traction pattern for multi-surface grip. Insole:\nRemovable cushione"
+        }
+      ],
+      "generation_model": "phi3:mini",
+      "status": "pending"
+    },
+    {
+      "comment_id": "987654321_3007",
+      "commenter_name": "Anjali Desai",
+      "commenter_id": "u2007",
+      "original_message": "What sizes are available for this shoe?",
+      "created_time": "2026-02-18T09:09:42+0000",
+      "intent": "question",
+      "reply_message": "Hi Anjali! The Nike Air X1 is available in UK sizes ranging from 6 to 12. If you need a specific size, feel free to check our website or contact customer support directly as we don't offer returns on individual sized orders overseas due to shipping policies.",
+      "faq_chunks_used": [
+        {
+          "score": 0.6235,
+          "page": 0,
+          "preview": "Nike Air X1 - Premium Performance Running Shoe\nProduct Overview\nThe Nike Air X1 is a high-performance running shoe desig"
+        },
+        {
+          "score": 0.5824,
+          "page": 0,
+          "preview": "return. Outsole: Durable rubber with waffle-inspired traction pattern for multi-surface grip. Insole:\nRemovable cushione"
+        },
+        {
+          "score": 0.5109,
+          "page": 1,
+          "preview": "5\nGrey / Orange Accent\nPricing & Availability\nRegion\nRetail Price\nDiscounted Price (Seasonal)\nCurrency\nIndia\n■8,999\n■7,4"
+        }
+      ],
+      "generation_model": "phi3:mini",
+      "status": "pending"
+    },
+    {
+      "comment_id": "987654321_3008",
+      "commenter_name": "Vikram Singh",
+      "commenter_id": "u2008",
+      "original_message": "What material is used in the upper part of the shoe?",
+      "created_time": "2026-02-18T09:11:03+0000",
+      "intent": "question",
+      "reply_message": "Hi Vikram! The Nike Air X1's upper is made from an engineered breathable mesh with synthetic overlays for structure and durability. It’s designed to provide comfort while allowing your feet to breathe during intense workouts or casual wear.",
+      "faq_chunks_used": [
+        {
+          "score": 0.6472,
+          "page": 0,
+          "preview": "return. Outsole: Durable rubber with waffle-inspired traction pattern for multi-surface grip. Insole:\nRemovable cushione"
+        },
+        {
+          "score": 0.6448,
+          "page": 0,
+          "preview": "Nike Air X1 - Premium Performance Running Shoe\nProduct Overview\nThe Nike Air X1 is a high-performance running shoe desig"
+        },
+        {
+          "score": 0.5408,
+          "page": 1,
+          "preview": "5\nGrey / Orange Accent\nPricing & Availability\nRegion\nRetail Price\nDiscounted Price (Seasonal)\nCurrency\nIndia\n■8,999\n■7,4"
+        }
+      ],
+      "generation_model": "phi3:mini",
+      "status": "pending"
+    },
+    {
+      "comment_id": "987654321_3009",
+      "commenter_name": "Sneha Reddy",
+      "commenter_id": "u2009",
+      "original_message": "Does this model have arch support for flat feet?",
+      "created_time": "2026-02-18T09:12:26+0000",
+      "intent": "question",
+      "reply_message": "Hi Sneha! The Nike Air X1 offers neutral arch support which is designed not only for those with a normal foot but also provides some assistance to help prevent overpronation. For specific concerns related to your arch type, I recommend consulting our care specialists directly or considering other models like the Air Zoom Pegasus 36 if you're seeking dedicated orthotic support.",
+      "faq_chunks_used": [
+        {
+          "score": 0.6288,
+          "page": 0,
+          "preview": "Nike Air X1 - Premium Performance Running Shoe\nProduct Overview\nThe Nike Air X1 is a high-performance running shoe desig"
+        },
+        {
+          "score": 0.6219,
+          "page": 0,
+          "preview": "return. Outsole: Durable rubber with waffle-inspired traction pattern for multi-surface grip. Insole:\nRemovable cushione"
+        },
+        {
+          "score": 0.5574,
+          "page": 1,
+          "preview": "5\nGrey / Orange Accent\nPricing & Availability\nRegion\nRetail Price\nDiscounted Price (Seasonal)\nCurrency\nIndia\n■8,999\n■7,4"
+        }
+      ],
+      "generation_model": "phi3:mini",
+      "status": "pending"
+    },
+    {
+      "comment_id": "987654321_3010",
+      "commenter_name": "Deepak Choudhary",
+      "commenter_id": "u2010",
+      "original_message": "Is the outsole rubber or foam based?",
+      "created_time": "2026-02-18T09:14:08+0000",
+      "intent": "question",
+      "reply_message": "Hi Deepak! The Nike Air X1 has a durable rubber outsole with a waffle-inspired traction pattern. It's not made of foam, but rather designed for multi-surface grip and longevity. For more care tips or specific concerns about the material, feel free to DM me!",
+      "faq_chunks_used": [
+        {
+          "score": 0.6821,
+          "page": 0,
+          "preview": "return. Outsole: Durable rubber with waffle-inspired traction pattern for multi-surface grip. Insole:\nRemovable cushione"
+        },
+        {
+          "score": 0.5905,
+          "page": 0,
+          "preview": "Nike Air X1 - Premium Performance Running Shoe\nProduct Overview\nThe Nike Air X1 is a high-performance running shoe desig"
+        },
+        {
+          "score": 0.5135,
+          "page": 1,
+          "preview": "5\nGrey / Orange Accent\nPricing & Availability\nRegion\nRetail Price\nDiscounted Price (Seasonal)\nCurrency\nIndia\n■8,999\n■7,4"
+        }
+      ],
+      "generation_model": "phi3:mini",
+      "status": "pending"
+    }
+  ],
+  "summary": {
+    "total_comments": 10,
+    "replied": 10,
+    "skipped": 0,
+    "generated_at": "2026-02-19T06:34:51.318587+00:00"
+  }
+}

@@ -188,6 +188,19 @@ async def read_settings():
     with open("templates/FACEBOOK-SETTINGS.html", "r", encoding="utf-8") as f:
         return f.read()
 
+@app.get("/FACEBOOK-ENGAGE-BOOST.html", response_class=HTMLResponse)
+async def serve_engage_boost():
+    with open("templates/FACEBOOK-ENGAGE-BOOST.html", "r", encoding="utf-8") as f:
+        return f.read()
+
+@app.get("/api/engage-boost/replies")
+async def get_engage_boost_replies():
+    replies_path = Path("RAG/replies.json")
+    if not replies_path.exists():
+        raise HTTPException(status_code=404, detail="replies.json not found in RAG/")
+    with open(replies_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
 from pydantic import BaseModel
 import time
 

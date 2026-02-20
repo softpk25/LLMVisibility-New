@@ -1,0 +1,97 @@
+{
+  "creative_type": "carousel",
+  "timestamp": 1771567014434,
+  "source_analysis": {
+    "visual_dna": {
+      "composition": "Central whimsical juxtaposition",
+      "palette": "Soft blue (#A3C1DA) 70%, Creamy beige (#D2B48C) 20%, Black accents",
+      "lighting": "Soft even lighting with minimal shadows",
+      "style": "Surreal, playful, minimalist"
+    },
+    "strategic_analysis": {
+      "tone": "Playful, imaginative, whimsical",
+      "cta_style": "Subtle engagement through intrigue",
+      "emotional_angle": "Curiosity & surprise",
+      "audience": "Creative thinkers, 18-35, art enthusiasts"
+    },
+    "image_composition_analysis": {
+      "focal_points": "Primary focus on ice cream-cone iceberg (~70% saliency); secondary orca shapes suggest depth and whimsy",
+      "typography_style": "Absent; open space likely reserved for branding or messaging"
+    },
+    "prompt_reconstruction": "Surreal illustration, ice cream cone as iceberg floating in soft blue ocean, whimsical orcas swimming, minimalist style, central composition --ar 1:1 --style raw",
+    "video_prompt_json": {
+      "scene": "whimsical aquatic environment",
+      "subjects": [
+        {
+          "type": "ice cream cone",
+          "description": "cone appearing as an iceberg in water",
+          "position": "center"
+        },
+        {
+          "type": "orcas",
+          "description": "small, playful orcas",
+          "position": "around the cone"
+        }
+      ],
+      "style": "surreal and playful animation",
+      "color_palette": [
+        "soft blue #A3C1DA",
+        "creamy beige #D2B48C",
+        "black"
+      ],
+      "lighting": "soft, even lighting to maintain focus",
+      "mood": "imaginative, delightful, whimsical",
+      "camera": "slow zoom into the cone iceberg",
+      "movement": "gentle bobbing of water, playful orca movements",
+      "duration_suggestion": "8-12 seconds"
+    },
+    "stored_image_path": "analyzed_images\\05_1771566980.jpg",
+    "stored_image_url": "/analyzed_images/05_1771566980.jpg"
+  },
+  "transformation_instructions": "advertisment for my ice cream parlor \"ice cube\"\n",
+  "common": {
+    "objective": "Product Launch",
+    "product": "UltraRun Pro Shoes",
+    "platform": "Instagram",
+    "aspect_ratio": "1:1 (Square)"
+  },
+  "carousel_settings": {
+    "panels": [
+      {
+        "panel_number": 1,
+        "role": "Hook",
+        "visual_intent": "On-dark hero",
+        "headline": "",
+        "body_copy": ""
+      },
+      {
+        "panel_number": 2,
+        "role": "Feature",
+        "visual_intent": "Macro detail",
+        "headline": "",
+        "body_copy": ""
+      },
+      {
+        "panel_number": 3,
+        "role": "Feature",
+        "visual_intent": "Lifestyle cut",
+        "headline": "",
+        "body_copy": ""
+      },
+      {
+        "panel_number": 4,
+        "role": "Proof",
+        "visual_intent": "Lifestyle cut",
+        "headline": "",
+        "body_copy": ""
+      },
+      {
+        "panel_number": 5,
+        "role": "CTA",
+        "visual_intent": "On-dark hero",
+        "headline": "",
+        "body_copy": ""
+      }
+    ]
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "creative_type": "reel",
+  "timestamp": 1771566513808,
+  "source_analysis": {
+    "visual_dna": {
+      "composition": "Off-center with foreground elements and linear depth",
+      "palette": "Muted grays and greens with red accent (#CC0000)",
+      "lighting": "Natural outdoor lighting with shadows",
+      "style": "Candid, emotional realism"
+    },
+    "strategic_analysis": {
+      "tone": "Reflective, somber, contemplative",
+      "cta_style": "Implied reflection; no direct call to action",
+      "emotional_angle": "Grief & remembrance",
+      "audience": "Adults, 30-50, experiencing loss or commemoration"
+    },
+    "image_composition_analysis": {
+      "focal_points": "Person in emotional expression with ~70% saliency; background adds contextual depth",
+      "typography_style": "Overlay watermark, subtle placement"
+    },
+    "prompt_reconstruction": "Candid photography, person sitting on stairs in cemetery holding a red rose, natural lighting, muted colors, emotional and reflective composition, realistic style --ar 16:9 --style raw",
+    "video_prompt_json": {
+      "scene": "cemetery with linear pathway",
+      "subjects": [
+        {
+          "type": "person",
+          "description": "individual in reflective pose holding a rose",
+          "position": "right off-center"
+        }
+      ],
+      "style": "candid emotional realism, reflective narrative",
+      "color_palette": [
+        "muted grays",
+        "green",
+        "red #CC0000"
+      ],
+      "lighting": "natural daylight with soft shadows",
+      "mood": "somber, reflective, emotional",
+      "camera": "steady zoom-in on person, focus shift to rose",
+      "movement": "slight sway of trees, subtle wind effect",
+      "duration_suggestion": "10-12 seconds"
+    },
+    "stored_image_path": "analyzed_images\\images_1771566489.jpeg",
+    "stored_image_url": "/analyzed_images/images_1771566489.jpeg"
+  },
+  "transformation_instructions": "Make an ad for our date night at out club \"mi casa\" , where you can find heartbroken love, also add taglines in audio",
+  "common": {
+    "objective": "Product Launch",
+    "product": "UltraRun Pro Shoes",
+    "platform": "Instagram",
+    "aspect_ratio": "1:1 (Square)"
+  },
+  "reel_settings": {
+    "scene_count": "4 Scenes (Standard)",
+    "total_duration": "15 seconds",
+    "hook_length": "3 seconds",
+    "music_style": "Upbeat/Energetic",
+    "voiceover": "No",
+    "captions": "Yes - Auto-highlight keywords"
+  }
+}
